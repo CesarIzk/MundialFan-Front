@@ -1,0 +1,130 @@
+.perfil-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.perfil-avatar {
+    flex: 0 0 150px;
+    text-align: center;
+}
+
+.avatar-img, .avatar-placeholder {
+    width: 150px;
+    height: 150px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    background-color: var(--btn);
+    color: #fff;
+    object-fit: cover;
+}
+
+.perfil-info {
+    flex: 1 1 300px;
+}
+
+@media (max-width: 768px) {
+    .perfil-grid {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .perfil-info h3 small {
+        display: block;
+        margin-top: 0.3rem;
+    }
+}
+/* === Corrección de centrado para el avatar === */
+.perfil-avatar {
+  flex: 0 0 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* centra verticalmente */
+  text-align: center;
+  margin: 0 auto; /* asegura que no quede a la izquierda */
+}
+
+.avatar-img,
+.avatar-placeholder {
+  display: block;
+  margin: 0 auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.avatar-img {
+  border: 3px solid var(--btn);
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .perfil-avatar {
+    margin-bottom: 1.5rem;
+  }
+}
+/* Centrar correctamente el bloque de avatar y formulario */
+.perfil-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center; /* cambia de flex-start a center */
+  justify-content: center; /* centra ambas columnas horizontalmente */
+  text-align: center;
+}
+
+/* Avatar centrado */
+.perfil-avatar {
+  flex: 0 0 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Imagen y placeholder del avatar */
+.avatar-img, 
+.avatar-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  background-color: var(--btn);
+  color: #fff;
+  object-fit: cover;
+  margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Formulario */
+.perfil-info {
+  flex: 1 1 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .perfil-grid {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .perfil-info {
+    text-align: center;
+    align-items: center;
+  }
+
+  .perfil-info form {
+    width: 100%;
+    max-width: 400px;
+  }
+}

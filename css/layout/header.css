@@ -1,0 +1,118 @@
+/* =======================
+   HEADER Y LOGO
+   ======================= */
+
+header {
+  background: var(--gradient-primary);
+  padding: var(--spacing-lg) 0;
+  box-shadow: var(--shadow-lg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-contenido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover {
+  transform: scale(1.02);
+}
+
+.logo i {
+  font-size: 32px;
+  transition: transform var(--transition-fast);
+}
+
+.logo h1 {
+  font-family: var(--font-family);
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  letter-spacing: 1px;
+  color: white;
+}
+
+/* ===== RESPONSIVE HEADER ===== */
+
+@media (max-width: 768px) {
+  header {
+    padding: var(--spacing-md) 0;
+  }
+
+  .logo i {
+    font-size: 24px;
+  }
+
+  .logo h1 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  header {
+    padding: var(--spacing-sm) 0;
+  }
+
+  .logo i {
+    font-size: 20px;
+  }
+
+  .logo h1 {
+    font-size: 16px;
+  }
+}
+/* ======= ADMIN NAV FIX ======= */
+@media (max-width: 768px) {
+  nav {
+    position: relative;
+    z-index: 2000;
+  }
+
+  #admin-navbar-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--color-surface, #fff);
+    border-top: 1px solid var(--color-border, #ddd);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+  }
+
+  #admin-navbar-menu.active {
+    display: flex;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  #admin-navbar-menu li {
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+
+  #admin-navbar-menu li a {
+    width: 100%;
+    display: block;
+    color: var(--color-text, #222);
+    padding: 0.75rem;
+    text-decoration: none;
+  }
+
+  #admin-navbar-menu li a:hover {
+    background: rgba(0,0,0,0.05);
+  }
+}

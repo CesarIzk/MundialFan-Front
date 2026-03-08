@@ -1,0 +1,553 @@
+/* =======================
+   CORRECCIONES DE MODO OSCURO - TODAS LAS SECCIONES
+   Agregar al final de styles.css
+   ======================= */
+
+/* ===== COMENTARIOS ===== */
+body.dark-mode .comentarios-section {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .comentario {
+  border-bottom-color: var(--border);
+  color: var(--text);
+}
+
+/* ===== EQUIPOS ===== */
+body.dark-mode .selector-pais select {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .selector-pais select:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .pais-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .pais-card h3 {
+  color: var(--text);
+}
+
+body.dark-mode .pais-card:hover h3 {
+  color: var(--btn);
+}
+
+/* ===== CAMPEONATOS ===== */
+body.dark-mode .filtro-ediciones .input-filtro {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .filtro-ediciones .input-filtro::placeholder {
+  color: rgba(241, 241, 241, 0.5);
+}
+
+body.dark-mode .edicion-item {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .edicion-info h3 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .edicion-info p {
+  color: var(--text);
+}
+
+body.dark-mode #ediciones li span {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+/* Jugadores destacados */
+body.dark-mode .jugador-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .jugador-info h3 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .jugador-pais {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .jugador-logros {
+  color: var(--text);
+}
+
+/* ===== CARACTERÃSTICAS ===== */
+body.dark-mode .caracteristicas {
+  background: var(--bg);
+}
+
+body.dark-mode .caracteristica {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .caracteristica i {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .caracteristica h3 {
+  color: var(--text);
+}
+
+body.dark-mode .caracteristica p {
+  color: var(--text);
+}
+
+/* ===== PERFIL ===== */
+body.dark-mode .perfil-grid {
+  color: var(--text);
+}
+
+body.dark-mode .avatar-img,
+body.dark-mode .avatar-placeholder {
+  background-color: var(--btn);
+  border-color: var(--btn-hover);
+}
+
+body.dark-mode .perfil-info h3 {
+  color: var(--text);
+}
+
+body.dark-mode .perfil-info label {
+  color: var(--text);
+}
+
+body.dark-mode .perfil-info input,
+body.dark-mode .perfil-info textarea,
+body.dark-mode .perfil-info select {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .perfil-info input:focus,
+body.dark-mode .perfil-info textarea:focus,
+body.dark-mode .perfil-info select:focus {
+  border-color: var(--btn);
+  background: var(--card);
+}
+
+/* ===== POSTS ===== */
+body.dark-mode .posts-container {
+  background: var(--bg);
+}
+
+body.dark-mode .post-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .post-card:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .post-autor-info h4 {
+  color: var(--text);
+}
+
+body.dark-mode .post-fecha {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .post-titulo {
+  color: var(--text);
+}
+
+body.dark-mode .post-descripcion {
+  color: var(--text);
+}
+
+body.dark-mode .post-actions {
+  border-top-color: var(--border);
+}
+
+body.dark-mode .post-actions button {
+  color: var(--text);
+}
+
+body.dark-mode .post-actions button:hover {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .destacado-post {
+  background: var(--card);
+  border-color: var(--btn);
+}
+
+body.dark-mode .destacado-contenido h2 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .destacado-contenido p {
+  color: var(--text);
+}
+
+body.dark-mode .media-selector button {
+  background: var(--border);
+}
+
+body.dark-mode .media-selector button.active-dot {
+  background: var(--btn-hover);
+}
+
+/* ===== PRODUCTOS ===== */
+body.dark-mode .productos {
+  background: var(--bg);
+}
+
+body.dark-mode .producto {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .producto:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .producto h3 {
+  color: var(--text);
+}
+
+body.dark-mode .producto:hover h3 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .producto-descripcion {
+  color: var(--text);
+}
+
+body.dark-mode .producto-imagen {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .producto .precio-original {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .productos-controles {
+  background: var(--bg);
+}
+
+body.dark-mode .productos-filtro select,
+body.dark-mode .productos-ordenar select {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* ===== ESTADÃSTICAS ===== */
+body.dark-mode .stats-filters .form-select {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .stats-filters .form-select:hover,
+body.dark-mode .stats-filters .form-select:focus {
+  border-color: var(--btn);
+  box-shadow: 0 0 0 3px rgba(176, 0, 0, 0.15);
+}
+
+body.dark-mode .stat-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .stat-card:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .stat-content h3 {
+  color: var(--text);
+}
+
+body.dark-mode .stat-content p {
+  color: rgba(241, 241, 241, 0.7);
+}
+
+body.dark-mode .stat-change {
+  background: rgba(56, 142, 60, 0.2);
+  color: #66bb6a;
+}
+
+body.dark-mode .chart-container {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .chart-container h3 {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table-container {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .stats-table-container h3 {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table thead {
+  background: rgba(176, 0, 0, 0.15);
+}
+
+body.dark-mode .stats-table th {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table td {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table .resultado {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .stats-table tbody tr {
+  border-bottom-color: var(--border);
+}
+
+body.dark-mode .stats-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .player-stats h3 {
+  color: var(--text);
+}
+
+body.dark-mode .player-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .player-card:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .player-info h4 {
+  color: var(--text);
+}
+
+body.dark-mode .player-info p {
+  color: rgba(241, 241, 241, 0.7);
+}
+
+body.dark-mode .stat-badge {
+  background: rgba(176, 0, 0, 0.2);
+  color: var(--btn-hover);
+}
+
+/* ===== AJUSTES ADICIONALES PARA HEADERS ===== */
+body.dark-mode .posts-header,
+body.dark-mode .tienda-header {
+  /* Mantener gradiente pero ajustar overlay si es necesario */
+  opacity: 1;
+}
+
+body.dark-mode .posts-header h1,
+body.dark-mode .posts-header p,
+body.dark-mode .tienda-header h1,
+body.dark-mode .tienda-header p {
+  color: white; /* Mantener blanco sobre gradiente */
+}
+
+/* ===== HERO SECTIONS ===== */
+body.dark-mode .hero-campeonatos .hero-contenido h2,
+body.dark-mode .hero-campeonatos .hero-contenido p {
+  color: white; /* Mantener blanco sobre imagen oscura */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* ===== MEJORAS DE CONTRASTE GENERAL ===== */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: var(--text);
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li,
+body.dark-mode label,
+body.dark-mode .texto {
+  color: var(--text);
+}
+
+/* ===== BORDES Y SEPARADORES ===== */
+body.dark-mode .divider,
+body.dark-mode hr {
+  background: var(--border);
+  border-color: var(--border);
+}
+
+/* ===== PLACEHOLDERS Y FONDOS SECUNDARIOS ===== */
+body.dark-mode .post-media,
+body.dark-mode .producto-imagen,
+body.dark-mode .media-container {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ===== AJUSTE DE OPACIDAD EN TEXTOS SECUNDARIOS ===== */
+body.dark-mode .post-descripcion,
+body.dark-mode .producto-descripcion,
+body.dark-mode .caracteristica p,
+body.dark-mode .jugador-logros {
+  opacity: 0.9;
+}
+
+/* ===== SELECT Y DROPDOWNS ===== */
+body.dark-mode select {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode select:focus {
+  border-color: var(--btn);
+  outline: none;
+}
+
+body.dark-mode select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ===== MEJORAS EN HOVER STATES ===== */
+body.dark-mode .post-card:hover,
+body.dark-mode .producto:hover,
+body.dark-mode .caracteristica:hover,
+body.dark-mode .stat-card:hover,
+body.dark-mode .player-card:hover,
+body.dark-mode .jugador-card:hover,
+body.dark-mode .edicion-item:hover,
+body.dark-mode .pais-card:hover {
+  box-shadow: 0 8px 16px rgba(176, 0, 0, 0.2);
+}
+
+/* ===== ICONOS ===== */
+body.dark-mode i {
+  color: var(--text);
+}
+
+body.dark-mode .caracteristica i,
+body.dark-mode .stat-icon i {
+  color: white; /* Iconos en círculos de color mantienen blanco */
+}
+
+/* ===== BADGES Y ETIQUETAS ===== */
+body.dark-mode .badge,
+body.dark-mode .descuento {
+  color: white; /* Mantener legible */
+}
+
+body.dark-mode .campeon {
+  color: #ffd54f;
+  background: rgba(255, 213, 79, 0.15);
+  border-color: rgba(255, 213, 79, 0.4);
+}
+
+body.dark-mode .subcampeon {
+  color: #e0e0e0;
+  background: rgba(224, 224, 224, 0.15);
+  border-color: rgba(224, 224, 224, 0.3);
+}
+
+/* ===== SCROLLBAR EN TABLAS ===== */
+body.dark-mode .stats-table-container::-webkit-scrollbar {
+  height: 8px;
+  background: var(--surface);
+}
+
+body.dark-mode .stats-table-container::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+body.dark-mode .stats-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--btn);
+}
+
+/* ===== INPUTS Y FORMULARIOS ESPECÃFICOS ===== */
+body.dark-mode .input-filtro,
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="number"],
+body.dark-mode textarea {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .input-filtro::placeholder,
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: rgba(241, 241, 241, 0.4);
+}
+
+body.dark-mode .input-filtro:focus,
+body.dark-mode input:focus,
+body.dark-mode textarea:focus {
+  background: var(--card);
+  border-color: var(--btn);
+  box-shadow: 0 0 0 3px rgba(176, 0, 0, 0.15);
+}
+
+/* ===== RESPONSIVE - MANTENER CONTRASTE EN MÃ"VIL ===== */
+@media (max-width: 768px) {
+  body.dark-mode .post-card,
+  body.dark-mode .producto,
+  body.dark-mode .caracteristica,
+  body.dark-mode .stat-card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  body.dark-mode .post-card:hover,
+  body.dark-mode .producto:hover,
+  body.dark-mode .caracteristica:hover,
+  body.dark-mode .stat-card:hover {
+    box-shadow: 0 4px 12px rgba(176, 0, 0, 0.25);
+  }
+}
+
+/* ===== AJUSTES FINALES DE ACCESIBILIDAD ===== */
+body.dark-mode a:not(.btn):not(.boton) {
+  color: var(--btn-hover);
+}
+
+body.dark-mode a:not(.btn):not(.boton):hover {
+  color: #ff6666;
+  text-decoration: underline;
+}
+
+/* Asegurar que los botones primarios mantengan buen contraste */
+body.dark-mode .btn,
+body.dark-mode button.btn,
+body.dark-mode .boton {
+  color: white;
+  background: var(--btn);
+}
+
+body.dark-mode .btn:hover,
+body.dark-mode button.btn:hover,
+body.dark-mode .boton:hover {
+  background: var(--btn-hover);
+  color: white;
+}

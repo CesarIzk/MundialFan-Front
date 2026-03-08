@@ -1,0 +1,196 @@
+/* =======================
+   SECCIÓN CARACTERÍSTICAS
+   ======================= */
+
+.caracteristicas {
+  background: var(--surface);
+  transition: background var(--transition-normal);
+  padding: var(--spacing-4xl) var(--spacing-lg);
+}
+
+.caracteristicas-header {
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.titulo-seccion {
+  color: var(--primary-blue);
+  font-size: 2.2rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-lg);
+  transition: color var(--transition-normal);
+}
+
+body.dark-mode .titulo-seccion {
+  color: var(--text);
+}
+
+.caracteristicas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* ===== CARACTERÍSTICA CARD ===== */
+
+.caracteristica {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-normal);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.caracteristica:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--btn);
+}
+
+.caracteristica i {
+  color: var(--primary-blue);
+  font-size: 48px;
+  margin-bottom: var(--spacing-lg);
+  transition: all var(--transition-normal);
+}
+
+body.dark-mode .caracteristica i {
+  color: var(--text);
+}
+
+.caracteristica:hover i {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.caracteristica h3 {
+  color: var(--btn);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  font-size: 1.3rem;
+  transition: color var(--transition-normal);
+}
+
+body.dark-mode .caracteristica h3 {
+  color: var(--text);
+}
+
+.caracteristica p {
+  color: var(--text);
+  font-size: var(--text-sm);
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 992px) {
+  .caracteristicas {
+    padding: var(--spacing-3xl) var(--spacing-md);
+  }
+
+  .titulo-seccion {
+    font-size: 1.8rem;
+  }
+
+  .caracteristicas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  .caracteristica i {
+    font-size: 40px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .caracteristica h3 {
+    font-size: 1.1rem;
+  }
+
+  .caracteristica p {
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 768px) {
+  .caracteristicas {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .titulo-seccion {
+    font-size: 1.6rem;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .caracteristicas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .caracteristica {
+    padding: var(--spacing-md);
+  }
+
+  .caracteristica i {
+    font-size: 32px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .caracteristica h3 {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .caracteristica p {
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 576px) {
+  .caracteristicas {
+    padding: var(--spacing-xl) var(--spacing-sm);
+  }
+
+  .titulo-seccion {
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .caracteristicas-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .caracteristica {
+    padding: var(--spacing-md);
+  }
+
+  .caracteristica i {
+    font-size: 28px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .caracteristica h3 {
+    font-size: 0.95rem;
+  }
+
+  .caracteristica:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Cards clickeables tipo menú */
+.caracteristica--link{
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.caracteristica--link:focus-visible{
+  outline: 3px solid rgba(176,0,0,0.35);
+  outline-offset: 3px;
+}

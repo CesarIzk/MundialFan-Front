@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Usuarios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-users"></i> Usuarios</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card">
+      <!-- Toolbar -->
+      <div class="adm-toolbar">
+        <input class="adm-input" id="search-input" placeholder="Buscar nombre, email, usuario...">
+        <select class="adm-select" id="filter-role" style="max-width:160px;">
+          <option value="">Todos los roles</option>
+          <option value="admin">Admin</option>
+          <option value="user">Usuario</option>
+        </select>
+        <select class="adm-select" id="filter-status" style="max-width:160px;">
+          <option value="">Todos los estados</option>
+          <option value="active">Activo</option>
+          <option value="inactive">Inactivo</option>
+        </select>
+        <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
+        <button class="adm-btn adm-btn--primary" style="margin-left:auto;" id="btn-new">
+          <i class="fas fa-plus"></i> Nuevo Usuario
+        </button>
+      </div>
+
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Posts</th>
+              <th>Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="7" class="adm-loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal crear/editar usuario -->
+<div class="adm-modal-overlay" id="modal-user">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <span id="modal-user-title">Nuevo Usuario</span>
+      <button class="adm-modal__close" onclick="closeModal('modal-user')">&times;</button>
+    </div>
+    <div class="adm-modal__body">
+      <input type="hidden" id="edit-id">
+      <div class="adm-form-grid">
+        <div class="adm-form-group">
+          <label class="adm-form-label">Nombre</label>
+          <input class="adm-input" id="edit-name" placeholder="Nombre completo">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Usuario</label>
+          <input class="adm-input" id="edit-username" placeholder="@usuario">
+        </div>
+        <div class="adm-form-group" style="grid-column:1/-1;">
+          <label class="adm-form-label">Email</label>
+          <input class="adm-input" id="edit-email" type="email" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Contraseña <small style="opacity:.6;">(dejar vacío para no cambiar)</small></label>
+          <input class="adm-input" id="edit-password" type="password" placeholder="••••••••">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Rol</label>
+          <select class="adm-select" id="edit-role">
+            <option value="user">Usuario</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Estado</label>
+          <select class="adm-select" id="edit-status">
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+          </select>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Fecha nacimiento</label>
+          <input class="adm-input" id="edit-birth" type="date">
+        </div>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="adm-btn adm-btn--ghost" onclick="closeModal('modal-user')">Cancelar</button>
+      <button class="adm-btn adm-btn--primary" id="btn-save-user"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  let users = [];
+
+  // ── Renderizar tabla ───────────────────────────────
+  function renderUsers(list) {
+    const tbody = document.getElementById('users-tbody');
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="adm-empty"><i class="fas fa-user-slash"></i>No se encontraron usuarios</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(u => `
+      <tr>
+        <td>
+          <div class="adm-user-cell">
+            <div class="adm-avatar-placeholder">${(u.name||'U')[0].toUpperCase()}</div>
+            <div>
+              <div style="font-weight:500;">${u.name}</div>
+              <div style="font-size:.75rem;color:var(--adm-muted);">@${u.username}</div>
+            </div>
+          </div>
+        </td>
+        <td style="color:var(--adm-muted);">${u.email}</td>
+        <td><span class="adm-badge ${u.role==='admin'?'adm-badge--red':'adm-badge--blue'}">${u.role}</span></td>
+        <td><span class="adm-badge ${u.status==='active'?'adm-badge--green':'adm-badge--gray'}">${u.status}</span></td>
+        <td>${u.total_posts ?? 0}</td>
+        <td style="color:var(--adm-muted);font-size:.8rem;">${u.created_at?.slice(0,10) ?? '—'}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;">
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="editUser(${u.id})">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="toggleStatus(${u.id},'${u.status === 'active' ? 'inactive' : 'active'}')" title="${u.status==='active'?'Desactivar':'Activar'}">
+              <i class="fas fa-${u.status==='active'?'ban':'check'}"></i>
+            </button>
+            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="deleteUser(${u.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // ── Cargar usuarios ────────────────────────────────
+  async function loadUsers() {
+    try {
+      const q      = document.getElementById('search-input').value.trim();
+      const role   = document.getElementById('filter-role').value;
+      const status = document.getElementById('filter-status').value;
+      const params = new URLSearchParams();
+      if (q)      params.set('q', q);
+      if (role)   params.set('role', role);
+      if (status) params.set('status', status);
+
+      const data = await adminFetch(`/admin/users?${params}`);
+      users = data.data ?? data;
+      renderUsers(users);
+    } catch(e) {
+      document.getElementById('users-tbody').innerHTML =
+        `<tr><td colspan="7" class="adm-empty">Error al cargar usuarios</td></tr>`;
+    }
+  }
+
+  // ── Editar usuario ─────────────────────────────────
+  window.editUser = async (id) => {
+    try {
+      const data = await adminFetch(`/admin/users/${id}`);
+      const u = data.data ?? data;
+      document.getElementById('modal-user-title').textContent = 'Editar Usuario';
+      document.getElementById('edit-id').value       = u.id;
+      document.getElementById('edit-name').value     = u.name ?? '';
+      document.getElementById('edit-username').value = u.username ?? '';
+      document.getElementById('edit-email').value    = u.email ?? '';
+      document.getElementById('edit-password').value = '';
+      document.getElementById('edit-role').value     = u.role ?? 'user';
+      document.getElementById('edit-status').value   = u.status ?? 'active';
+      document.getElementById('edit-birth').value    = u.birth_date?.slice(0,10) ?? '';
+      openModal('modal-user');
+    } catch(e) { showAlert('page-alert', 'Error al cargar usuario', 'danger'); }
+  };
+
+  // ── Toggle estado ──────────────────────────────────
+  window.toggleStatus = async (id, newStatus) => {
+    try {
+      await adminFetch(`/admin/users/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status: newStatus }),
+      });
+      showAlert('page-alert', `Usuario ${newStatus === 'active' ? 'activado' : 'desactivado'}.`);
+      loadUsers();
+    } catch(e) { showAlert('page-alert', e.message || 'Error', 'danger'); }
+  };
+
+  // ── Eliminar usuario ───────────────────────────────
+  window.deleteUser = (id) => {
+    confirmAction('¿Eliminar este usuario permanentemente?', async () => {
+      try {
+        await adminFetch(`/admin/users/${id}`, { method: 'DELETE' });
+        showAlert('page-alert', 'Usuario eliminado.');
+        loadUsers();
+      } catch(e) { showAlert('page-alert', e.message || 'Error', 'danger'); }
+    });
+  };
+
+  // ── Nuevo usuario ──────────────────────────────────
+  document.getElementById('btn-new').addEventListener('click', () => {
+    document.getElementById('modal-user-title').textContent = 'Nuevo Usuario';
+    document.getElementById('edit-id').value       = '';
+    document.getElementById('edit-name').value     = '';
+    document.getElementById('edit-username').value = '';
+    document.getElementById('edit-email').value    = '';
+    document.getElementById('edit-password').value = '';
+    document.getElementById('edit-role').value     = 'user';
+    document.getElementById('edit-status').value   = 'active';
+    document.getElementById('edit-birth').value    = '';
+    openModal('modal-user');
+  });
+
+  // ── Guardar usuario ────────────────────────────────
+  document.getElementById('btn-save-user').addEventListener('click', async () => {
+    const id = document.getElementById('edit-id').value;
+    const payload = {
+      name:       document.getElementById('edit-name').value.trim(),
+      username:   document.getElementById('edit-username').value.trim(),
+      email:      document.getElementById('edit-email').value.trim(),
+      role:       document.getElementById('edit-role').value,
+      status:     document.getElementById('edit-status').value,
+      birth_date: document.getElementById('edit-birth').value,
+    };
+    const pass = document.getElementById('edit-password').value;
+    if (pass) payload.password = pass;
+
+    try {
+      if (id) {
+        await adminFetch(`/admin/users/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+        showAlert('page-alert', 'Usuario actualizado.');
+      } else {
+        if (!pass) { showAlert('page-alert', 'La contraseña es requerida.', 'danger'); return; }
+        await adminFetch('/admin/users', { method: 'POST', body: JSON.stringify(payload) });
+        showAlert('page-alert', 'Usuario creado.');
+      }
+      closeModal('modal-user');
+      loadUsers();
+    } catch(e) { showAlert('page-alert', e.message || 'Error al guardar', 'danger'); }
+  });
+
+  document.getElementById('btn-search').addEventListener('click', loadUsers);
+  document.getElementById('search-input').addEventListener('keydown', e => e.key === 'Enter' && loadUsers());
+
+  loadUsers();
+});
+</script>
+</body>
+</html>

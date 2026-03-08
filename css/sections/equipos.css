@@ -1,0 +1,109 @@
+.selector-pais {
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.selector-pais select {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.selector-pais select:hover {
+  border-color: var(--btn);
+  box-shadow: 0 0 6px rgba(176, 0, 0, 0.2);
+}
+
+/* ====== GRID DE PAISES ====== */
+.paises-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-2xl);
+}
+
+.pais-card {
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.pais-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--btn);
+  box-shadow: var(--shadow-md);
+}
+
+.pais-card img {
+  width: 100px;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.pais-card h3 {
+  color: var(--btn);
+  font-weight: var(--font-weight-semibold);
+  font-size: 1.2rem;
+}
+
+body.dark-mode .pais-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .pais-card:hover {
+  border-color: var(--btn);
+}
+
+.team-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform var(--transition-fast);
+}
+
+.team-card:hover{ transform: translateY(-2px); }
+
+.team-card__link{
+  display: block;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--text);
+  text-align: center;
+}
+
+.team-card__flag{
+  width: 96px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.team-card__name{
+  margin: 0;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+}
+
+.team-card__meta{
+  margin: 6px 0 0;
+  font-size: 13px;
+  opacity: 0.8;
+}

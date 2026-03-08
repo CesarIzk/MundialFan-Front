@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Equipos Exitosos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-shield-halved"></i> Equipos Exitosos</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card">
+      <div class="adm-toolbar">
+        <input class="adm-input" id="search-input" placeholder="Buscar equipo o país...">
+        <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
+        <button class="adm-btn adm-btn--primary" style="margin-left:auto;" id="btn-new">
+          <i class="fas fa-plus"></i> Nuevo Equipo
+        </button>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr><th>Equipo</th><th>País</th><th>Títulos</th><th>Años Campeón</th><th>Mejor Resultado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="6" class="adm-loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="adm-modal-overlay" id="modal">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <span id="modal-title">Nuevo Equipo Exitoso</span>
+      <button class="adm-modal__close" onclick="closeModal('modal')">&times;</button>
+    </div>
+    <div class="adm-modal__body">
+      <input type="hidden" id="edit-id">
+      <div class="adm-form-grid">
+        <div class="adm-form-group">
+          <label class="adm-form-label">Nombre del equipo / selección</label>
+          <input class="adm-input" id="edit-name" placeholder="Ej: Brasil">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">País (ID)</label>
+          <select class="adm-select" id="edit-country">
+            <option value="">Selecciona país...</option>
+          </select>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Títulos mundiales</label>
+          <input class="adm-input" id="edit-titles" type="number" min="0" value="0">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Mejor resultado</label>
+          <input class="adm-input" id="edit-best" placeholder="Ej: Campeón 2022">
+        </div>
+        <div class="adm-form-group" style="grid-column:1/-1;">
+          <label class="adm-form-label">Años campeón (separados por coma)</label>
+          <input class="adm-input" id="edit-years" placeholder="1970, 1994, 2002...">
+        </div>
+        <div class="adm-form-group" style="grid-column:1/-1;">
+          <label class="adm-form-label">Descripción</label>
+          <textarea class="adm-textarea" id="edit-desc" placeholder="Historia y logros destacados..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="adm-btn adm-btn--ghost" onclick="closeModal('modal')">Cancelar</button>
+      <button class="adm-btn adm-btn--primary" id="btn-save"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  try {
+    const data = await adminFetch('/countries');
+    const countries = data.data ?? data;
+    const sel = document.getElementById('edit-country');
+    countries.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id; opt.textContent = c.name; sel.appendChild(opt);
+    });
+  } catch {}
+
+  function renderRows(list) {
+    const tbody = document.getElementById('tbody');
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="6" class="adm-empty"><i class="fas fa-shield-halved"></i> Sin equipos</td></tr>`; return; }
+    tbody.innerHTML = list.map(t => `
+      <tr>
+        <td style="font-weight:500;">${t.name ?? t.nombre ?? '—'}</td>
+        <td style="color:var(--adm-muted);">${t.country?.name ?? t.country_name ?? '—'}</td>
+        <td>${t.titles ?? t.titulos ?? 0}</td>
+        <td style="font-size:.8rem;color:var(--adm-muted);">${t.champion_years ?? t.anios ?? '—'}</td>
+        <td style="font-size:.82rem;">${t.best_result ?? t.mejor_resultado ?? '—'}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;">
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="editItem(${t.id})"><i class="fas fa-pen"></i></button>
+            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="delItem(${t.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function load() {
+    const q = document.getElementById('search-input').value.trim();
+    try {
+      const data = await adminFetch(`/admin/successful-teams${q?'?q='+encodeURIComponent(q):''}`);
+      renderRows(data.data??data);
+    } catch { document.getElementById('tbody').innerHTML = `<tr><td colspan="6" class="adm-empty">Error al cargar</td></tr>`; }
+  }
+
+  window.editItem = async (id) => {
+    const data = await adminFetch(`/admin/successful-teams/${id}`);
+    const t = data.data??data;
+    document.getElementById('edit-id').value      = t.id;
+    document.getElementById('edit-name').value    = t.name ?? t.nombre ?? '';
+    document.getElementById('edit-country').value = t.country_id ?? '';
+    document.getElementById('edit-titles').value  = t.titles ?? t.titulos ?? 0;
+    document.getElementById('edit-best').value    = t.best_result ?? t.mejor_resultado ?? '';
+    document.getElementById('edit-years').value   = t.champion_years ?? t.anios ?? '';
+    document.getElementById('edit-desc').value    = t.description ?? t.descripcion ?? '';
+    document.getElementById('modal-title').textContent = 'Editar Equipo';
+    openModal('modal');
+  };
+
+  window.delItem = (id) => confirmAction('¿Eliminar este equipo?', async () => {
+    await adminFetch(`/admin/successful-teams/${id}`,{method:'DELETE'});
+    showAlert('page-alert','Equipo eliminado.'); load();
+  });
+
+  document.getElementById('btn-new').addEventListener('click', () => {
+    document.getElementById('edit-id').value = '';
+    ['edit-name','edit-best','edit-years','edit-desc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('edit-titles').value  = 0;
+    document.getElementById('edit-country').value = '';
+    document.getElementById('modal-title').textContent = 'Nuevo Equipo Exitoso';
+    openModal('modal');
+  });
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const id = document.getElementById('edit-id').value;
+    const payload = {
+      name:          document.getElementById('edit-name').value.trim(),
+      country_id:    document.getElementById('edit-country').value,
+      titles:        document.getElementById('edit-titles').value,
+      best_result:   document.getElementById('edit-best').value.trim(),
+      champion_years:document.getElementById('edit-years').value.trim(),
+      description:   document.getElementById('edit-desc').value.trim(),
+    };
+    try {
+      if(id) await adminFetch(`/admin/successful-teams/${id}`,{method:'PUT',body:JSON.stringify(payload)});
+      else   await adminFetch('/admin/successful-teams',{method:'POST',body:JSON.stringify(payload)});
+      showAlert('page-alert',id?'Equipo actualizado.':'Equipo creado.');
+      closeModal('modal'); load();
+    } catch(e) { showAlert('page-alert',e.message||'Error','danger'); }
+  });
+
+  document.getElementById('btn-search').addEventListener('click', load);
+  document.getElementById('search-input').addEventListener('keydown', e => e.key==='Enter' && load());
+  load();
+});
+</script>
+</body>
+</html>

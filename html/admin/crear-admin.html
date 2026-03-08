@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Crear Administrador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;">
+      <a href="usuarios.html" class="adm-btn adm-btn--ghost"><i class="fas fa-arrow-left"></i></a>
+      <h1 class="adm-page-title" style="margin:0;"><i class="fas fa-user-shield"></i> Crear Nuevo Administrador</h1>
+    </div>
+
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card" style="max-width:680px;">
+      <div class="adm-card__header">
+        <span>Datos del nuevo administrador</span>
+      </div>
+      <div class="adm-card__body">
+
+        <div class="adm-form-grid">
+          <div class="adm-form-group">
+            <label class="adm-form-label">Nombre completo</label>
+            <input class="adm-input" id="f-name" placeholder="Nombre completo">
+          </div>
+          <div class="adm-form-group">
+            <label class="adm-form-label">Nombre de usuario</label>
+            <input class="adm-input" id="f-username" placeholder="@usuario">
+          </div>
+          <div class="adm-form-group" style="grid-column:1/-1;">
+            <label class="adm-form-label">Correo electrónico</label>
+            <input class="adm-input" id="f-email" type="email" placeholder="correo@ejemplo.com">
+          </div>
+          <div class="adm-form-group">
+            <label class="adm-form-label">Contraseña del nuevo admin</label>
+            <input class="adm-input" id="f-pass" type="password" placeholder="••••••••">
+          </div>
+          <div class="adm-form-group">
+            <label class="adm-form-label">Confirmar contraseña</label>
+            <input class="adm-input" id="f-pass2" type="password" placeholder="••••••••">
+          </div>
+        </div>
+
+        <hr style="border-color:var(--adm-border);margin:1.25rem 0;">
+
+        <div class="adm-form-group">
+          <label class="adm-form-label">
+            <i class="fas fa-lock me-1" style="color:var(--adm-warning);"></i>
+            Confirma <strong>tu</strong> contraseña (admin actual) para autorizar
+          </label>
+          <input class="adm-input" id="f-confirm-admin" type="password" placeholder="Tu contraseña actual"
+                 style="max-width:320px;">
+          <small style="color:var(--adm-muted);font-size:.75rem;display:block;margin-top:.35rem;">
+            Ingresa tu propia contraseña para autorizar la creación del nuevo administrador.
+          </small>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:.65rem;margin-top:1.5rem;">
+          <a href="usuarios.html" class="adm-btn adm-btn--ghost">
+            <i class="fas fa-arrow-left"></i> Cancelar
+          </a>
+          <button class="adm-btn adm-btn--primary" id="btn-create">
+            <i class="fas fa-save"></i> Crear Administrador
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Info de seguridad -->
+    <div style="max-width:680px;margin-top:1rem;padding:1rem 1.25rem;background:rgba(243,156,18,.08);
+                border:1px solid rgba(243,156,18,.25);border-radius:10px;font-size:.82rem;color:var(--adm-muted);">
+      <i class="fas fa-exclamation-triangle" style="color:#f39c12;margin-right:.4rem;"></i>
+      Los administradores tienen acceso completo al panel. Crea esta cuenta solo para personal de confianza.
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.getElementById('btn-create').addEventListener('click', async () => {
+  const name         = document.getElementById('f-name').value.trim();
+  const username     = document.getElementById('f-username').value.trim();
+  const email        = document.getElementById('f-email').value.trim();
+  const pass         = document.getElementById('f-pass').value;
+  const pass2        = document.getElementById('f-pass2').value;
+  const adminConfirm = document.getElementById('f-confirm-admin').value;
+
+  if (!name || !username || !email || !pass || !adminConfirm) {
+    showAlert('page-alert', 'Todos los campos son obligatorios.', 'danger'); return;
+  }
+  if (pass !== pass2) {
+    showAlert('page-alert', 'Las contraseñas no coinciden.', 'danger'); return;
+  }
+  if (pass.length < 4) {
+    showAlert('page-alert', 'La contraseña debe tener al menos 4 caracteres.', 'danger'); return;
+  }
+
+  const btn = document.getElementById('btn-create');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+
+  try {
+    await adminFetch('/admin/create-admin', {
+      method: 'POST',
+      body: JSON.stringify({ name, username, email, password: pass, confirm_admin_password: adminConfirm }),
+    });
+    showAlert('page-alert', '¡Administrador creado exitosamente!');
+    // Limpiar form
+    ['f-name','f-username','f-email','f-pass','f-pass2','f-confirm-admin'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  } catch(e) {
+    showAlert('page-alert', e.message || 'Error al crear administrador.', 'danger');
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Crear Administrador';
+  }
+});
+</script>
+</body>
+</html>

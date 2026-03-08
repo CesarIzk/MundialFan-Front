@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan - Estadísticas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div id="mf-header"></div>
+<div id="mf-nav"></div>
+
+<!-- ═══════════ CONTENIDO ÚNICO DE ESTA PÁGINA ═══════════ -->
+
+<main class="stats2026 contenedor">
+  <section class="stats2026__head">
+    <h1>Estadísticas • Mundial 2026</h1>
+  </section>
+
+  <!-- TABLAS DE GRUPOS -->
+  <section class="stats2026__section">
+    <h2>Fase de Grupos (12 grupos)</h2>
+    <div class="groups-grid" id="grupos-grid">
+      <!-- Se genera con JS o hardcoded si no hay API para esto -->
+    </div>
+  </section>
+
+  <!-- FASE FINAL -->
+  <section class="stats2026__section">
+    <h2>Fase Final (eliminación directa)</h2>
+    <div class="table-card">
+      <div class="table-wrap">
+        <table class="mf-table">
+          <thead>
+            <tr>
+              <th>Ronda</th><th>Partido</th><th>Equipo 1</th>
+              <th>Marcador</th><th>Equipo 2</th><th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-eliminatoria">
+            <tr><td>Dieciseisavos</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Dieciseisavos</td><td>2</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Octavos</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Cuartos</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Semifinal</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Final</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>3er lugar</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTADÍSTICA GENERAL -->
+  <section class="stats2026__section">
+    <h2>Estadística general (goles / amarillas / rojas)</h2>
+    <div class="table-card">
+      <div class="table-wrap">
+        <table class="mf-table">
+          <thead>
+            <tr><th>Equipo</th><th>Goles</th><th>Amarillas</th><th>Rojas</th></tr>
+          </thead>
+          <tbody id="tbody-stats">
+            <tr>
+              <td colspan="4" class="text-center py-3" style="opacity:.5;">
+                <i class="fas fa-spinner fa-spin me-2"></i>Cargando...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div id="mf-footer"></div>
+
+<script src="../js/components.js"></script>
+<script src="../js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── Generar 12 grupos hardcoded (se llenarán cuando haya API) ──
+  const grupos = 'ABCDEFGHIJKL'.split('');
+  const gruposGrid = document.getElementById('grupos-grid');
+
+  gruposGrid.innerHTML = grupos.map(letra => `
+    <article class="table-card">
+      <h3>Grupo ${letra}</h3>
+      <div class="table-wrap">
+        <table class="mf-table">
+          <thead>
+            <tr>
+              <th>Pos</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th>
+              <th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${[1,2,3,4].map(n => `
+              <tr>
+                <td>${n}</td><td>—</td><td>0</td><td>0</td><td>0</td>
+                <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  `).join('');
+
+  // ── Estadística general desde API (successful_teams) ──────────
+  apiFetch('/stats/general').then(data => {
+    const rows = data.data ?? data;
+    const tbody = document.getElementById('tbody-stats');
+    if (!rows || !rows.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center py-3" style="opacity:.5;">Sin datos aún.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.team ?? r.country ?? '—'}</td>
+        <td>${r.goals ?? 0}</td>
+        <td>${r.yellow_cards ?? 0}</td>
+        <td>${r.red_cards ?? 0}</td>
+      </tr>
+    `).join('');
+  }).catch(() => {
+    document.getElementById('tbody-stats').innerHTML =
+      `<tr><td colspan="4" class="text-center py-3" style="opacity:.5;">Sin datos aún.</td></tr>`;
+  });
+
+});
+
+// Exponer apiFetch globalmente (viene de api.js pero lo necesitamos aquí)
+function apiFetch(endpoint, options = {}) {
+  const token = localStorage.getItem('mf_token');
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+  };
+  return fetch(`http://localhost:8000/api${endpoint}`, { ...options, headers })
+    .then(r => r.json());
+}
+</script>
+</body>
+</html>

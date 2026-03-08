@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Jugadores Destacados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-star"></i> Jugadores Destacados</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card">
+      <div class="adm-toolbar">
+        <input class="adm-input" id="search-input" placeholder="Buscar jugador o país...">
+        <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
+        <button class="adm-btn adm-btn--primary" style="margin-left:auto;" id="btn-new">
+          <i class="fas fa-plus"></i> Nuevo Jugador
+        </button>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr><th>Jugador</th><th>País</th><th>Posición</th><th>Dorsal</th><th>Goles</th><th>Amarillas</th><th>Rojas</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="8" class="adm-loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="adm-modal-overlay" id="modal">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <span id="modal-title">Nuevo Jugador</span>
+      <button class="adm-modal__close" onclick="closeModal('modal')">&times;</button>
+    </div>
+    <div class="adm-modal__body">
+      <input type="hidden" id="edit-id">
+      <div class="adm-form-grid">
+        <div class="adm-form-group">
+          <label class="adm-form-label">Nombre del jugador</label>
+          <input class="adm-input" id="edit-name" placeholder="Ej: Lionel Messi">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">País (ID)</label>
+          <select class="adm-select" id="edit-country">
+            <option value="">Selecciona país...</option>
+          </select>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Posición</label>
+          <select class="adm-select" id="edit-position">
+            <option value="">Selecciona...</option>
+            <option>Portero</option><option>Defensa</option><option>Mediocampista</option><option>Delantero</option><option>Extremo</option>
+          </select>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Dorsal</label>
+          <input class="adm-input" id="edit-number" type="number" min="1" max="99">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Goles</label>
+          <input class="adm-input" id="edit-goals" type="number" min="0" value="0">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Tarjetas Amarillas</label>
+          <input class="adm-input" id="edit-yellow" type="number" min="0" value="0">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Tarjetas Rojas</label>
+          <input class="adm-input" id="edit-red" type="number" min="0" value="0">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Descripción</label>
+          <textarea class="adm-textarea" id="edit-desc" placeholder="Breve descripción..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="adm-btn adm-btn--ghost" onclick="closeModal('modal')">Cancelar</button>
+      <button class="adm-btn adm-btn--primary" id="btn-save"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // Cargar países para el select
+  try {
+    const data = await adminFetch('/countries');
+    const countries = data.data ?? data;
+    const sel = document.getElementById('edit-country');
+    countries.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id; opt.textContent = c.name;
+      sel.appendChild(opt);
+    });
+  } catch {}
+
+  function renderRows(list) {
+    const tbody = document.getElementById('tbody');
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="8" class="adm-empty"><i class="fas fa-star"></i> Sin jugadores</td></tr>`; return; }
+    tbody.innerHTML = list.map(p => `
+      <tr>
+        <td style="font-weight:500;">${p.name ?? p.nombre ?? '—'}</td>
+        <td style="color:var(--adm-muted);">${p.country?.name ?? p.country_name ?? '—'}</td>
+        <td>${p.position ?? p.posicion ?? '—'}</td>
+        <td>${p.number ?? p.dorsal ?? '—'}</td>
+        <td>${p.goals ?? p.goles ?? 0}</td>
+        <td>${p.yellow_cards ?? p.amarillas ?? 0}</td>
+        <td>${p.red_cards ?? p.rojas ?? 0}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;">
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="editItem(${p.id})"><i class="fas fa-pen"></i></button>
+            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="delItem(${p.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function load() {
+    const q = document.getElementById('search-input').value.trim();
+    try {
+      const data = await adminFetch(`/admin/featured-players${q?'?q='+encodeURIComponent(q):''}`);
+      renderRows(data.data??data);
+    } catch { document.getElementById('tbody').innerHTML = `<tr><td colspan="8" class="adm-empty">Error al cargar</td></tr>`; }
+  }
+
+  window.editItem = async (id) => {
+    const data = await adminFetch(`/admin/featured-players/${id}`);
+    const p = data.data??data;
+    document.getElementById('edit-id').value       = p.id;
+    document.getElementById('edit-name').value     = p.name ?? p.nombre ?? '';
+    document.getElementById('edit-country').value  = p.country_id ?? '';
+    document.getElementById('edit-position').value = p.position ?? p.posicion ?? '';
+    document.getElementById('edit-number').value   = p.number ?? p.dorsal ?? '';
+    document.getElementById('edit-goals').value    = p.goals ?? p.goles ?? 0;
+    document.getElementById('edit-yellow').value   = p.yellow_cards ?? p.amarillas ?? 0;
+    document.getElementById('edit-red').value      = p.red_cards ?? p.rojas ?? 0;
+    document.getElementById('edit-desc').value     = p.description ?? p.descripcion ?? '';
+    document.getElementById('modal-title').textContent = 'Editar Jugador';
+    openModal('modal');
+  };
+
+  window.delItem = (id) => confirmAction('¿Eliminar este jugador?', async () => {
+    await adminFetch(`/admin/featured-players/${id}`,{method:'DELETE'});
+    showAlert('page-alert','Jugador eliminado.'); load();
+  });
+
+  document.getElementById('btn-new').addEventListener('click', () => {
+    document.getElementById('edit-id').value = '';
+    ['edit-name','edit-number','edit-desc'].forEach(id => document.getElementById(id).value = '');
+    ['edit-goals','edit-yellow','edit-red'].forEach(id => document.getElementById(id).value = 0);
+    document.getElementById('edit-country').value  = '';
+    document.getElementById('edit-position').value = '';
+    document.getElementById('modal-title').textContent = 'Nuevo Jugador';
+    openModal('modal');
+  });
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const id = document.getElementById('edit-id').value;
+    const payload = {
+      name:         document.getElementById('edit-name').value.trim(),
+      country_id:   document.getElementById('edit-country').value,
+      position:     document.getElementById('edit-position').value,
+      number:       document.getElementById('edit-number').value,
+      goals:        document.getElementById('edit-goals').value,
+      yellow_cards: document.getElementById('edit-yellow').value,
+      red_cards:    document.getElementById('edit-red').value,
+      description:  document.getElementById('edit-desc').value.trim(),
+    };
+    try {
+      if(id) await adminFetch(`/admin/featured-players/${id}`,{method:'PUT',body:JSON.stringify(payload)});
+      else   await adminFetch('/admin/featured-players',{method:'POST',body:JSON.stringify(payload)});
+      showAlert('page-alert',id?'Jugador actualizado.':'Jugador creado.');
+      closeModal('modal'); load();
+    } catch(e) { showAlert('page-alert',e.message||'Error','danger'); }
+  });
+
+  document.getElementById('btn-search').addEventListener('click', load);
+  document.getElementById('search-input').addEventListener('keydown', e => e.key==='Enter' && load());
+  load();
+});
+</script>
+</body>
+</html>

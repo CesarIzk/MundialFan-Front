@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Reportes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+  <style>
+    .metric-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .metric-card{background:var(--adm-surface);border:1px solid var(--adm-border);border-radius:12px;padding:1.5rem;text-align:center;}
+    .metric-card i{font-size:2rem;display:block;margin-bottom:.75rem;}
+    .metric-card h3{font-size:2rem;font-weight:700;margin:.25rem 0;}
+    .metric-card p{color:var(--adm-muted);font-size:.82rem;margin:0;}
+    .metric-card small{font-size:.74rem;}
+    .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+    .top10-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+    @media(max-width:900px){.charts-row,.top10-row{grid-template-columns:1fr;}}
+    .top-list{list-style:none;padding:0;margin:0;}
+    .top-list li{display:flex;align-items:center;justify-content:space-between;
+                 padding:.7rem 1.25rem;border-bottom:1px solid var(--adm-border);}
+    .top-list li:last-child{border-bottom:none;}
+    .top-num{width:26px;height:26px;border-radius:50%;background:var(--adm-accent);
+             display:grid;place-items:center;font-size:.78rem;font-weight:700;color:#fff;flex-shrink:0;}
+    .top-info{flex:1;margin-left:.65rem;}
+    .top-info strong{display:block;font-size:.87rem;}
+    .top-info span{font-size:.74rem;color:var(--adm-muted);}
+    .top-badge{background:rgba(231,76,60,.18);color:#e74c3c;padding:.2rem .5rem;border-radius:6px;font-size:.78rem;font-weight:600;}
+    .top-badge.blue{background:rgba(52,152,219,.18);color:#3498db;}
+  </style>
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-chart-line"></i> Reportes y Estadísticas</h1>
+
+    <!-- Filtros -->
+    <div class="adm-card" style="margin-bottom:1.25rem;">
+      <div class="adm-card__body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.85rem;align-items:end;">
+          <div class="adm-form-group" style="margin:0;">
+            <label class="adm-form-label">Fecha Inicio</label>
+            <input class="adm-input" type="date" id="filter-start">
+          </div>
+          <div class="adm-form-group" style="margin:0;">
+            <label class="adm-form-label">Fecha Fin</label>
+            <input class="adm-input" type="date" id="filter-end">
+          </div>
+          <div class="adm-form-group" style="margin:0;">
+            <label class="adm-form-label">Tipo de Reporte</label>
+            <select class="adm-select" id="filter-type">
+              <option value="general">General</option>
+              <option value="usuarios">Solo Usuarios</option>
+              <option value="publicaciones">Solo Publicaciones</option>
+              <option value="actividad">Actividad</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:.5rem;">
+            <button class="adm-btn adm-btn--primary" id="btn-generate" style="flex:1;">
+              <i class="fas fa-search"></i> Generar
+            </button>
+            <button class="adm-btn adm-btn--success" id="btn-export" title="Exportar CSV">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métricas -->
+    <div class="metric-cards">
+      <div class="metric-card">
+        <i class="fas fa-users" style="color:#3498db;"></i>
+        <h3 id="m-users">—</h3>
+        <p>Total Usuarios Registrados</p>
+        <small id="m-users-pct" style="color:#2ecc71;"></small>
+      </div>
+      <div class="metric-card">
+        <i class="fas fa-file-alt" style="color:#2ecc71;"></i>
+        <h3 id="m-posts">—</h3>
+        <p>Total Publicaciones</p>
+        <small id="m-posts-pct" style="color:#2ecc71;"></small>
+      </div>
+      <div class="metric-card">
+        <i class="fas fa-heart" style="color:#e74c3c;"></i>
+        <h3 id="m-likes">—</h3>
+        <p>Total Interacciones (Likes)</p>
+        <small id="m-likes-avg" style="color:#3498db;"></small>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="charts-row">
+      <div class="adm-card">
+        <div class="adm-card__header"><span><i class="fas fa-chart-bar me-2"></i>Usuarios por País</span></div>
+        <div class="adm-card__body"><canvas id="paisesChart" height="200"></canvas></div>
+      </div>
+      <div class="adm-card">
+        <div class="adm-card__header"><span><i class="fas fa-chart-pie me-2"></i>Tipos de Contenido</span></div>
+        <div class="adm-card__body"><canvas id="contenidoChart" height="200"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tabla detallada (vw_daily_report) -->
+    <div class="adm-card" style="margin-bottom:1.25rem;">
+      <div class="adm-card__header">
+        <span><i class="fas fa-table me-2"></i>Detalles del Período</span>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table" id="report-table">
+          <thead>
+            <tr><th>Fecha</th><th>Nuevos Usuarios</th><th>Nuevas Publicaciones</th><th>Total Likes</th><th>Usuarios Activos</th></tr>
+          </thead>
+          <tbody id="tbl-detail">
+            <tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--adm-muted);">
+              <i class="fas fa-spinner fa-spin"></i> Cargando...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Top 10 -->
+    <div class="top10-row">
+      <div class="adm-card">
+        <div class="adm-card__header"><span><i class="fas fa-trophy me-2"></i>Top 10 Usuarios Más Activos</span></div>
+        <ul class="top-list" id="top-users">
+          <li><span style="color:var(--adm-muted);padding:.5rem 0;"><i class="fas fa-spinner fa-spin"></i></span></li>
+        </ul>
+      </div>
+      <div class="adm-card">
+        <div class="adm-card__header"><span><i class="fas fa-fire me-2"></i>Top 10 Publicaciones Más Populares</span></div>
+        <ul class="top-list" id="top-posts">
+          <li><span style="color:var(--adm-muted);padding:.5rem 0;"><i class="fas fa-spinner fa-spin"></i></span></li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="admin.js"></script>
+<script>
+// Inicializa fechas por defecto (últimos 30 días)
+const today = new Date();
+const ago30 = new Date(today); ago30.setDate(today.getDate() - 30);
+document.getElementById('filter-start').value = ago30.toISOString().slice(0,10);
+document.getElementById('filter-end').value   = today.toISOString().slice(0,10);
+
+let chartPaises    = null;
+let chartContenido = null;
+let detailData     = [];
+
+function buildParams() {
+  const start = document.getElementById('filter-start').value;
+  const end   = document.getElementById('filter-end').value;
+  const type  = document.getElementById('filter-type').value;
+  const p = new URLSearchParams();
+  if (start) p.set('fecha_inicio', start);
+  if (end)   p.set('fecha_fin', end);
+  if (type)  p.set('tipo', type);
+  return p;
+}
+
+async function loadMetrics(params) {
+  try {
+    const data = await adminFetch(`/admin/reports/metrics?${params}`);
+    const m = data.data ?? data;
+    document.getElementById('m-users').textContent = m.total_usuarios ?? m.total_users ?? '—';
+    document.getElementById('m-posts').textContent = m.total_publicaciones ?? m.total_posts ?? '—';
+    document.getElementById('m-likes').textContent = m.total_likes ?? '—';
+    const upct = m.usuarios_pct ?? m.users_pct ?? 0;
+    const ppct = m.publicaciones_pct ?? m.posts_pct ?? 0;
+    const lavg = Number(m.likes_promedio ?? m.likes_avg ?? 0).toFixed(1);
+    document.getElementById('m-users-pct').innerHTML = `<i class="fas fa-arrow-up"></i> ${upct}% vs mes anterior`;
+    document.getElementById('m-posts-pct').innerHTML = `<i class="fas fa-arrow-up"></i> ${ppct}% vs mes anterior`;
+    document.getElementById('m-likes-avg').innerHTML = `<i class="fas fa-chart-line"></i> Promedio: ${lavg} por post`;
+  } catch { /* silencioso */ }
+}
+
+async function loadCharts(params) {
+  // Países
+  try {
+    const data  = await adminFetch(`/admin/reports/users-by-country?${params}`);
+    const rows  = data.data ?? data;
+    const labels = rows.map(r => r.country ?? r.pais ?? '—');
+    const values = rows.map(r => r.total ?? r.count ?? 0);
+    const ctx1 = document.getElementById('paisesChart').getContext('2d');
+    if (chartPaises) chartPaises.destroy();
+    chartPaises = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets:[{ label:'Usuarios', data:values,
+          backgroundColor:'rgba(52,152,219,.7)', borderColor:'#3498db', borderWidth:1 }]
+      },
+      options:{ responsive:true, plugins:{legend:{display:false}},
+        scales:{ x:{ticks:{color:'#7a8099'}}, y:{beginAtZero:true,ticks:{color:'#7a8099'}} } }
+    });
+  } catch { document.getElementById('paisesChart').parentElement.innerHTML = '<p style="color:var(--adm-muted);text-align:center;padding:1rem;">No disponible</p>'; }
+
+  // Tipos de contenido
+  try {
+    const data  = await adminFetch(`/admin/reports/content-types?${params}`);
+    const rows  = data.data ?? data;
+    const labels = rows.map(r => r.type ?? r.tipo ?? '—');
+    const values = rows.map(r => r.total ?? r.count ?? 0);
+    const ctx2 = document.getElementById('contenidoChart').getContext('2d');
+    if (chartContenido) chartContenido.destroy();
+    chartContenido = new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets:[{ data:values,
+          backgroundColor:['rgba(52,152,219,.8)','rgba(46,204,113,.8)','rgba(231,76,60,.8)','rgba(243,156,18,.8)'],
+          borderWidth:0 }]
+      },
+      options:{ responsive:true, plugins:{legend:{position:'bottom',labels:{color:'#7a8099',font:{family:'Oswald'}}}} }
+    });
+  } catch { document.getElementById('contenidoChart').parentElement.innerHTML = '<p style="color:var(--adm-muted);text-align:center;padding:1rem;">No disponible</p>'; }
+}
+
+async function loadDetail(params) {
+  try {
+    const data = await adminFetch(`/admin/reports/daily?${params}`);
+    detailData  = data.data ?? data;
+    const tbody = document.getElementById('tbl-detail');
+    if (!detailData.length) {
+      tbody.innerHTML = `<tr><td colspan="5" style="padding:1.5rem;text-align:center;color:var(--adm-muted);">Sin datos para el período</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = detailData.map(r => `
+      <tr>
+        <td style="font-weight:500;">${r.fecha ?? r.date ?? '—'}</td>
+        <td>${r.nuevosUsuarios ?? r.new_users ?? 0}</td>
+        <td>${r.nuevasPublicaciones ?? r.new_posts ?? 0}</td>
+        <td>${r.totalLikes ?? r.total_likes ?? 0}</td>
+        <td>${r.usuariosActivos ?? r.active_users ?? 0}</td>
+      </tr>
+    `).join('');
+  } catch {
+    document.getElementById('tbl-detail').innerHTML =
+      `<tr><td colspan="5" style="padding:1.5rem;text-align:center;color:var(--adm-muted);">No disponible</td></tr>`;
+  }
+}
+
+async function loadTop(params) {
+  // Top usuarios
+  try {
+    const data  = await adminFetch(`/admin/reports/top-users?limit=10&${params}`);
+    const users = data.data ?? data;
+    document.getElementById('top-users').innerHTML = users.map((u, i) => `
+      <li>
+        <div class="top-num">${i+1}</div>
+        <div class="top-info">
+          <strong>@${u.username ?? '—'}</strong>
+          <span>${u.nombre ?? u.name ?? '—'}</span>
+        </div>
+        <span class="top-badge blue">${u.posts ?? u.publicaciones ?? 0} posts</span>
+      </li>
+    `).join('') || '<li style="color:var(--adm-muted);padding:.75rem 1.25rem;">Sin datos</li>';
+  } catch { document.getElementById('top-users').innerHTML = '<li style="color:var(--adm-muted);padding:.75rem 1.25rem;">No disponible</li>'; }
+
+  // Top publicaciones
+  try {
+    const data  = await adminFetch(`/admin/reports/top-posts?limit=10&${params}`);
+    const posts = data.data ?? data;
+    document.getElementById('top-posts').innerHTML = posts.map((p, i) => `
+      <li>
+        <div class="top-num">${i+1}</div>
+        <div class="top-info">
+          <strong>${(p.texto ?? p.content ?? '—').slice(0,55)}…</strong>
+          <span>Por @${p.autor ?? p.author ?? '—'}</span>
+        </div>
+        <span class="top-badge"><i class="fas fa-heart"></i> ${p.likes ?? p.likes_count ?? 0}</span>
+      </li>
+    `).join('') || '<li style="color:var(--adm-muted);padding:.75rem 1.25rem;">Sin datos</li>';
+  } catch { document.getElementById('top-posts').innerHTML = '<li style="color:var(--adm-muted);padding:.75rem 1.25rem;">No disponible</li>'; }
+}
+
+async function runAll() {
+  const params = buildParams();
+  await Promise.allSettled([
+    loadMetrics(params),
+    loadCharts(params),
+    loadDetail(params),
+    loadTop(params),
+  ]);
+}
+
+// Exportar CSV
+document.getElementById('btn-export').addEventListener('click', () => {
+  if (!detailData.length) { alert('Genera un reporte primero.'); return; }
+  const header = 'Fecha,Nuevos Usuarios,Nuevas Publicaciones,Total Likes,Usuarios Activos';
+  const rows = detailData.map(r =>
+    [r.fecha??r.date??'',r.nuevosUsuarios??r.new_users??0,r.nuevasPublicaciones??r.new_posts??0,r.totalLikes??r.total_likes??0,r.usuariosActivos??r.active_users??0].join(',')
+  );
+  const csv  = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type:'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a'); a.href = url;
+  a.download = `reporte_${document.getElementById('filter-start').value}_${document.getElementById('filter-end').value}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+});
+
+document.getElementById('btn-generate').addEventListener('click', runAll);
+document.addEventListener('DOMContentLoaded', runAll);
+</script>
+</body>
+</html>

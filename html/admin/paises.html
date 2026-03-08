@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Países</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-globe-americas"></i> Países</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card">
+      <div class="adm-toolbar">
+        <input class="adm-input" id="search-input" placeholder="Buscar país...">
+        <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
+        <button class="adm-btn adm-btn--primary" style="margin-left:auto;" id="btn-new">
+          <i class="fas fa-plus"></i> Nuevo País
+        </button>
+      </div>
+
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Bandera</th><th>País</th><th>Código</th><th>Continente</th>
+              <th>Títulos</th><th>Imágenes</th><th>Videos</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="countries-tbody">
+            <tr><td colspan="8" class="adm-loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal país -->
+<div class="adm-modal-overlay" id="modal-country">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <span id="modal-country-title">Nuevo País</span>
+      <button class="adm-modal__close" onclick="closeModal('modal-country')">&times;</button>
+    </div>
+    <div class="adm-modal__body">
+      <input type="hidden" id="edit-id">
+      <div class="adm-form-grid">
+        <div class="adm-form-group">
+          <label class="adm-form-label">Nombre</label>
+          <input class="adm-input" id="edit-name" placeholder="Ej: México">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Código (ISO)</label>
+          <input class="adm-input" id="edit-code" placeholder="MX" maxlength="3">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Continente</label>
+          <select class="adm-select" id="edit-continent">
+            <option value="">Selecciona</option>
+            <option>CONCACAF</option><option>CONMEBOL</option><option>UEFA</option>
+            <option>AFC</option><option>CAF</option><option>OFC</option>
+          </select>
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Títulos Mundiales</label>
+          <input class="adm-input" id="edit-titles" type="number" min="0" value="0">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Participaciones</label>
+          <input class="adm-input" id="edit-participations" type="number" min="0" value="0">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Entrenador</label>
+          <input class="adm-input" id="edit-coach" placeholder="Nombre del DT">
+        </div>
+        <div class="adm-form-group">
+          <label class="adm-form-label">Mejor Jugador</label>
+          <input class="adm-input" id="edit-best-player" placeholder="Nombre">
+        </div>
+        <div class="adm-form-group" style="grid-column:1/-1;">
+          <label class="adm-form-label">Bandera (imagen)</label>
+          <input class="adm-input" id="edit-flag" type="file" accept="image/*">
+        </div>
+        <div class="adm-form-group" style="grid-column:1/-1;">
+          <label class="adm-form-label">Imágenes de galería (múltiples)</label>
+          <input class="adm-input" id="edit-images" type="file" accept="image/*" multiple>
+        </div>
+        <div class="adm-form-group" style="grid-column:1/-1;">
+          <label class="adm-form-label">URL de Video (YouTube embed)</label>
+          <input class="adm-input" id="edit-video-url" placeholder="https://www.youtube.com/embed/...">
+        </div>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="adm-btn adm-btn--ghost" onclick="closeModal('modal-country')">Cancelar</button>
+      <button class="adm-btn adm-btn--primary" id="btn-save-country"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const API_BASE = 'http://localhost:8000';
+
+  function renderCountries(list) {
+    const tbody = document.getElementById('countries-tbody');
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="8" class="adm-empty"><i class="fas fa-globe"></i>Sin países</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(c => `
+      <tr>
+        <td>
+          ${c.flag
+            ? `<img src="${API_BASE}/uploads/${c.flag}" style="width:40px;height:27px;object-fit:cover;border-radius:4px;">`
+            : `<div style="width:40px;height:27px;background:var(--adm-surface2);border-radius:4px;"></div>`}
+        </td>
+        <td style="font-weight:500;">${c.name}</td>
+        <td style="color:var(--adm-muted);">${c.code ?? '—'}</td>
+        <td>${c.continent ?? '—'}</td>
+        <td>${c.titles ?? 0}</td>
+        <td>${c.images?.length ?? 0}</td>
+        <td>${c.videos?.length ?? 0}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;">
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="editCountry(${c.id})">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="deleteCountry(${c.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function loadCountries() {
+    const q = document.getElementById('search-input').value.trim();
+    try {
+      const data = await adminFetch(`/admin/countries${q ? '?q=' + encodeURIComponent(q) : ''}`);
+      renderCountries(data.data ?? data);
+    } catch(e) {
+      document.getElementById('countries-tbody').innerHTML =
+        `<tr><td colspan="8" class="adm-empty">Error al cargar</td></tr>`;
+    }
+  }
+
+  window.editCountry = async (id) => {
+    try {
+      const data = await adminFetch(`/admin/countries/${id}`);
+      const c = data.data ?? data;
+      document.getElementById('modal-country-title').textContent = 'Editar País';
+      document.getElementById('edit-id').value             = c.id;
+      document.getElementById('edit-name').value           = c.name ?? '';
+      document.getElementById('edit-code').value           = c.code ?? '';
+      document.getElementById('edit-continent').value      = c.continent ?? '';
+      document.getElementById('edit-titles').value         = c.titles ?? 0;
+      document.getElementById('edit-participations').value = c.participations ?? 0;
+      document.getElementById('edit-coach').value          = c.coach ?? '';
+      document.getElementById('edit-best-player').value    = c.best_player ?? '';
+      document.getElementById('edit-video-url').value      = c.videos?.[0]?.url ?? '';
+      openModal('modal-country');
+    } catch(e) { showAlert('page-alert', 'Error al cargar país', 'danger'); }
+  };
+
+  window.deleteCountry = (id) => {
+    confirmAction('¿Eliminar este país y todo su contenido?', async () => {
+      try {
+        await adminFetch(`/admin/countries/${id}`, { method: 'DELETE' });
+        showAlert('page-alert', 'País eliminado.');
+        loadCountries();
+      } catch(e) { showAlert('page-alert', e.message || 'Error', 'danger'); }
+    });
+  };
+
+  document.getElementById('btn-new').addEventListener('click', () => {
+    document.getElementById('modal-country-title').textContent = 'Nuevo País';
+    ['edit-id','edit-name','edit-code','edit-coach','edit-best-player','edit-video-url'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('edit-continent').value      = '';
+    document.getElementById('edit-titles').value         = 0;
+    document.getElementById('edit-participations').value = 0;
+    openModal('modal-country');
+  });
+
+  document.getElementById('btn-save-country').addEventListener('click', async () => {
+    const id  = document.getElementById('edit-id').value;
+    const fd  = new FormData();
+    fd.append('name',           document.getElementById('edit-name').value.trim());
+    fd.append('code',           document.getElementById('edit-code').value.trim().toUpperCase());
+    fd.append('continent',      document.getElementById('edit-continent').value);
+    fd.append('titles',         document.getElementById('edit-titles').value);
+    fd.append('participations', document.getElementById('edit-participations').value);
+    fd.append('coach',          document.getElementById('edit-coach').value.trim());
+    fd.append('best_player',    document.getElementById('edit-best-player').value.trim());
+    fd.append('video_url',      document.getElementById('edit-video-url').value.trim());
+
+    const flagFile = document.getElementById('edit-flag').files[0];
+    if (flagFile) fd.append('flag', flagFile);
+
+    const imgFiles = document.getElementById('edit-images').files;
+    for (const f of imgFiles) fd.append('images[]', f);
+
+    try {
+      if (id) {
+        await adminFetchForm(`/admin/countries/${id}`, fd, 'POST'); // POST con _method=PUT
+      } else {
+        await adminFetchForm('/admin/countries', fd);
+      }
+      showAlert('page-alert', id ? 'País actualizado.' : 'País creado.');
+      closeModal('modal-country');
+      loadCountries();
+    } catch(e) { showAlert('page-alert', e.message || 'Error al guardar', 'danger'); }
+  });
+
+  document.getElementById('btn-search').addEventListener('click', loadCountries);
+  document.getElementById('search-input').addEventListener('keydown', e => e.key === 'Enter' && loadCountries());
+  loadCountries();
+});
+</script>
+</body>
+</html>

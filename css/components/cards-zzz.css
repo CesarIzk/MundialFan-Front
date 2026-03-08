@@ -1,0 +1,209 @@
+/* ===========================================================
+   Estilos del Feed Estilo Zenless Zone Zero (MundialFan)
+   =========================================================== */
+
+.zzz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+  padding: 1rem;
+}
+
+.zzz-card {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.zzz-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.zzz-media {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.zzz-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.2));
+  color: #fff;
+}
+
+.zzz-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
+}
+
+.zzz-user {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.zzz-like {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.zzz-like img {
+  width: 14px;
+  height: 14px;
+}
+
+/* ========= 🌙 Tema oscuro ========= */
+body.dark-mode .zzz-card {
+  background: #1a1a1a;
+}
+body.dark-mode .zzz-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.25));
+}
+/* ==== MODAL DE PUBLICACIÓN ==== */
+.zzz-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.zzz-modal-content {
+  background: #111;
+  border-radius: 1rem;
+  max-width: 800px;
+  width: 100%;
+  color: #fff;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.zzz-modal-content img, 
+.zzz-modal-content video {
+  width: 100%;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+.zzz-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+}
+/* === MODAL DE PUBLICACIÓN === */
+.zzz-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: none; /* se muestra con JS */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow-y: auto;
+  backdrop-filter: blur(4px);
+}
+
+.zzz-modal-content {
+  background: #1c1c1c;
+  color: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 800px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: modalFade 0.3s ease;
+}
+
+@keyframes modalFade {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* === MULTIMEDIA INTERNA === */
+.zzz-modal-content img,
+.zzz-modal-content video {
+  width: 100%;
+  max-height: 450px;
+  object-fit: contain; /* mantiene proporciones */
+  border-radius: 12px;
+  background: #000;
+  margin-bottom: 1rem;
+}
+
+/* === TEXTO INTERNO === */
+.zzz-modal-content h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.zzz-modal-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+/* === BOTÓN CERRAR === */
+.zzz-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.zzz-close:hover {
+  transform: scale(1.2);
+  color: #ff4040;
+}
+
+/* === MODO CLARO === */
+body:not(.dark-mode) .zzz-modal-content {
+  background: #fff;
+  color: #222;
+}
+
+body:not(.dark-mode) .zzz-modal {
+  background: rgba(255, 255, 255, 0.9);
+}
+@media (max-width: 600px) {
+  .zzz-media {
+    height: 220px;
+  }
+}

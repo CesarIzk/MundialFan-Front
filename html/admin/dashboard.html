@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+  <style>
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .kpi-card{background:var(--adm-surface);border:1px solid var(--adm-border);border-radius:12px;padding:1.1rem 1.25rem;display:flex;align-items:center;gap:1rem;}
+    .kpi-card__icon{width:52px;height:52px;border-radius:10px;display:grid;place-items:center;font-size:1.4rem;flex-shrink:0;}
+    .kpi-card__label{font-size:.72rem;color:var(--adm-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.15rem;}
+    .kpi-card__value{font-size:1.8rem;font-weight:700;line-height:1;}
+    .kpi-card__sub{font-size:.72rem;margin-top:.2rem;}
+    .kpi--blue   .kpi-card__icon{background:rgba(41,128,185,.15);color:#3498db;}
+    .kpi--green  .kpi-card__icon{background:rgba(39,174,96,.15);color:#2ecc71;}
+    .kpi--info   .kpi-card__icon{background:rgba(22,160,133,.15);color:#1abc9c;}
+    .kpi--yellow .kpi-card__icon{background:rgba(243,156,18,.15);color:#f39c12;}
+    .kpi--gray   .kpi-card__icon{background:rgba(122,128,153,.15);color:#95a5a6;}
+    .kpi--pink   .kpi-card__icon{background:rgba(232,62,140,.15);color:#e83e8c;}
+    .two-col{display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+    @media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+    .adm-table td.loading-cell{padding:2rem;color:var(--adm-muted);text-align:center;}
+  </style>
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+
+    <!-- 6 KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi--blue">
+        <div class="kpi-card__icon"><i class="fas fa-users"></i></div>
+        <div>
+          <div class="kpi-card__label">Total Usuarios</div>
+          <div class="kpi-card__value" id="kpi-users">—</div>
+          <div class="kpi-card__sub" id="kpi-users-sub" style="color:var(--adm-muted);">cargando...</div>
+        </div>
+      </div>
+      <div class="kpi-card kpi--green">
+        <div class="kpi-card__icon"><i class="fas fa-file-alt"></i></div>
+        <div>
+          <div class="kpi-card__label">Publicaciones</div>
+          <div class="kpi-card__value" id="kpi-posts">—</div>
+          <div class="kpi-card__sub" id="kpi-posts-sub" style="color:var(--adm-muted);">cargando...</div>
+        </div>
+      </div>
+      <div class="kpi-card kpi--info">
+        <div class="kpi-card__icon"><i class="fas fa-user-check"></i></div>
+        <div>
+          <div class="kpi-card__label">Usuarios Activos</div>
+          <div class="kpi-card__value" id="kpi-active">—</div>
+          <div class="kpi-card__sub" style="color:var(--adm-muted);">Última semana</div>
+        </div>
+      </div>
+      <div class="kpi-card kpi--yellow">
+        <div class="kpi-card__icon"><i class="fas fa-eye-slash"></i></div>
+        <div>
+          <div class="kpi-card__label">Contenido Oculto</div>
+          <div class="kpi-card__value" id="kpi-hidden">—</div>
+          <div class="kpi-card__sub" style="color:#f39c12;">Requiere revisión</div>
+        </div>
+      </div>
+      <div class="kpi-card kpi--gray">
+        <div class="kpi-card__icon"><i class="fas fa-comments"></i></div>
+        <div>
+          <div class="kpi-card__label">Comentarios Totales</div>
+          <div class="kpi-card__value" id="kpi-comments">—</div>
+          <div class="kpi-card__sub" style="color:var(--adm-muted);">en todas las publicaciones</div>
+        </div>
+      </div>
+      <div class="kpi-card kpi--pink">
+        <div class="kpi-card__icon"><i class="fas fa-heart"></i></div>
+        <div>
+          <div class="kpi-card__label">Total Likes</div>
+          <div class="kpi-card__value" id="kpi-likes">—</div>
+          <div class="kpi-card__sub" style="color:var(--adm-muted);">en todas las publicaciones</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico + Top Usuarios -->
+    <div class="two-col">
+      <div class="adm-card">
+        <div class="adm-card__header">
+          <span><i class="fas fa-chart-line me-2"></i>Actividad de los últimos 7 días</span>
+          <div style="display:flex;gap:.5rem;">
+            <span style="font-size:.75rem;color:#3498db;"><i class="fas fa-circle"></i> Posts</span>
+            <span style="font-size:.75rem;color:#e83e8c;"><i class="fas fa-circle"></i> Likes</span>
+            <span style="font-size:.75rem;color:#2ecc71;"><i class="fas fa-circle"></i> Usuarios</span>
+          </div>
+        </div>
+        <div class="adm-card__body">
+          <canvas id="activityChart" height="120"></canvas>
+        </div>
+      </div>
+
+      <div class="adm-card">
+        <div class="adm-card__header">
+          <span><i class="fas fa-star me-2"></i>Top Usuarios</span>
+          <a href="usuarios.html" class="adm-btn adm-btn--ghost adm-btn--sm">Ver todos</a>
+        </div>
+        <div class="adm-card__body" id="top-users-list" style="padding:0;">
+          <div class="adm-loading"><i class="fas fa-spinner fa-spin"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actividad Reciente -->
+    <div class="adm-card">
+      <div class="adm-card__header">
+        <span><i class="fas fa-clock me-2"></i>Actividad Reciente (vw_daily_report)</span>
+        <a href="reportes.html" class="adm-btn adm-btn--ghost adm-btn--sm">Ver reportes</a>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr><th>Fecha</th><th>Nuevas Publicaciones</th><th>Total Likes</th><th>Nuevos Usuarios</th><th>Usuarios Activos</th></tr>
+          </thead>
+          <tbody id="tbl-activity">
+            <tr><td colspan="5" class="loading-cell"><i class="fas fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // ── KPIs ──────────────────────────────────────────────────────────
+  async function loadKPIs() {
+    try {
+      const stats = await adminFetch('/admin/dashboard/stats');
+      const s = stats.data ?? stats;
+      document.getElementById('kpi-users').textContent    = s.total_usuarios ?? s.total_users ?? '—';
+      document.getElementById('kpi-posts').textContent    = s.total_publicaciones ?? s.total_posts ?? '—';
+      document.getElementById('kpi-active').textContent   = s.usuarios_activos ?? s.active_users ?? '—';
+      document.getElementById('kpi-hidden').textContent   = s.contenido_oculto ?? s.hidden_posts ?? '—';
+      document.getElementById('kpi-comments').textContent = s.total_comentarios ?? s.total_comments ?? '—';
+      document.getElementById('kpi-likes').textContent    = s.total_likes ?? '—';
+
+      const usersToday = s.usuarios_hoy ?? s.users_today ?? 0;
+      const postsToday = s.publicaciones_hoy ?? s.posts_today ?? 0;
+      document.getElementById('kpi-users-sub').textContent = `+${usersToday} hoy`;
+      document.getElementById('kpi-users-sub').style.color = usersToday > 0 ? '#2ecc71' : 'var(--adm-muted)';
+      document.getElementById('kpi-posts-sub').textContent = `+${postsToday} hoy`;
+      document.getElementById('kpi-posts-sub').style.color = postsToday > 0 ? '#2ecc71' : 'var(--adm-muted)';
+    } catch(e) {
+      console.warn('KPIs no disponibles:', e);
+    }
+  }
+
+  // ── Chart actividad 7 días ─────────────────────────────────────────
+  async function loadChart() {
+    try {
+      const data   = await adminFetch('/admin/reports/daily?limit=7');
+      const rows   = (data.data ?? data).slice(-7);
+      const labels = rows.map(r => r.fecha ?? r.date ?? '');
+      const posts  = rows.map(r => r.nuevasPublicaciones ?? r.new_posts ?? 0);
+      const likes  = rows.map(r => r.totalLikes ?? r.total_likes ?? 0);
+      const users  = rows.map(r => r.nuevosUsuarios ?? r.new_users ?? 0);
+
+      const ctx = document.getElementById('activityChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label:'Publicaciones', data:posts, borderColor:'#3498db', backgroundColor:'rgba(52,152,219,.1)', tension:.4, fill:true },
+            { label:'Likes',         data:likes, borderColor:'#e83e8c', backgroundColor:'rgba(232,62,140,.1)', tension:.4, fill:true },
+            { label:'Nuevos usuarios',data:users,borderColor:'#2ecc71', backgroundColor:'rgba(46,204,113,.1)', tension:.4, fill:true },
+          ]
+        },
+        options: {
+          responsive:true,
+          plugins:{ legend:{ display:false } },
+          scales:{
+            x:{ ticks:{ color:'#7a8099', font:{family:'Oswald'} }, grid:{ color:'rgba(255,255,255,.04)' } },
+            y:{ beginAtZero:true, ticks:{ color:'#7a8099' }, grid:{ color:'rgba(255,255,255,.04)' } }
+          }
+        }
+      });
+    } catch(e) {
+      document.getElementById('activityChart').parentElement.innerHTML =
+        '<p style="color:var(--adm-muted);text-align:center;padding:2rem;">Gráfico no disponible</p>';
+    }
+  }
+
+  // ── Top usuarios ───────────────────────────────────────────────────
+  async function loadTopUsers() {
+    try {
+      const data  = await adminFetch('/admin/reports/top-users?limit=5');
+      const users = data.data ?? data;
+      const el    = document.getElementById('top-users-list');
+      if (!users.length) { el.innerHTML = '<div class="adm-empty">Sin datos</div>'; return; }
+      el.innerHTML = users.map((u, i) => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;
+                    border-bottom:1px solid var(--adm-border);">
+          <div style="display:flex;align-items:center;gap:.75rem;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--adm-accent);
+                        display:grid;place-items:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0;">
+              ${i + 1}
+            </div>
+            <div>
+              <div style="font-weight:500;font-size:.88rem;">${u.nombre ?? u.name ?? '—'}</div>
+              <div style="font-size:.73rem;color:var(--adm-muted);">${u.publicaciones ?? u.posts ?? 0} publicaciones</div>
+            </div>
+          </div>
+          <span style="font-size:.75rem;color:var(--adm-muted);">
+            ~${Number(u.promedioInteraccion ?? u.avg_interactions ?? 0).toFixed(1)} interac.
+          </span>
+        </div>
+      `).join('');
+    } catch(e) {
+      document.getElementById('top-users-list').innerHTML = '<div class="adm-empty" style="padding:1.5rem;">No disponible</div>';
+    }
+  }
+
+  // ── Actividad reciente ─────────────────────────────────────────────
+  async function loadActivity() {
+    try {
+      const data = await adminFetch('/admin/reports/daily?limit=10');
+      const rows = data.data ?? data;
+      const tbody = document.getElementById('tbl-activity');
+      if (!rows.length) { tbody.innerHTML = `<tr><td colspan="5" class="loading-cell">Sin datos</td></tr>`; return; }
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td style="font-weight:500;">${r.fecha ?? r.date ?? '—'}</td>
+          <td>${r.nuevasPublicaciones ?? r.new_posts ?? 0}</td>
+          <td>${r.totalLikes ?? r.total_likes ?? 0}</td>
+          <td>${r.nuevosUsuarios ?? r.new_users ?? 0}</td>
+          <td>${r.usuariosActivos ?? r.active_users ?? 0}</td>
+        </tr>
+      `).join('');
+    } catch(e) {
+      document.getElementById('tbl-activity').innerHTML =
+        `<tr><td colspan="5" class="loading-cell">No disponible</td></tr>`;
+    }
+  }
+
+  loadKPIs();
+  loadChart();
+  loadTopUsers();
+  loadActivity();
+});
+</script>
+</body>
+</html>

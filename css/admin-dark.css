@@ -1,0 +1,805 @@
+/* =======================
+   PÃGINAS DE ADMINISTRACIÃ"N - MODO OSCURO
+   Agregar al final de styles.css
+   ======================= */
+
+/* ===================================================
+   CONTENEDORES Y LAYOUT GENERAL
+   =================================================== */
+
+body.dark-mode .container-fluid,
+body.dark-mode .contenedor {
+  background: var(--bg);
+  color: var(--text);
+}
+
+
+
+body.dark-mode .mb-4,
+body.dark-mode .mb-3 {
+  color: var(--text);
+}
+
+/* ===================================================
+   CARDS Y CONTENEDORES
+   =================================================== */
+
+body.dark-mode .card {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .card-header {
+  background: var(--surface) !important;
+  border-bottom-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .card-body {
+  background: var(--card) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .shadow,
+body.dark-mode .shadow-lg {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ===================================================
+   TABLAS
+   =================================================== */
+
+body.dark-mode .table {
+  color: var(--text) !important;
+  background: var(--card);
+}
+
+body.dark-mode .table thead {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .table-dark {
+  background: rgba(176, 0, 0, 0.15) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+body.dark-mode .table-dark th {
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+  background: rgba(176, 0, 0, 0.1) !important;
+  color: var(--text);
+}
+
+body.dark-mode .table td,
+body.dark-mode .table th {
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .table tbody tr {
+  border-bottom-color: var(--border) !important;
+}
+
+body.dark-mode .align-middle td {
+  vertical-align: middle;
+}
+
+/* Responsive tables */
+body.dark-mode .table-responsive {
+  background: var(--card);
+}
+
+/* ===================================================
+   BADGES Y ETIQUETAS
+   =================================================== */
+
+body.dark-mode .badge {
+  color: white !important;
+}
+
+body.dark-mode .badge.bg-primary {
+  background-color: var(--primary-blue) !important;
+}
+
+body.dark-mode .badge.bg-danger {
+  background-color: var(--btn) !important;
+}
+
+body.dark-mode .badge.bg-success {
+  background-color: #388e3c !important;
+}
+
+body.dark-mode .badge.bg-warning {
+  background-color: #f9a825 !important;
+  color: #111 !important;
+}
+
+body.dark-mode .badge.bg-secondary {
+  background-color: #666 !important;
+}
+
+body.dark-mode .badge.bg-info {
+  background-color: #0288d1 !important;
+}
+
+body.dark-mode .badge.bg-light {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+/* ===================================================
+   BOTONES BOOTSTRAP
+   =================================================== */
+
+body.dark-mode .btn-primary {
+  background: linear-gradient(135deg, var(--btn) 0%, var(--primary-blue) 100%) !important;
+  border-color: var(--btn) !important;
+  color: white !important;
+}
+
+body.dark-mode .btn-primary:hover {
+  background: linear-gradient(135deg, var(--btn-hover) 0%, #2d4bb5 100%) !important;
+  color: white !important;
+}
+
+body.dark-mode .btn-secondary {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .btn-secondary:hover {
+  background: var(--card) !important;
+  border-color: var(--btn) !important;
+}
+
+body.dark-mode .btn-success {
+  background: #388e3c !important;
+  border-color: #2e7d32 !important;
+  color: white !important;
+}
+
+body.dark-mode .btn-success:hover {
+  background: #43a047 !important;
+}
+
+body.dark-mode .btn-warning {
+  background: #f9a825 !important;
+  border-color: #f57f17 !important;
+  color: #111 !important;
+}
+
+body.dark-mode .btn-warning:hover {
+  background: #fbc02d !important;
+}
+
+body.dark-mode .btn-danger {
+  background: var(--btn) !important;
+  border-color: var(--btn) !important;
+  color: white !important;
+}
+
+body.dark-mode .btn-danger:hover {
+  background: var(--btn-hover) !important;
+}
+
+body.dark-mode .btn-info {
+  background: #0288d1 !important;
+  border-color: #0277bd !important;
+  color: white !important;
+}
+
+body.dark-mode .btn-info:hover {
+  background: #039be5 !important;
+}
+
+body.dark-mode .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* ===================================================
+   ALERTAS
+   =================================================== */
+
+body.dark-mode .alert {
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+}
+
+body.dark-mode .alert-success {
+  background: rgba(56, 142, 60, 0.15) !important;
+  border-color: rgba(56, 142, 60, 0.3) !important;
+  color: #66bb6a !important;
+}
+
+body.dark-mode .alert-success i {
+  color: #66bb6a;
+}
+
+body.dark-mode .alert-danger {
+  background: rgba(211, 47, 47, 0.15) !important;
+  border-color: rgba(211, 47, 47, 0.3) !important;
+  color: #ff6b6b !important;
+}
+
+body.dark-mode .alert-warning {
+  background: rgba(249, 168, 37, 0.15) !important;
+  border-color: rgba(249, 168, 37, 0.3) !important;
+  color: #ffc107 !important;
+}
+
+body.dark-mode .alert-info {
+  background: rgba(2, 136, 209, 0.15) !important;
+  border-color: rgba(2, 136, 209, 0.3) !important;
+  color: #4fc3f7 !important;
+}
+
+body.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ===================================================
+   FORMULARIOS
+   =================================================== */
+
+body.dark-mode .form-label {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .form-control::placeholder {
+  color: rgba(241, 241, 241, 0.5) !important;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  background: var(--card) !important;
+  border-color: var(--btn) !important;
+  color: var(--text) !important;
+  box-shadow: 0 0 0 0.25rem rgba(176, 0, 0, 0.15) !important;
+}
+
+body.dark-mode .form-select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.dark-mode input[type="date"],
+body.dark-mode input[type="time"],
+body.dark-mode input[type="datetime-local"] {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  color-scheme: dark;
+}
+
+/* ===================================================
+   GRÃFICOS Y CANVAS (Chart.js)
+   =================================================== */
+
+body.dark-mode canvas {
+  background: transparent !important;
+}
+
+/* Asegurar que los gráficos sean visibles */
+body.dark-mode .card-body canvas {
+  filter: none;
+}
+
+/* ===================================================
+   LISTAS Y GRUPOS
+   =================================================== */
+
+body.dark-mode .list-group {
+  background: var(--card);
+}
+
+body.dark-mode .list-group-item {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .list-group-item:hover {
+  background: var(--card) !important;
+}
+
+body.dark-mode .list-group-numbered {
+  counter-reset: section;
+}
+
+body.dark-mode .list-group-numbered > li::before {
+  color: var(--text);
+}
+
+/* ===================================================
+   MÉTRICAS Y ESTADÃSTICAS
+   =================================================== */
+
+body.dark-mode .text-primary {
+  color: var(--btn-hover) !important;
+}
+
+body.dark-mode .text-success {
+  color: #66bb6a !important;
+}
+
+body.dark-mode .text-danger {
+  color: #ff6b6b !important;
+}
+
+body.dark-mode .text-warning {
+  color: #ffc107 !important;
+}
+
+body.dark-mode .text-info {
+  color: #4fc3f7 !important;
+}
+
+body.dark-mode .text-muted {
+  color: rgba(241, 241, 241, 0.6) !important;
+}
+
+body.dark-mode .text-dark {
+  color: var(--text) !important;
+}
+
+body.dark-mode small,
+body.dark-mode .small {
+  color: rgba(241, 241, 241, 0.7);
+}
+
+/* ===================================================
+   ICONOS FONT AWESOME
+   =================================================== */
+
+body.dark-mode .fas,
+body.dark-mode .far,
+body.dark-mode .fab {
+  color: inherit;
+}
+
+body.dark-mode .text-primary .fas,
+body.dark-mode .text-success .fas,
+body.dark-mode .text-danger .fas,
+body.dark-mode .text-warning .fas,
+body.dark-mode .text-info .fas {
+  color: inherit !important;
+}
+
+/* ===================================================
+   UTILIDADES BOOTSTRAP
+   =================================================== */
+
+body.dark-mode .d-flex {
+  color: var(--text);
+}
+
+body.dark-mode .justify-content-between,
+body.dark-mode .align-items-center {
+  color: var(--text);
+}
+
+body.dark-mode .row {
+  color: var(--text);
+}
+
+body.dark-mode .col-md-3,
+body.dark-mode .col-md-4,
+body.dark-mode .col-md-6,
+body.dark-mode .col-md-8 {
+  color: var(--text);
+}
+
+/* ===================================================
+   TEXTO TRUNCADO Y TOOLTIPS
+   =================================================== */
+
+body.dark-mode .text-truncate {
+  color: var(--text) !important;
+}
+
+body.dark-mode [title] {
+  cursor: help;
+}
+
+/* ===================================================
+   SOMBRAS Y BORDES
+   =================================================== */
+
+body.dark-mode .border {
+  border-color: var(--border) !important;
+}
+
+body.dark-mode .border-primary {
+  border-color: var(--btn) !important;
+}
+
+body.dark-mode .rounded,
+body.dark-mode .rounded-pill {
+  border-radius: var(--radius-lg);
+}
+
+/* ===================================================
+   PAGINACIÃ"N (si la usas)
+   =================================================== */
+
+body.dark-mode .pagination {
+  background: var(--card);
+}
+
+body.dark-mode .page-link {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .page-link:hover {
+  background: var(--card);
+  border-color: var(--btn);
+  color: var(--btn-hover);
+}
+
+body.dark-mode .page-item.active .page-link {
+  background: var(--btn);
+  border-color: var(--btn);
+  color: white;
+}
+
+/* ===================================================
+   NAVEGACIÃ"N Y BREADCRUMBS
+   =================================================== */
+
+body.dark-mode .breadcrumb {
+  background: var(--surface);
+}
+
+body.dark-mode .breadcrumb-item {
+  color: var(--text);
+}
+
+body.dark-mode .breadcrumb-item.active {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .breadcrumb-item + .breadcrumb-item::before {
+  color: var(--border);
+}
+
+/* ===================================================
+   HOVER STATES MEJORADOS
+   =================================================== */
+
+body.dark-mode .card:hover {
+  box-shadow: 0 8px 20px rgba(176, 0, 0, 0.2) !important;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .btn:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+body.dark-mode .list-group-item:hover {
+  transform: translateX(4px);
+  transition: all 0.2s ease;
+}
+
+/* ===================================================
+   STRONG Y ÉNFASIS
+   =================================================== */
+
+body.dark-mode strong,
+body.dark-mode b {
+  color: var(--text);
+  font-weight: 700;
+}
+
+body.dark-mode em,
+body.dark-mode i:not(.fas):not(.far):not(.fab) {
+  color: var(--text);
+}
+
+/* ===================================================
+   BACKGROUNDS ESPECÃFICOS
+   =================================================== */
+
+body.dark-mode .bg-light {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .bg-white {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .bg-dark {
+  background-color: var(--surface) !important;
+}
+
+/* ===================================================
+   MÉTRICAS CON ICONOS GRANDES
+   =================================================== */
+
+body.dark-mode .fa-3x {
+  font-size: 3rem;
+}
+
+body.dark-mode .card-body.text-center h3 {
+  color: var(--text) !important;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+body.dark-mode .card-body.text-center p {
+  color: rgba(241, 241, 241, 0.8) !important;
+}
+
+/* ===================================================
+   CANVAS Y GRÃFICOS - TEMA OSCURO
+   =================================================== */
+
+body.dark-mode canvas {
+  /* Chart.js hereda colores del CSS */
+  color: var(--text);
+}
+
+/* ===================================================
+   GAP Y ESPACIADO BOOTSTRAP
+   =================================================== */
+
+body.dark-mode .g-3,
+body.dark-mode .g-4 {
+  color: var(--text);
+}
+
+body.dark-mode .gap-2 {
+  gap: 0.5rem;
+}
+
+/* ===================================================
+   DROPDOWN MENU
+   =================================================== */
+
+body.dark-mode .dropdown-menu {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text) !important;
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: rgba(176, 0, 0, 0.1) !important;
+  color: var(--btn-hover) !important;
+}
+
+/* ===================================================
+   RESPONSIVE - MANTENER CONTRASTE
+   =================================================== */
+
+@media (max-width: 768px) {
+  body.dark-mode .table {
+    font-size: 0.85rem;
+  }
+
+  body.dark-mode .card-body {
+    padding: 1rem !important;
+  }
+
+  body.dark-mode .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  body.dark-mode h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  body.dark-mode .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  body.dark-mode .table {
+    font-size: 0.75rem;
+  }
+
+  body.dark-mode .card {
+    margin-bottom: 1rem;
+  }
+
+  body.dark-mode .btn {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===================================================
+   ACCESIBILIDAD - FOCUS VISIBLE
+   =================================================== */
+
+body.dark-mode *:focus {
+  outline: 2px solid var(--btn);
+  outline-offset: 2px;
+}
+
+body.dark-mode .btn:focus,
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  box-shadow: 0 0 0 0.25rem rgba(176, 0, 0, 0.25) !important;
+}
+
+/* ===================================================
+   SCROLLBAR EN TABLAS
+   =================================================== */
+
+body.dark-mode .table-responsive::-webkit-scrollbar {
+  height: 8px;
+  background: var(--surface);
+}
+
+body.dark-mode .table-responsive::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+body.dark-mode .table-responsive::-webkit-scrollbar-thumb:hover {
+  background: var(--btn);
+}
+
+/* ===================================================
+   ANIMACIONES SUAVES
+   =================================================== */
+
+body.dark-mode .fade {
+  transition: opacity 0.3s ease;
+}
+
+body.dark-mode .show {
+  opacity: 1;
+}
+
+/* ===================================================
+   TEXT-END Y ALINEACIONES
+   =================================================== */
+
+body.dark-mode .text-end {
+  text-align: right !important;
+}
+
+body.dark-mode .text-center {
+  text-align: center !important;
+}
+
+body.dark-mode .text-start {
+  text-align: left !important;
+}
+/* ===================================================
+   FIXES DE CONTRASTE Y TITULOS
+   =================================================== */
+
+/* 1. Fondo y contraste de tablas */
+body.dark-mode table,
+body.dark-mode .table,
+body.dark-mode .table-responsive {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+  border-collapse: collapse;
+}
+
+body.dark-mode .table thead th {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-bottom: 2px solid var(--border) !important;
+}
+
+body.dark-mode .table tbody tr {
+  background-color: var(--card) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+body.dark-mode .table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+body.dark-mode .table td {
+  color: var(--text) !important;
+}
+
+body.dark-mode .table .text-muted {
+  color: var(--text-muted) !important;
+}
+
+
+
+/* 3. Forzar color de enlaces en títulos o cards */
+body.dark-mode a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+body.dark-mode a:hover {
+  color: var(--btn-hover);
+  text-decoration: none;
+}
+/* ===================================================
+   FIX FINAL: CONTRASTE Y TITULOS
+   =================================================== */
+
+/* ====== 1. Arreglo de fondo de tabla ====== */
+body.dark-mode .table,
+body.dark-mode table {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+}
+
+body.dark-mode .table thead th {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+body.dark-mode .table tbody tr td {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+body.dark-mode .table tbody tr:nth-child(even) td {
+  background-color: #202227 !important; /* leve diferencia para filas pares */
+}
+
+body.dark-mode .table tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+
+
+
+
+
+/* ====== 4. Ajuste de contraste global ====== */
+body.dark-mode {
+  --bg: #111;
+  --card: #1a1c21;
+  --surface: #23262c;
+  --border: #33373f;
+  --text: #eaeaea;
+  --text-muted: #b8b8b8;
+  --btn: #b00000;
+  --btn-hover: #ff4040;
+  --primary-blue: #3b82f6;
+}
+
+/* === Fix final: limpiar fondo negro bajo MundialFan === */
+body.dark-mode header,
+body.dark-mode header * {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+

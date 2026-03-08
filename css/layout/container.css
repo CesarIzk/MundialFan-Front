@@ -1,0 +1,124 @@
+/* =======================
+   CONTENEDORES Y GRID
+   ======================= */
+
+.contenedor {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* ===== GRID LAYOUTS ===== */
+
+/* Grid de características */
+.caracteristicas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+/* Grid de productos */
+.productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  padding: var(--spacing-4xl) var(--spacing-lg);
+}
+
+/* Grid de posts */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-4xl);
+}
+
+/* Grid de otros posts */
+.otros-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Grid de formularios */
+.formularios-contenedor {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+/* Grid del footer */
+.footer-contenido {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* ===== FLEXBOX ===== */
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-gap {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+/* ===== RESPONSIVE CONTAINER ===== */
+
+@media (max-width: 768px) {
+  .contenedor {
+    width: 95%;
+    padding: 0 var(--spacing-md);
+  }
+
+  .caracteristicas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  .productos {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .formularios-contenedor {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .contenedor {
+    width: 100%;
+    padding: 0 var(--spacing-sm);
+  }
+
+  .caracteristicas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .productos {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    padding: var(--spacing-2xl) var(--spacing-sm);
+  }
+
+  .footer-contenido {
+    grid-template-columns: 1fr;
+  }
+}

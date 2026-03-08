@@ -1,0 +1,78 @@
+/* =======================
+   VARIABLES CSS - Paleta y Temas
+   ======================= */
+
+/* Variables por defecto (modo claro) */
+:root {
+  --bg: #f5f5f5;
+  --text: #111;
+  --nav: #ffffff;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --border: #e6e6e6;
+  --hero-overlay: rgba(0, 0, 0, 0.35);
+  --btn: #b00000;
+  --btn-hover: #d21919;
+
+  /* Variables que NO cambian */
+  --secondary-btn: #FF9900;
+  --secondary-btn-hover: #F29200;
+  --gradient-primary: linear-gradient(90deg, #b00000 0%, #8b1538 25%, #5a1a6f 50%, #2d3b8f 75%, #1e3a8a 100%);
+  --gradient-secondary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-user: linear-gradient(135deg, #b00000 0%, #1e3a8a 100%);
+  --primary-red: #b00000;
+  --primary-blue: #1e3a8a;
+
+  /* Espaciado y bordes */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 48px;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  --font-family: 'Oswald', Arial, Helvetica, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  --text-3xl: 24px;
+  --text-4xl: 28px;
+}
+
+/* Variables para modo oscuro */
+body.dark-mode {
+  --bg: #0b0b0b;
+  --text: #f1f1f1;
+  --nav: #111111;
+  --surface: #121212;
+  --card: #1a1a1a;
+  --border: #2a2a2a;
+  --hero-overlay: rgba(0, 0, 0, 0.55);
+  --btn: #b00000;
+  --btn-hover: #ff4444;
+}

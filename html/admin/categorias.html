@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Categorías</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-tags"></i> Categorías</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:1.25rem;align-items:start;">
+
+      <!-- Tabla -->
+      <div class="adm-card">
+        <div class="adm-card__header"><span>Categorías existentes</span></div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead><tr><th>#</th><th>Nombre</th><th>Posts</th><th>Acciones</th></tr></thead>
+            <tbody id="tbody">
+              <tr><td colspan="4" class="adm-loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Form nueva/editar -->
+      <div class="adm-card">
+        <div class="adm-card__header"><span id="form-title">Nueva Categoría</span></div>
+        <div class="adm-card__body">
+          <input type="hidden" id="edit-id">
+          <div class="adm-form-group">
+            <label class="adm-form-label">Nombre</label>
+            <input class="adm-input" id="edit-name" placeholder="Ej: Goles históricos">
+          </div>
+          <div class="adm-form-group">
+            <label class="adm-form-label">Descripción (opcional)</label>
+            <textarea class="adm-textarea" id="edit-desc" placeholder="Breve descripción..."></textarea>
+          </div>
+          <div style="display:flex;gap:.65rem;margin-top:.5rem;">
+            <button class="adm-btn adm-btn--primary" id="btn-save"><i class="fas fa-save"></i> Guardar</button>
+            <button class="adm-btn adm-btn--ghost" id="btn-cancel" style="display:none;">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  function renderRows(list) {
+    const tbody = document.getElementById('tbody');
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="4" class="adm-empty">Sin categorías</td></tr>`; return; }
+    tbody.innerHTML = list.map(c => `
+      <tr>
+        <td style="color:var(--adm-muted);">${c.id}</td>
+        <td style="font-weight:500;">${c.name}</td>
+        <td>${c.posts_count??'—'}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;">
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="editCat(${c.id},'${c.name.replace(/'/g,"\\'")}','${(c.description||'').replace(/'/g,"\\'")}')"><i class="fas fa-pen"></i></button>
+            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="delCat(${c.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function load() {
+    try {
+      const data = await adminFetch('/admin/categories');
+      renderRows(data.data??data);
+    } catch { document.getElementById('tbody').innerHTML = `<tr><td colspan="4" class="adm-empty">Error</td></tr>`; }
+  }
+
+  window.editCat = (id, name, desc) => {
+    document.getElementById('edit-id').value   = id;
+    document.getElementById('edit-name').value = name;
+    document.getElementById('edit-desc').value = desc;
+    document.getElementById('form-title').textContent = 'Editar Categoría';
+    document.getElementById('btn-cancel').style.display = 'inline-flex';
+  };
+
+  window.delCat = (id) => confirmAction('¿Eliminar esta categoría?', async () => {
+    await adminFetch(`/admin/categories/${id}`,{method:'DELETE'});
+    showAlert('page-alert','Categoría eliminada.'); load();
+  });
+
+  document.getElementById('btn-cancel').addEventListener('click', () => {
+    document.getElementById('edit-id').value = '';
+    document.getElementById('edit-name').value = '';
+    document.getElementById('edit-desc').value = '';
+    document.getElementById('form-title').textContent = 'Nueva Categoría';
+    document.getElementById('btn-cancel').style.display = 'none';
+  });
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const id      = document.getElementById('edit-id').value;
+    const payload = {
+      name: document.getElementById('edit-name').value.trim(),
+      description: document.getElementById('edit-desc').value.trim(),
+    };
+    try {
+      if (id) await adminFetch(`/admin/categories/${id}`,{method:'PUT',body:JSON.stringify(payload)});
+      else    await adminFetch('/admin/categories',{method:'POST',body:JSON.stringify(payload)});
+      showAlert('page-alert', id?'Actualizada.':'Creada.');
+      document.getElementById('btn-cancel').click();
+      load();
+    } catch(e) { showAlert('page-alert',e.message||'Error','danger'); }
+  });
+
+  load();
+});
+</script>
+</body>
+</html>

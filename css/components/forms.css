@@ -1,0 +1,207 @@
+/* =======================
+   FORMULARIOS
+   ======================= */
+
+.formulario {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-normal);
+}
+
+.formulario:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ===== TÍTULOS DE FORMULARIO ===== */
+
+.formulario h3 {
+  color: var(--primary-blue);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  transition: color var(--transition-normal);
+}
+
+body.dark-mode .formulario h3 {
+  color: var(--text);
+}
+
+.formulario h3 i {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  transition: color var(--transition-normal);
+}
+
+body.dark-mode .formulario h3 i {
+  color: var(--text);
+}
+
+/* ===== INPUTS Y SELECTS ===== */
+
+.formulario input,
+.formulario select,
+.formulario textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: white;
+  color: #111;
+  font-size: var(--text-base);
+  font-family: inherit;
+  transition: all var(--transition-normal);
+}
+
+.formulario input::placeholder,
+.formulario textarea::placeholder {
+  color: #999;
+  opacity: 0.7;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
+  outline: none;
+  border-color: var(--btn);
+  box-shadow: 0 0 0 3px rgba(176, 0, 0, 0.1);
+  background: white;
+  color: #111;
+}
+
+body.dark-mode .formulario input,
+body.dark-mode .formulario select,
+body.dark-mode .formulario textarea {
+  background: #2a2a2a;
+  color: white;
+  border-color: var(--border);
+}
+
+body.dark-mode .formulario input::placeholder,
+body.dark-mode .formulario textarea::placeholder {
+  color: #999;
+}
+
+body.dark-mode .formulario input:focus,
+body.dark-mode .formulario select:focus,
+body.dark-mode .formulario textarea:focus {
+  background: #2a2a2a;
+  color: white;
+  border-color: var(--btn);
+}
+
+/* ===== BOTONES DE FORMULARIO ===== */
+
+.formulario button {
+  width: 100%;
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  background: var(--btn);
+  color: white;
+  border: none;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  transition: all var(--transition-normal);
+}
+
+.formulario button:hover {
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.formulario button:active {
+  transform: translateY(0);
+}
+
+/* ===== VALIDACIÓN ===== */
+
+.formulario input.error {
+  border-color: #d32f2f;
+  background: rgba(211, 47, 47, 0.05);
+}
+
+.formulario input.success {
+  border-color: #388e3c;
+  background: rgba(56, 142, 60, 0.05);
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: var(--text-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.success-message {
+  color: #388e3c;
+  font-size: var(--text-xs);
+  margin-top: var(--spacing-xs);
+}
+
+/* ===== LABEL ===== */
+
+.formulario label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+/* ===== TEXTAREA ===== */
+
+.formulario textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  .formulario {
+    padding: var(--spacing-md);
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea {
+    padding: var(--spacing-sm);
+    font-size: var(--text-sm);
+  }
+
+  .formulario button {
+    padding: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 576px) {
+  .formulario {
+    padding: var(--spacing-md);
+  }
+
+  .formulario h3 {
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea {
+    padding: var(--spacing-sm);
+    font-size: var(--text-sm);
+    margin: var(--spacing-sm) 0;
+  }
+
+  .formulario button {
+    padding: var(--spacing-sm);
+    font-size: var(--text-sm);
+  }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Comentarios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-comments"></i> Comentarios</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card">
+      <div class="adm-toolbar">
+        <input class="adm-input" id="search-input" placeholder="Buscar por contenido o autor...">
+        <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead><tr><th>Autor</th><th>Comentario</th><th>Publicación</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <tbody id="tbody">
+            <tr><td colspan="5" class="adm-loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  function renderRows(list) {
+    const tbody = document.getElementById('tbody');
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="5" class="adm-empty">Sin comentarios</td></tr>`; return; }
+    tbody.innerHTML = list.map(c => `
+      <tr>
+        <td>
+          <div class="adm-user-cell">
+            <div class="adm-avatar-placeholder">${(c.user?.name||'U')[0].toUpperCase()}</div>
+            <span style="white-space:nowrap;">${c.user?.name??'—'}</span>
+          </div>
+        </td>
+        <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${c.content}">${c.content}</td>
+        <td style="color:var(--adm-muted);font-size:.8rem;">Post #${c.post_id??'—'}</td>
+        <td style="color:var(--adm-muted);font-size:.8rem;white-space:nowrap;">${c.created_at?.slice(0,10)??'—'}</td>
+        <td>
+          <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="delComment(${c.id})">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function load() {
+    const q = document.getElementById('search-input').value.trim();
+    try {
+      const data = await adminFetch(`/admin/comments${q?'?q='+encodeURIComponent(q):''}`);
+      renderRows(data.data??data);
+    } catch { document.getElementById('tbody').innerHTML = `<tr><td colspan="5" class="adm-empty">Error al cargar</td></tr>`; }
+  }
+
+  window.delComment = (id) => confirmAction('¿Eliminar este comentario?', async () => {
+    try {
+      await adminFetch(`/admin/comments/${id}`,{method:'DELETE'});
+      showAlert('page-alert','Comentario eliminado.'); load();
+    } catch(e) { showAlert('page-alert',e.message||'Error','danger'); }
+  });
+
+  document.getElementById('btn-search').addEventListener('click', load);
+  document.getElementById('search-input').addEventListener('keydown', e => e.key==='Enter' && load());
+  load();
+});
+</script>
+</body>
+</html>

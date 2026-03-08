@@ -1,0 +1,465 @@
+/* =======================
+   SECCIÓN CAMPEONATOS
+   ======================= */
+
+/* HERO específico */
+.hero-campeonatos {
+  min-height: 400px;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url("../../imagenes/mundial-banner.jpg") center/cover no-repeat;
+  color: white;
+}
+
+.hero-campeonatos .hero-contenido h2 {
+  font-size: 2.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hero-campeonatos .hero-contenido p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto var(--spacing-xl);
+  color: #f2f2f2;
+}
+
+/* ===== LISTAS DE CONTENIDO ===== */
+
+#ediciones ul,
+#equipos ul,
+#jugadores ul {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+#ediciones li,
+#equipos li,
+#jugadores li {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+#ediciones li:hover,
+#equipos li:hover,
+#jugadores li:hover {
+  transform: translateY(-3px);
+  border-color: var(--btn);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== BANDERAS ===== */
+.flag {
+  width: 40px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== TEXTO ===== */
+#ediciones li span {
+  margin-left: auto;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+#equipos li,
+#jugadores li {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+#jugadores strong {
+  color: var(--btn);
+}
+
+/* ===== ENCABEZADOS ===== */
+#ediciones .titulo-seccion,
+#equipos .titulo-seccion,
+#jugadores .titulo-seccion {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  color: var(--btn);
+}
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode #ediciones li,
+body.dark-mode #equipos li,
+body.dark-mode #jugadores li {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode #ediciones li:hover,
+body.dark-mode #equipos li:hover,
+body.dark-mode #jugadores li:hover {
+  border-color: var(--btn);
+  box-shadow: 0 0 10px rgba(176, 0, 0, 0.2);
+}
+
+body.dark-mode #jugadores strong {
+  color: var(--btn-hover);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  #ediciones li,
+  #equipos li,
+  #jugadores li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    text-align: left;
+  }
+
+  #ediciones li span {
+    margin-left: 0;
+    font-size: 0.85rem;
+  }
+
+  .flag {
+    width: 36px;
+    height: 24px;
+  }
+
+  .hero-campeonatos .hero-contenido h2 {
+    font-size: 2rem;
+  }
+}
+/* =======================
+   FILTRO DE EDICIONES
+   ======================= */
+.filtro-ediciones {
+  text-align: center;
+  margin: var(--spacing-lg) 0 var(--spacing-xl);
+}
+
+.input-filtro {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.input-filtro:focus {
+  outline: none;
+  border-color: var(--btn);
+  box-shadow: 0 0 6px rgba(176, 0, 0, 0.2);
+}
+
+body.dark-mode .input-filtro {
+  background: var(--surface);
+  color: var(--text);
+}
+/* =======================
+   EDICIONES DEL MUNDIAL
+   ======================= */
+.ediciones-lista {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.edicion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.edicion-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--btn);
+  box-shadow: var(--shadow-md);
+}
+
+.edicion-info {
+  flex: 1;
+}
+
+.edicion-info h3 {
+  color: var(--btn);
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.edicion-info p {
+  color: var(--text);
+  opacity: 0.9;
+  font-size: var(--text-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.edicion-resultados {
+  display: flex;
+  gap: var(--spacing-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ===== ESTILOS DE RESULTADOS ===== */
+.campeon {
+  color: #d4af37; /* dorado */
+  font-weight: bold;
+  background: rgba(212, 175, 55, 0.1);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.subcampeon {
+  color: #b0b0b0; /* plateado */
+  font-weight: bold;
+  background: rgba(176, 176, 176, 0.1);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(176, 176, 176, 0.3);
+}
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .edicion-item {
+  background: var(--surface);
+}
+
+body.dark-mode .campeon {
+  color: #e6c84d;
+  border-color: rgba(230, 200, 77, 0.4);
+  background: rgba(230, 200, 77, 0.1);
+}
+
+body.dark-mode .subcampeon {
+  color: #cfcfcf;
+  border-color: rgba(207, 207, 207, 0.3);
+  background: rgba(207, 207, 207, 0.1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .edicion-item {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .edicion-resultados {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .edicion-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .flag {
+    width: 50px;
+    height: auto;
+  }
+}
+/* =======================
+   JUGADORES DESTACADOS
+   ======================= */
+.jugadores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+.jugador-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.jugador-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--btn);
+  box-shadow: var(--shadow-md);
+}
+
+.jugador-foto img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.jugador-info {
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.jugador-info h3 {
+  color: var(--btn);
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.jugador-bandera {
+  width: 28px;
+  height: 20px;
+  border-radius: 3px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.jugador-pais {
+  font-size: var(--text-sm);
+  color: #777;
+  margin-bottom: var(--spacing-sm);
+}
+
+.jugador-logros {
+  font-size: var(--text-sm);
+  color: var(--text);
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* ===== MODO OSCURO ===== */
+body.dark-mode .jugador-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .jugador-info h3 {
+  color: var(--text);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .jugador-foto img {
+    height: 180px;
+  }
+  .jugador-info h3 {
+    font-size: 1.1rem;
+  }
+  .jugador-logros {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ===== Resultado de búsqueda (Campeonatos) ===== */
+.wc-result{
+  margin-top: 18px;
+}
+
+.wc-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.wc-card__head{
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wc-card__head h2{
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+}
+
+.wc-card__head h2 span{
+  color: var(--btn);
+}
+
+.wc-card__head p{
+  margin: 6px 0 0;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+.wc-grid{
+  padding: 16px 18px 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.wc-box{
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.wc-box--full{
+  grid-column: 1 / -1;
+}
+
+.wc-box h3{
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: var(--font-weight-bold);
+}
+
+.wc-list{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text);
+  opacity: 0.95;
+  font-size: 14px;
+}
+
+.wc-list li{ margin: 6px 0; }
+
+.wc-pills{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wc-pill{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 980px){
+  .wc-grid{ grid-template-columns: 1fr; }
+}

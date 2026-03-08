@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan Admin — Campeonatos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="adm-shell">
+  <header class="adm-topbar" id="adm-topbar"></header>
+  <nav    class="adm-sidebar" id="adm-sidebar"></nav>
+  <main class="adm-main">
+    <h1 class="adm-page-title"><i class="fas fa-trophy"></i> Campeonatos</h1>
+    <div id="page-alert" class="adm-alert"></div>
+
+    <div class="adm-card">
+      <div class="adm-toolbar">
+        <input class="adm-input" id="search-input" placeholder="Buscar por año o sede...">
+        <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
+        <button class="adm-btn adm-btn--primary" style="margin-left:auto;" id="btn-new">
+          <i class="fas fa-plus"></i> Nuevo Campeonato
+        </button>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead><tr><th>Año</th><th>Sede</th><th>Campeón</th><th>Subcampeón</th><th>Equipos</th><th>Goles</th><th>Acciones</th></tr></thead>
+          <tbody id="tbody">
+            <tr><td colspan="7" class="adm-loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="adm-modal-overlay" id="modal">
+  <div class="adm-modal">
+    <div class="adm-modal__header">
+      <span id="modal-title">Nuevo Campeonato</span>
+      <button class="adm-modal__close" onclick="closeModal('modal')">&times;</button>
+    </div>
+    <div class="adm-modal__body">
+      <input type="hidden" id="edit-id">
+      <div class="adm-form-grid">
+        <div class="adm-form-group"><label class="adm-form-label">Año</label>
+          <input class="adm-input" id="edit-year" type="number" min="1930" max="2100"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Sede (país/ciudad)</label>
+          <input class="adm-input" id="edit-host" placeholder="Ej: Brasil"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Campeón</label>
+          <input class="adm-input" id="edit-champion"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Subcampeón</label>
+          <input class="adm-input" id="edit-runner-up"></div>
+        <div class="adm-form-group"><label class="adm-form-label">3er Lugar</label>
+          <input class="adm-input" id="edit-third"></div>
+        <div class="adm-form-group"><label class="adm-form-label">4to Lugar</label>
+          <input class="adm-input" id="edit-fourth"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Equipos</label>
+          <input class="adm-input" id="edit-teams" type="number" min="0"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Partidos</label>
+          <input class="adm-input" id="edit-matches" type="number" min="0"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Goles</label>
+          <input class="adm-input" id="edit-goals" type="number" min="0"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Balón de Oro</label>
+          <input class="adm-input" id="edit-golden-ball"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Bota de Oro</label>
+          <input class="adm-input" id="edit-top-scorer"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Guante de Oro</label>
+          <input class="adm-input" id="edit-golden-glove"></div>
+        <div class="adm-form-group"><label class="adm-form-label">Mejor Joven</label>
+          <input class="adm-input" id="edit-best-young"></div>
+      </div>
+    </div>
+    <div class="adm-modal__footer">
+      <button class="adm-btn adm-btn--ghost" onclick="closeModal('modal')">Cancelar</button>
+      <button class="adm-btn adm-btn--primary" id="btn-save"><i class="fas fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fields = ['year','host','champion','runner-up','third','fourth','teams','matches','goals','golden-ball','top-scorer','golden-glove','best-young'];
+
+  function renderRows(list) {
+    const tbody = document.getElementById('tbody');
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="7" class="adm-empty">Sin campeonatos</td></tr>`; return; }
+    tbody.innerHTML = list.map(c => `
+      <tr>
+        <td style="font-weight:600;">${c.year??'—'}</td>
+        <td>${c.host??'—'}</td>
+        <td>${c.champion??'—'}</td>
+        <td>${c.runner_up??'—'}</td>
+        <td>${c.teams??0}</td>
+        <td>${c.goals??0}</td>
+        <td>
+          <div style="display:flex;gap:.4rem;">
+            <button class="adm-btn adm-btn--ghost adm-btn--sm" onclick="editItem(${c.id})"><i class="fas fa-pen"></i></button>
+            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="delItem(${c.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function load() {
+    const q = document.getElementById('search-input').value.trim();
+    try {
+      const data = await adminFetch(`/admin/championships${q?'?q='+encodeURIComponent(q):''}`);
+      renderRows(data.data??data);
+    } catch(e) { document.getElementById('tbody').innerHTML = `<tr><td colspan="7" class="adm-empty">Error al cargar</td></tr>`; }
+  }
+
+  function clearForm() { fields.forEach(f => { const el = document.getElementById('edit-'+f); if(el) el.value=''; }); document.getElementById('edit-id').value=''; }
+
+  window.editItem = async (id) => {
+    const data = await adminFetch(`/admin/championships/${id}`);
+    const c = data.data??data;
+    document.getElementById('edit-id').value = c.id;
+    document.getElementById('edit-year').value = c.year??'';
+    document.getElementById('edit-host').value = c.host??'';
+    document.getElementById('edit-champion').value = c.champion??'';
+    document.getElementById('edit-runner-up').value = c.runner_up??'';
+    document.getElementById('edit-third').value = c.third_place??'';
+    document.getElementById('edit-fourth').value = c.fourth_place??'';
+    document.getElementById('edit-teams').value = c.teams??0;
+    document.getElementById('edit-matches').value = c.matches??0;
+    document.getElementById('edit-goals').value = c.goals??0;
+    document.getElementById('edit-golden-ball').value = c.golden_ball??'';
+    document.getElementById('edit-top-scorer').value = c.top_scorer??'';
+    document.getElementById('edit-golden-glove').value = c.golden_glove??'';
+    document.getElementById('edit-best-young').value = c.best_young??'';
+    document.getElementById('modal-title').textContent = 'Editar Campeonato';
+    openModal('modal');
+  };
+
+  window.delItem = (id) => confirmAction('¿Eliminar este campeonato?', async () => {
+    await adminFetch(`/admin/championships/${id}`, {method:'DELETE'});
+    showAlert('page-alert','Campeonato eliminado.'); load();
+  });
+
+  document.getElementById('btn-new').addEventListener('click', () => { clearForm(); document.getElementById('modal-title').textContent='Nuevo Campeonato'; openModal('modal'); });
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const id = document.getElementById('edit-id').value;
+    const payload = {
+      year: document.getElementById('edit-year').value,
+      host: document.getElementById('edit-host').value.trim(),
+      champion: document.getElementById('edit-champion').value.trim(),
+      runner_up: document.getElementById('edit-runner-up').value.trim(),
+      third_place: document.getElementById('edit-third').value.trim(),
+      fourth_place: document.getElementById('edit-fourth').value.trim(),
+      teams: document.getElementById('edit-teams').value,
+      matches: document.getElementById('edit-matches').value,
+      goals: document.getElementById('edit-goals').value,
+      golden_ball: document.getElementById('edit-golden-ball').value.trim(),
+      top_scorer: document.getElementById('edit-top-scorer').value.trim(),
+      golden_glove: document.getElementById('edit-golden-glove').value.trim(),
+      best_young: document.getElementById('edit-best-young').value.trim(),
+    };
+    try {
+      if(id) await adminFetch(`/admin/championships/${id}`,{method:'PUT',body:JSON.stringify(payload)});
+      else   await adminFetch('/admin/championships',{method:'POST',body:JSON.stringify(payload)});
+      showAlert('page-alert', id?'Actualizado.':'Creado.');
+      closeModal('modal'); load();
+    } catch(e) { showAlert('page-alert', e.message||'Error','danger'); }
+  });
+
+  document.getElementById('btn-search').addEventListener('click', load);
+  document.getElementById('search-input').addEventListener('keydown', e => e.key==='Enter' && load());
+  load();
+});
+</script>
+</body>
+</html>

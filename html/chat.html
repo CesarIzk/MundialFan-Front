@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan - Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div id="mf-header"></div>
+<div id="mf-nav"></div>
+
+<!-- ═══════════ CONTENIDO ÚNICO DE ESTA PÁGINA ═══════════ -->
+
+<main class="chat-page">
+  <div class="chat-shell">
+
+    <!-- Sidebar -->
+    <aside class="chat-sidebar" aria-label="Lista de chats">
+      <div class="chat-sidebar__top">
+        <h2 class="chat-sidebar__title">Chats</h2>
+        <button class="chat-icon-btn" type="button" title="Nuevo chat">
+          <i class="fas fa-pen-to-square"></i>
+        </button>
+      </div>
+
+      <div class="chat-sidebar__search">
+        <div class="chat-search">
+          <i class="fas fa-search"></i>
+          <input type="text" id="chat-search-input" placeholder="Buscar en chats..." aria-label="Buscar chats">
+        </div>
+      </div>
+
+      <ul class="chat-list" id="chat-list">
+        <!-- Placeholder UI mientras no haya backend de chat -->
+        <li>
+          <a class="chat-item chat-item--active" href="#" aria-current="page">
+            <img class="chat-avatar" src="imagenes/default-profile.jpg" alt="Ana">
+            <div class="chat-item__meta">
+              <div class="chat-item__row">
+                <p class="chat-item__name">Ana</p>
+              </div>
+              <p class="chat-item__preview">¿Listo para ver el partido? </p>
+            </div>
+            <span class="chat-badge" title="Mensajes sin leer">2</span>
+          </a>
+        </li>
+        <li>
+          <a class="chat-item" href="#">
+            <img class="chat-avatar" src="imagenes/default-profile.jpg" alt="Leo">
+            <div class="chat-item__meta">
+              <div class="chat-item__row">
+                <p class="chat-item__name">Leo</p>
+              </div>
+              <p class="chat-item__preview">Te pasé el video, échale ojo </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="chat-item" href="#">
+            <img class="chat-avatar" src="imagenes/default-profile.jpg" alt="Grupo MundialFan">
+            <div class="chat-item__meta">
+              <div class="chat-item__row">
+                <p class="chat-item__name">Grupo: MundialFan</p>
+              </div>
+              <p class="chat-item__preview">Carlos: ¿quién trae las apuestas? </p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="chat-item" href="#">
+            <img class="chat-avatar" src="imagenes/default-profile.jpg" alt="Carlos">
+            <div class="chat-item__meta">
+              <div class="chat-item__row">
+                <p class="chat-item__name">Carlos</p>
+              </div>
+              <p class="chat-item__preview">Va, nos vemos en el estadio.</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Conversación -->
+    <section class="chat-main" aria-label="Conversación">
+      <div class="chat-topbar">
+        <div class="chat-topbar__left">
+          <img class="chat-avatar" src="imagenes/default-profile.jpg" alt="Ana">
+          <div class="chat-topbar__title">
+            <h2>Ana</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg-row msg-row--them">
+          <img class="chat-avatar--msg" src="imagenes/default-profile.jpg" alt="Ana">
+          <div class="msg msg--them">
+            <div class="msg-bubble">
+              ¿Listo para el partido? Si quieres armamos grupo con los demás 👀
+            </div>
+          </div>
+        </div>
+
+        <div class="msg-row msg-row--me">
+          <div class="msg msg--me">
+            <div class="msg-bubble">
+              Sii. Pásame el grupo y te mando una foto del estadio.
+            </div>
+          </div>
+        </div>
+
+        <div class="msg-row msg-row--me">
+          <div class="msg msg--me">
+            <div class="msg-bubble">
+              <div class="msg-media">
+                <img src="imagenes/estadio.png" alt="Imagen enviada">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-composer">
+        <input id="chat-attach-input" type="file" accept="image/*,video/*" multiple hidden>
+        <label class="chat-attach" for="chat-attach-input" title="Adjuntar foto o video">
+          <i class="fas fa-paperclip"></i>
+        </label>
+        <textarea class="chat-input" id="chat-text-input" rows="1"
+                  placeholder="Escribe un mensaje..." aria-label="Escribir mensaje"></textarea>
+        <button class="chat-send" id="btn-send" type="button" title="Enviar">
+          <i class="fas fa-paper-plane"></i> <span>Enviar</span>
+        </button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div id="mf-footer"></div>
+
+<script src="js/components.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Guard: requiere sesión para chatear
+  if (!isLoggedIn()) {
+    window.location.href = 'auth.html';
+    return;
+  }
+
+  const user        = getUser();
+  const messages    = document.getElementById('chat-messages');
+  const input       = document.getElementById('chat-text-input');
+  const btnSend     = document.getElementById('btn-send');
+  const attachInput = document.getElementById('chat-attach-input');
+
+  // ── Enviar mensaje de texto (UI local, sin backend aún) ───
+  function sendMessage(text, mediaHTML = '') {
+    if (!text && !mediaHTML) return;
+    const bubble = mediaHTML || `<div class="msg-bubble">${text}</div>`;
+    messages.insertAdjacentHTML('beforeend', `
+      <div class="msg-row msg-row--me">
+        <div class="msg msg--me">${bubble}</div>
+      </div>
+    `);
+    messages.scrollTop = messages.scrollHeight;
+    input.value = '';
+  }
+
+  btnSend.addEventListener('click', () => {
+    sendMessage(input.value.trim());
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(input.value.trim());
+    }
+  });
+
+  // ── Adjuntar imagen/video ─────────────────────────────────
+  attachInput.addEventListener('change', () => {
+    const file = attachInput.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const mediaHTML = file.type.startsWith('video')
+      ? `<div class="msg-bubble"><div class="msg-media"><video controls src="${url}"></video></div></div>`
+      : `<div class="msg-bubble"><div class="msg-media"><img src="${url}" alt="Adjunto"></div></div>`;
+    sendMessage('', mediaHTML);
+    attachInput.value = '';
+  });
+
+  // Scroll al final al cargar
+  messages.scrollTop = messages.scrollHeight;
+
+});
+</script>
+</body>
+</html>

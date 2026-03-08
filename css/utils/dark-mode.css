@@ -1,0 +1,910 @@
+/* =======================
+   CORRECCIONES DE MODO OSCURO - COMPLETAS
+   Agregar al final de styles.css
+   ======================= */
+
+/* ===================================================
+   LAYOUT - CONTAINER, HEADER, NAVBAR, FOOTER, HERO
+   =================================================== */
+
+/* ===== CONTENEDORES ===== */
+body.dark-mode .contenedor {
+  color: var(--text);
+}
+
+/* ===== FOOTER ===== */
+body.dark-mode footer {
+  background: var(--nav);
+  border-top-color: var(--border);
+}
+
+body.dark-mode .footer-seccion h4 {
+  color: var(--text);
+}
+
+body.dark-mode .footer-seccion p {
+  color: var(--text);
+}
+
+body.dark-mode .footer-seccion i {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .footer-seccion ul a {
+  color: var(--text);
+}
+
+body.dark-mode .footer-seccion ul a:hover {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .redes-sociales a {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .redes-sociales a:hover {
+  background: var(--btn);
+  color: white;
+}
+
+body.dark-mode .copyright {
+  color: var(--text);
+  border-top-color: var(--border);
+}
+
+/* ===== NAVBAR ===== */
+body.dark-mode nav {
+  background: var(--nav);
+  border-bottom-color: var(--border);
+}
+
+body.dark-mode .navbar li a {
+  color: var(--text);
+}
+
+body.dark-mode .navbar li a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--btn-hover);
+}
+
+body.dark-mode .toggle-btn {
+  color: var(--text);
+}
+
+body.dark-mode .toggle-btn:hover {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .menu-toggle {
+  color: var(--text);
+}
+
+body.dark-mode .user-profile {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .user-profile:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .dropdown-menu {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text);
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--btn-hover);
+}
+
+/* ===== HERO ===== */
+body.dark-mode .hero h2,
+body.dark-mode .hero p {
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+body.dark-mode .hero-equipos h2,
+body.dark-mode .hero-equipos p {
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+body.dark-mode .hero-indicators .hero-indicator {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: white;
+}
+
+/* ===================================================
+   COMPONENTS - BUTTONS, CARDS, FORMS, MODALS
+   =================================================== */
+
+/* ===== BOTONES ===== */
+body.dark-mode .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+}
+
+body.dark-mode .btn-accion {
+  color: var(--text);
+}
+
+body.dark-mode .btn-crear-post {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+body.dark-mode .btn-crear-post:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+}
+
+/* ===== CARDS ===== */
+body.dark-mode .card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .card:hover {
+  box-shadow: 0 8px 16px rgba(176, 0, 0, 0.2);
+}
+
+body.dark-mode .caracteristica {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .caracteristica i {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .caracteristica h3 {
+  color: var(--text);
+}
+
+body.dark-mode .caracteristica p {
+  color: var(--text);
+}
+
+body.dark-mode .producto {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .producto h3 {
+  color: var(--text);
+}
+
+body.dark-mode .producto:hover h3 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .producto p {
+  color: var(--text);
+}
+
+body.dark-mode .post-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .destacado-post {
+  background: var(--card);
+  border-color: var(--btn);
+}
+
+/* ===== FORMULARIOS ===== */
+body.dark-mode .formulario {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .formulario h3 {
+  color: var(--text);
+}
+
+body.dark-mode .formulario h3 i {
+  color: var(--text);
+}
+
+body.dark-mode .formulario label {
+  color: var(--text);
+}
+
+body.dark-mode .formulario input,
+body.dark-mode .formulario select,
+body.dark-mode .formulario textarea {
+  background: #2a2a2a;
+  color: white;
+  border-color: var(--border);
+}
+
+body.dark-mode .formulario input::placeholder,
+body.dark-mode .formulario textarea::placeholder {
+  color: #999;
+}
+
+body.dark-mode .formulario input:focus,
+body.dark-mode .formulario select:focus,
+body.dark-mode .formulario textarea:focus {
+  background: #2a2a2a;
+  color: white;
+  border-color: var(--btn);
+}
+
+body.dark-mode .error-message {
+  color: #ff6b6b;
+}
+
+body.dark-mode .success-message {
+  color: #66bb6a;
+}
+
+/* ===== MODALES ===== */
+body.dark-mode .modal-content {
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.dark-mode .modal-body {
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.dark-mode .modal-footer {
+  background: var(--surface);
+  border-top-color: var(--border);
+}
+
+body.dark-mode .nav-tabs {
+  border-bottom-color: var(--border);
+}
+
+body.dark-mode .nav-tabs .nav-link {
+  color: var(--text);
+}
+
+body.dark-mode .nav-tabs .nav-link:hover {
+  color: var(--btn-hover);
+  border-bottom-color: var(--border);
+}
+
+body.dark-mode .nav-tabs .nav-link.active {
+  color: var(--btn-hover);
+  border-bottom-color: var(--btn);
+}
+
+body.dark-mode .modal-body .form-label {
+  color: var(--text);
+}
+
+body.dark-mode .modal-body .form-control,
+body.dark-mode .modal-body .form-select {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .modal-body .form-control::placeholder {
+  color: rgba(241, 241, 241, 0.5);
+}
+
+body.dark-mode .modal-body .form-control:focus,
+body.dark-mode .modal-body .form-select:focus {
+  background: var(--card);
+  border-color: var(--btn);
+  color: var(--text);
+}
+
+body.dark-mode .dropdown-menu {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text);
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: rgba(176, 0, 0, 0.2);
+  color: var(--btn-hover);
+}
+
+body.dark-mode .dropdown-divider {
+  border-color: var(--border);
+}
+
+/* Modal Custom */
+body.dark-mode .modal-custom {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+body.dark-mode .modal-contenido {
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.dark-mode .cerrar {
+  color: var(--text);
+}
+
+body.dark-mode .cerrar:hover {
+  color: var(--btn-hover);
+}
+
+body.dark-mode #modalTitulo {
+  color: var(--text);
+}
+
+body.dark-mode #modalTexto {
+  color: var(--text);
+}
+
+/* ===================================================
+   SECTIONS - TODAS LAS SECCIONES
+   =================================================== */
+
+/* ===== COMENTARIOS ===== */
+body.dark-mode .comentarios-section {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .comentario {
+  border-bottom-color: var(--border);
+  color: var(--text);
+}
+
+/* ===== EQUIPOS ===== */
+body.dark-mode .selector-pais select {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .selector-pais select:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .paises-grid {
+  color: var(--text);
+}
+
+body.dark-mode .pais-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .pais-card h3 {
+  color: var(--text);
+}
+
+body.dark-mode .pais-card:hover {
+  border-color: var(--btn);
+}
+
+body.dark-mode .pais-card:hover h3 {
+  color: var(--btn-hover);
+}
+
+/* ===== CAMPEONATOS ===== */
+body.dark-mode .hero-campeonatos .hero-contenido h2,
+body.dark-mode .hero-campeonatos .hero-contenido p {
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+body.dark-mode .filtro-ediciones .input-filtro {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .filtro-ediciones .input-filtro::placeholder {
+  color: rgba(241, 241, 241, 0.5);
+}
+
+body.dark-mode #ediciones ul,
+body.dark-mode #equipos ul,
+body.dark-mode #jugadores ul {
+  color: var(--text);
+}
+
+body.dark-mode #ediciones li,
+body.dark-mode #equipos li,
+body.dark-mode #jugadores li {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode #ediciones li:hover,
+body.dark-mode #equipos li:hover,
+body.dark-mode #jugadores li:hover {
+  border-color: var(--btn);
+  box-shadow: 0 0 10px rgba(176, 0, 0, 0.2);
+}
+
+body.dark-mode #ediciones li span {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode #jugadores strong {
+  color: var(--btn-hover);
+}
+
+body.dark-mode #ediciones .titulo-seccion,
+body.dark-mode #equipos .titulo-seccion,
+body.dark-mode #jugadores .titulo-seccion {
+  color: var(--text);
+}
+
+body.dark-mode .edicion-item {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .edicion-info h3 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .edicion-info p {
+  color: var(--text);
+}
+
+body.dark-mode .campeon {
+  color: #ffd54f;
+  background: rgba(255, 213, 79, 0.15);
+  border-color: rgba(255, 213, 79, 0.4);
+}
+
+body.dark-mode .subcampeon {
+  color: #e0e0e0;
+  background: rgba(224, 224, 224, 0.15);
+  border-color: rgba(224, 224, 224, 0.3);
+}
+
+body.dark-mode .jugador-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.dark-mode .jugador-info h3 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .jugador-pais {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .jugador-logros {
+  color: var(--text);
+}
+
+/* ===== CARACTERÃSTICAS ===== */
+body.dark-mode .caracteristicas {
+  background: var(--bg);
+}
+
+body.dark-mode .titulo-seccion {
+  color: var(--text);
+}
+
+/* ===== PERFIL ===== */
+body.dark-mode .perfil-grid {
+  color: var(--text);
+}
+
+body.dark-mode .avatar-img,
+body.dark-mode .avatar-placeholder {
+  background-color: var(--btn);
+  border-color: var(--btn-hover);
+}
+
+body.dark-mode .perfil-info h3 {
+  color: var(--text);
+}
+
+body.dark-mode .perfil-info label {
+  color: var(--text);
+}
+
+body.dark-mode .perfil-info input,
+body.dark-mode .perfil-info textarea,
+body.dark-mode .perfil-info select {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .perfil-info input:focus,
+body.dark-mode .perfil-info textarea:focus,
+body.dark-mode .perfil-info select:focus {
+  border-color: var(--btn);
+  background: var(--card);
+}
+
+/* ===== POSTS ===== */
+body.dark-mode .posts-container {
+  background: var(--bg);
+}
+
+body.dark-mode .posts-header h1,
+body.dark-mode .posts-header p {
+  color: white;
+}
+
+body.dark-mode .post-autor-info h4 {
+  color: var(--text);
+}
+
+body.dark-mode .post-fecha {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .post-titulo {
+  color: var(--text);
+}
+
+body.dark-mode .post-descripcion {
+  color: var(--text);
+}
+
+body.dark-mode .post-actions {
+  border-top-color: var(--border);
+}
+
+body.dark-mode .post-actions button {
+  color: var(--text);
+}
+
+body.dark-mode .post-actions button:hover {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .destacado-contenido h2 {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .destacado-contenido p {
+  color: var(--text);
+}
+
+body.dark-mode .media-selector button {
+  background: var(--border);
+}
+
+body.dark-mode .media-selector button.active-dot {
+  background: var(--btn-hover);
+}
+
+body.dark-mode .post-media,
+body.dark-mode .media-container {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ===== PRODUCTOS ===== */
+body.dark-mode .productos {
+  background: var(--bg);
+}
+
+body.dark-mode .tienda-header h1,
+body.dark-mode .tienda-header p {
+  color: white;
+}
+
+body.dark-mode .producto-descripcion {
+  color: var(--text);
+}
+
+body.dark-mode .producto-imagen {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .producto .precio-original {
+  color: rgba(241, 241, 241, 0.6);
+}
+
+body.dark-mode .productos-controles {
+  background: var(--bg);
+}
+
+body.dark-mode .productos-filtro select,
+body.dark-mode .productos-ordenar select {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* ===== ESTADÃSTICAS ===== */
+body.dark-mode .stats-filters .form-select {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.dark-mode .stats-filters .form-select:hover,
+body.dark-mode .stats-filters .form-select:focus {
+  border-color: var(--btn);
+  box-shadow: 0 0 0 3px rgba(176, 0, 0, 0.15);
+}
+
+body.dark-mode .stat-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .stat-content h3 {
+  color: var(--text);
+}
+
+body.dark-mode .stat-content p {
+  color: rgba(241, 241, 241, 0.7);
+}
+
+body.dark-mode .stat-change {
+  background: rgba(56, 142, 60, 0.2);
+  color: #66bb6a;
+}
+
+body.dark-mode .chart-container {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .chart-container h3 {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table-container {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .stats-table-container h3 {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table thead {
+  background: rgba(176, 0, 0, 0.15);
+}
+
+body.dark-mode .stats-table th {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table td {
+  color: var(--text);
+}
+
+body.dark-mode .stats-table .resultado {
+  color: var(--btn-hover);
+}
+
+body.dark-mode .stats-table tbody tr {
+  border-bottom-color: var(--border);
+}
+
+body.dark-mode .stats-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .player-stats h3 {
+  color: var(--text);
+}
+
+body.dark-mode .player-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+body.dark-mode .player-info h4 {
+  color: var(--text);
+}
+
+body.dark-mode .player-info p {
+  color: rgba(241, 241, 241, 0.7);
+}
+
+body.dark-mode .stat-badge {
+  background: rgba(176, 0, 0, 0.2);
+  color: var(--btn-hover);
+}
+
+/* ===================================================
+   AJUSTES GENERALES Y UTILIDADES
+   =================================================== */
+
+/* ===== TEXTOS GENERALES ===== */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: var(--text);
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li,
+body.dark-mode label {
+  color: var(--text);
+}
+
+/* ===== BORDES Y SEPARADORES ===== */
+body.dark-mode .divider,
+body.dark-mode hr {
+  background: var(--border);
+  border-color: var(--border);
+}
+
+body.dark-mode .divider-vertical {
+  background: var(--border);
+}
+
+/* ===== BADGES Y ALERTAS ===== */
+body.dark-mode .badge {
+  color: white;
+}
+
+body.dark-mode .alert-primary {
+  background: rgba(176, 0, 0, 0.15);
+  color: var(--btn-hover);
+  border-left-color: var(--btn);
+}
+
+body.dark-mode .alert-success {
+  background: rgba(56, 142, 60, 0.15);
+  color: #66bb6a;
+}
+
+body.dark-mode .alert-warning {
+  background: rgba(249, 168, 37, 0.15);
+  color: #ffc107;
+}
+
+body.dark-mode .alert-danger {
+  background: rgba(211, 47, 47, 0.15);
+  color: #ff6b6b;
+}
+
+/* ===== TOOLTIPS ===== */
+body.dark-mode .tooltip .tooltiptext {
+  background-color: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* ===== INPUTS Y SELECTS GENERALES ===== */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: rgba(241, 241, 241, 0.5);
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus,
+body.dark-mode select:focus {
+  border-color: var(--btn);
+  background: var(--card);
+}
+
+body.dark-mode select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ===== ENLACES ===== */
+body.dark-mode a:not(.btn):not(.boton):not(.btn-login) {
+  color: var(--btn-hover);
+}
+
+body.dark-mode a:not(.btn):not(.boton):not(.btn-login):hover {
+  color: #ff6666;
+}
+
+/* ===== HOVER STATES MEJORADOS ===== */
+body.dark-mode .post-card:hover,
+body.dark-mode .producto:hover,
+body.dark-mode .caracteristica:hover,
+body.dark-mode .stat-card:hover,
+body.dark-mode .player-card:hover,
+body.dark-mode .jugador-card:hover,
+body.dark-mode .edicion-item:hover,
+body.dark-mode .pais-card:hover,
+body.dark-mode .card:hover {
+  box-shadow: 0 8px 16px rgba(176, 0, 0, 0.2);
+}
+
+/* ===== SCROLLBAR ===== */
+body.dark-mode ::-webkit-scrollbar {
+  background: var(--surface);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--btn);
+}
+
+/* ===== ESTADOS DESHABILITADOS ===== */
+body.dark-mode input:disabled,
+body.dark-mode textarea:disabled,
+body.dark-mode select:disabled,
+body.dark-mode button:disabled {
+  background: var(--surface);
+  color: rgba(241, 241, 241, 0.4);
+  border-color: var(--border);
+  opacity: 0.6;
+}
+
+/* ===== RESPONSIVE - MANTENER CONTRASTE ===== */
+@media (max-width: 768px) {
+  body.dark-mode .post-card,
+  body.dark-mode .producto,
+  body.dark-mode .caracteristica,
+  body.dark-mode .stat-card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  body.dark-mode .post-card:hover,
+  body.dark-mode .producto:hover,
+  body.dark-mode .caracteristica:hover,
+  body.dark-mode .stat-card:hover {
+    box-shadow: 0 4px 12px rgba(176, 0, 0, 0.25);
+  }
+}
+
+/* ===== ACCESIBILIDAD - CONTRASTE MÃNIMO ===== */
+body.dark-mode .text-muted,
+body.dark-mode .text-secondary {
+  color: rgba(241, 241, 241, 0.7) !important;
+}
+
+/* ===== ASEGURAR BOTONES PRIMARIOS LEGIBLES ===== */
+body.dark-mode .btn,
+body.dark-mode .btn-primary,
+body.dark-mode button.btn,
+body.dark-mode .boton {
+  color: white;
+  background: var(--btn);
+}
+
+body.dark-mode .btn:hover,
+body.dark-mode .btn-primary:hover,
+body.dark-mode button.btn:hover,
+body.dark-mode .boton:hover {
+  background: var(--btn-hover);
+  color: white;
+}
+
+/* Login button - mantener siempre visible */
+body.dark-mode .btn-login {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white !important;
+}
+
+body.dark-mode .btn-login:hover {
+  color: white !important;
+}

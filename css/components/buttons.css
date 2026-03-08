@@ -1,0 +1,201 @@
+/* =======================
+   BOTONES
+   ======================= */
+
+/* Botón base */
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Botón primario */
+.btn-primary {
+  background: linear-gradient(135deg, var(--btn) 0%, #1e3a8a 100%);
+  color: white;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--text-base);
+  border: none;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botón secundario */
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--text-base);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: var(--text);
+}
+
+body.dark-mode .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border);
+}
+
+body.dark-mode .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Botón de éxito */
+.btn-success {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--text-base);
+}
+
+.btn-success:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Botón de peligro */
+.btn-danger {
+  background: var(--btn);
+  color: white;
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.btn-danger:hover {
+  background: var(--btn-hover);
+}
+
+/* Botón pequeño */
+.btn-sm {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--text-sm);
+}
+
+/* Botón grande */
+.btn-lg {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--text-lg);
+}
+
+/* Botón ancho */
+.btn-block, .w-100 {
+  width: 100%;
+}
+
+/* Botón de acción con icono */
+.btn-accion {
+  background: none;
+  border: none;
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-accion img {
+  width: 30px;
+  height: auto;
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.btn-accion:hover img {
+  transform: scale(1.1);
+}
+
+/* Botón deshabilitado */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  transform: none;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 576px) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-success,
+  .btn-danger {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--text-sm);
+  }
+
+  .btn-lg {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--text-base);
+  }
+
+  .btn-accion img {
+    width: 24px;
+  }
+}
+
+/* Publicaciones*/
+/* Botón de crear publicación */
+.btn-crear-post {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-crear-post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-crear-post i {
+  font-size: 1.1rem;
+}
+
+/* Dark mode */
+body.dark-mode .btn-crear-post {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.dark-mode .btn-crear-post:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn-crear-post span {
+    display: none;
+  }
+  
+  .btn-crear-post {
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    margin-right: 0.5rem;
+  }
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MundialFan - Detalle de País</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div id="mf-header"></div>
+<div id="mf-nav"></div>
+
+<!-- ═══════════ CONTENIDO ÚNICO DE ESTA PÁGINA ═══════════ -->
+
+<!-- Estado: cargando -->
+<div id="page-loading" class="text-center py-5">
+  <i class="fas fa-spinner fa-spin fa-3x mb-3"></i>
+  <p>Cargando información del país...</p>
+</div>
+
+<!-- Estado: sin datos -->
+<div id="page-empty" style="display:none;">
+  <section class="hero hero-pais" style="background: linear-gradient(135deg, #333, #111);">
+    <div class="hero-contenido text-center">
+      <h2 id="empty-name"></h2>
+      <p>🚧 Este país aún no tiene información registrada.</p>
+    </div>
+  </section>
+  <section class="caracteristicas">
+    <div class="contenedor text-center py-5">
+      <p class="text-muted mb-4">El equipo de administración está trabajando en ello.</p>
+      <a href="equipo.html" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left"></i> Volver a Equipos
+      </a>
+    </div>
+  </section>
+</div>
+
+<!-- Estado: con datos -->
+<div id="page-content" style="display:none;">
+
+  <section class="hero hero-pais" id="hero-pais">
+    <div class="overlay"></div>
+    <div class="hero-contenido">
+      <h2 id="pais-nombre"></h2>
+      <p id="pais-continente"></p>
+    </div>
+  </section>
+
+  <section class="caracteristicas">
+    <div class="contenedor">
+      <a href="equipo.html" class="d-inline-flex align-items-center gap-2 mb-4" style="opacity:.85; text-decoration:none;">
+        <i class="fas fa-arrow-left"></i> Volver a Equipos
+      </a>
+
+      <!-- Encabezado con bandera -->
+      <div class="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
+        <div id="pais-cover" style="height:160px;"></div>
+        <div class="card-body p-4">
+          <div class="d-flex flex-column flex-md-row align-items-md-end gap-3" style="margin-top:-60px;">
+            <img id="pais-bandera" src="" alt="Bandera"
+                 style="width:120px;height:80px;object-fit:cover;border-radius:10px;border:5px solid var(--surface);">
+            <div class="flex-grow-1">
+              <h1 class="m-0" id="pais-nombre-2" style="font-size:26px;"></h1>
+              <p class="m-0" style="opacity:.8;" id="pais-codigo"></p>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <div class="p-3 rounded-4 border" style="background:var(--bg);">
+                <strong>Títulos Mundiales:</strong> <span id="pais-titulos">—</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="p-3 rounded-4 border" style="background:var(--bg);">
+                <strong>Participaciones:</strong> <span id="pais-participaciones">—</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="p-3 rounded-4 border" style="background:var(--bg);">
+                <strong>Continente:</strong> <span id="pais-continente-2">—</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="p-3 rounded-4 border" style="background:var(--bg);">
+                <strong>Entrenador:</strong> <span id="pais-entrenador">—</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="p-3 rounded-4 border" style="background:var(--bg);">
+                <strong>Mejor Jugador:</strong> <span id="pais-jugador">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Galería de imágenes -->
+      <div id="galeria-section" style="display:none;">
+        <h3 class="subtitulo mt-4 mb-3">Galería</h3>
+        <div class="galeria" id="galeria-container"></div>
+      </div>
+
+      <!-- Videos -->
+      <div id="videos-section" style="display:none;">
+        <h3 class="subtitulo mt-5 mb-3">Videos</h3>
+        <div class="videos" id="videos-container"></div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<div id="mf-footer"></div>
+
+<script src="../js/components.js"></script>
+<script src="../js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // Leer ?id= de la URL
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  const loading = document.getElementById('page-loading');
+  const empty   = document.getElementById('page-empty');
+  const content = document.getElementById('page-content');
+
+  if (!id) {
+    window.location.href = 'equipo.html';
+    return;
+  }
+
+  try {
+    const data    = await Countries.getOne(id);
+    const country = data.data ?? data;
+
+    loading.style.display = 'none';
+
+    // Si no tiene datos relevantes, mostrar fachada vacía
+    if (!country.name) {
+      document.getElementById('empty-name').textContent = 'País desconocido';
+      empty.style.display = 'block';
+      return;
+    }
+
+    // Llenar contenido
+    const API = 'http://localhost:8000';
+    document.title = `MundialFan - ${country.name}`;
+
+    document.getElementById('pais-nombre').textContent    = country.name;
+    document.getElementById('pais-nombre-2').textContent  = country.name;
+    document.getElementById('pais-continente').textContent = country.continent ?? '';
+    document.getElementById('pais-continente-2').textContent = country.continent ?? '—';
+    document.getElementById('pais-codigo').textContent    = country.code ?? '';
+    document.getElementById('pais-titulos').textContent   = country.titles ?? '—';
+    document.getElementById('pais-participaciones').textContent = country.participations ?? '—';
+    document.getElementById('pais-entrenador').textContent = country.coach ?? '—';
+    document.getElementById('pais-jugador').textContent   = country.best_player ?? '—';
+
+    if (country.flag) {
+      const flagUrl = `${API}/uploads/${country.flag}`;
+      document.getElementById('pais-bandera').src = flagUrl;
+      document.getElementById('pais-cover').style.backgroundImage = `url('${flagUrl}')`;
+      document.getElementById('pais-cover').style.backgroundSize  = 'cover';
+      document.getElementById('pais-cover').style.backgroundPosition = 'center';
+      document.getElementById('pais-cover').style.filter = 'brightness(0.6)';
+    }
+
+    // Galería
+    if (country.images && country.images.length) {
+      document.getElementById('galeria-section').style.display = 'block';
+      document.getElementById('galeria-container').innerHTML =
+        country.images.map(img => `
+          <img src="${API}/uploads/${img.path}" alt="${img.caption ?? ''}"
+               class="rounded shadow-sm" style="max-width:100%;border-radius:10px;">
+        `).join('');
+    }
+
+    // Videos
+    if (country.videos && country.videos.length) {
+      document.getElementById('videos-section').style.display = 'block';
+      document.getElementById('videos-container').innerHTML =
+        country.videos.map(v => `
+          <iframe src="${v.url}" frameborder="0" allowfullscreen
+                  class="shadow-sm" style="width:100%;aspect-ratio:16/9;border-radius:10px;"></iframe>
+        `).join('');
+    }
+
+    content.style.display = 'block';
+
+  } catch (e) {
+    loading.style.display = 'none';
+    document.getElementById('empty-name').textContent = 'País no encontrado';
+    empty.style.display = 'block';
+  }
+
+});
+</script>
+</body>
+</html>

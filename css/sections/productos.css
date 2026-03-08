@@ -1,0 +1,313 @@
+/* =======================
+   SECCIÓN TIENDA Y PRODUCTOS
+   ======================= */
+
+.tienda-header {
+  background: linear-gradient(135deg, var(--btn) 0%, var(--primary-blue) 100%);
+  color: white;
+  padding: var(--spacing-4xl) var(--spacing-lg);
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.tienda-header h1 {
+  margin-bottom: var(--spacing-md);
+  font-size: 2.4rem;
+}
+
+.tienda-header p {
+  font-size: var(--text-lg);
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0.95;
+}
+
+/* ===== GRID DE PRODUCTOS ===== */
+
+.productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  padding: var(--spacing-4xl) var(--spacing-lg);
+  background: var(--surface);
+  transition: background var(--transition-normal);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+/* ===== PRODUCTO CARD ===== */
+
+.producto {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  transition: all var(--transition-normal);
+  overflow: hidden;
+}
+
+.producto:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-8px);
+  border-color: var(--btn);
+}
+
+.producto-imagen {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.producto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-normal);
+  display: block;
+}
+
+.producto:hover img {
+  transform: scale(1.05);
+}
+
+.producto h3 {
+  font-size: 1.3rem;
+  margin: 0 0 var(--spacing-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--text);
+  transition: color var(--transition-fast);
+}
+
+.producto:hover h3 {
+  color: var(--btn);
+}
+
+.producto-descripcion {
+  font-size: var(--text-sm);
+  color: var(--text);
+  margin-bottom: var(--spacing-md);
+  opacity: 0.8;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.producto-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-lg);
+}
+
+.producto .precio {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--secondary-btn);
+}
+
+.producto .precio-original {
+  font-size: var(--text-sm);
+  color: var(--text);
+  text-decoration: line-through;
+  opacity: 0.6;
+  margin-right: var(--spacing-sm);
+}
+
+.producto .descuento {
+  display: inline-block;
+  background: #ff4444;
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+}
+
+.producto button {
+  background: var(--secondary-btn);
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-normal);
+  width: 100%;
+}
+
+.producto button:hover {
+  background: var(--secondary-btn-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+}
+
+.producto button:active {
+  transform: translateY(0);
+}
+
+/* ===== FILTROS Y CLASIFICACIÓN ===== */
+
+.productos-controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  background: var(--surface);
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.productos-filtro,
+.productos-ordenar {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.productos-filtro select,
+.productos-ordenar select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+  .productos {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+    padding: var(--spacing-3xl) var(--spacing-md);
+  }
+
+  .producto {
+    padding: var(--spacing-md);
+  }
+
+  .producto-imagen {
+    height: 180px;
+  }
+
+  .producto h3 {
+    font-size: 1.1rem;
+  }
+
+  .producto .precio {
+    font-size: 1.3rem;
+  }
+
+  .producto button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--text-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .tienda-header {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .tienda-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .productos {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    padding: var(--spacing-2xl) var(--spacing-md);
+    width: 95%;
+  }
+
+  .producto-imagen {
+    height: 160px;
+  }
+
+  .producto-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .productos-controles {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .productos-filtro,
+  .productos-ordenar {
+    flex-direction: column;
+  }
+
+  .productos-filtro select,
+  .productos-ordenar select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .tienda-header {
+    padding: var(--spacing-xl) var(--spacing-sm);
+  }
+
+  .tienda-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .tienda-header p {
+    font-size: var(--text-base);
+  }
+
+  .productos {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg) var(--spacing-sm);
+    width: 100%;
+  }
+
+  .producto {
+    padding: var(--spacing-sm);
+  }
+
+  .producto-imagen {
+    height: 140px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .producto h3 {
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .producto-descripcion {
+    font-size: var(--text-xs);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .producto .precio {
+    font-size: 1.1rem;
+  }
+
+  .producto button {
+    padding: var(--spacing-sm);
+    font-size: var(--text-xs);
+  }
+
+  .producto:hover {
+    transform: translateY(-4px);
+  }
+}

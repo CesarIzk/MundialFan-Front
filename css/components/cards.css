@@ -1,0 +1,227 @@
+/* =======================
+   TARJETAS (CARDS)
+   ======================= */
+
+/* Card base */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== CARACTERÍSTICA CARD ===== */
+
+.caracteristica {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-normal);
+  text-align: center;
+}
+
+.caracteristica:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.caracteristica i {
+  color: var(--primary-blue);
+  font-size: 40px;
+  margin-bottom: var(--spacing-md);
+  transition: color var(--transition-normal);
+}
+
+body.dark-mode .caracteristica i {
+  color: var(--text);
+}
+
+.caracteristica h3 {
+  color: var(--btn);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  transition: color var(--transition-normal);
+}
+
+body.dark-mode .caracteristica h3 {
+  color: var(--text);
+}
+
+.caracteristica p {
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* ===== PRODUCTO CARD ===== */
+
+.producto {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  transition: all var(--transition-normal);
+}
+
+.producto:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.producto img {
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-md);
+  object-fit: cover;
+}
+
+.producto h3 {
+  font-size: 1.3rem;
+  margin: 0 0 var(--spacing-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.producto p {
+  font-size: var(--text-base);
+  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+  opacity: 0.8;
+}
+
+.producto .precio {
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--secondary-btn);
+  margin: var(--spacing-md) 0;
+}
+
+.producto button {
+  background: var(--secondary-btn);
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-normal);
+}
+
+.producto button:hover {
+  background: var(--secondary-btn-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== POST CARD ===== */
+
+.post-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Post destacado */
+.destacado-post {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .destacado-post {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== MEDIA CONTAINERS ===== */
+
+.media-estatica,
+.media-container,
+.media-containerS {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.media-estatica img,
+.media-estatica video,
+.media-container img,
+.media-container video,
+.media-containerS img,
+.media-containerS video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+.media-container img,
+.media-container video {
+  display: none;
+}
+
+.media-container .active {
+  display: block;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 576px) {
+  .caracteristica {
+    padding: var(--spacing-md);
+  }
+
+  .caracteristica i {
+    font-size: 32px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .producto {
+    padding: var(--spacing-md);
+  }
+
+  .producto h3 {
+    font-size: 1.1rem;
+  }
+
+  .producto .precio {
+    font-size: 1.2rem;
+  }
+
+  .producto button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--text-sm);
+  }
+}
