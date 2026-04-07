@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      await Auth.register({ name, username, email, birth_date: birth, gender, password });
+      await Auth.register({ name, username, email, birth_date: birth, gender, password, password_confirmation: password2 });
       // Después de registrar, hacer login automático
       await Auth.login(email, password);
       window.location.href = 'index.html';
