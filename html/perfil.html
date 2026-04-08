@@ -55,11 +55,11 @@
     <div style="height:140px; background: linear-gradient(90deg, #b00000 0%, #8b1538 40%, #2d3b87 100%);"></div>
     <div class="card-body p-4">
       <div class="d-flex flex-column flex-md-row align-items-md-end gap-3" style="margin-top:-70px;">
-        <img src="imagenes/default-profile.jpg" alt="Foto de perfil" id="profile-avatar"
-             style="width:140px;height:140px;border-radius:999px;object-fit:cover;border:6px solid var(--surface);">
-        <div class="flex-grow-1">
+        <img src="../images/default-profile.jpg" alt="Foto de perfil" id="profile-avatar"
+             style="width:140px;height:140px;border-radius:999px;object-fit:cover;border:6px solid var(--surface); flex-shrink: 0;">
+        <div class="flex-grow-1" style="min-width: 0; word-break: break-word;">
           <h2 class="m-0 fw-bold" id="profile-name">—</h2>
-          <p class="m-0" style="opacity:.7;" id="profile-username">@—</p>
+          <p class="m-0 text-truncate" style="opacity:.7;" id="profile-username">@—</p>
         </div>
         <div class="d-grid gap-2" style="min-width:220px;">
           <a href="chat.html" class="btn btn-outline-primary">
@@ -120,49 +120,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const user = getUser();
+  const postsEl = document.getElementById('my-posts');
 
   // ── Llenar datos del perfil ────────────────────────────
   try {
     const data = await Users.getProfile(user.id);
-    const u = data.data ?? data;
+    const u = data.user ?? data;
     document.getElementById('profile-name').textContent     = u.name ?? '—';
     document.getElementById('profile-username').textContent = '@' + (u.username ?? '—');
     document.getElementById('profile-email').textContent    = u.email ?? '—';
-    document.getElementById('profile-birth').textContent    = u.birth_date ?? '—';
+    
+    let fechaNac = u.birth_date ?? '—';
+    if (fechaNac.includes(',')) fechaNac = fechaNac.split(',')[0]; // Quita la hora si ya fue formateada
+    else if (fechaNac.includes('T')) fechaNac = fechaNac.split('T')[0]; // Por si viene en formato crudo
+    document.getElementById('profile-birth').textContent    = fechaNac;
+
     if (u.profile_picture) {
       document.getElementById('profile-avatar').src = `http://localhost:8000/uploads/${u.profile_picture}`;
     }
-  } catch (e) {
-    // Fallback con datos locales
-    document.getElementById('profile-name').textContent     = user.name ?? '—';
-    document.getElementById('profile-username').textContent = '@' + (user.username ?? '—');
-    document.getElementById('profile-email').textContent    = user.email ?? '—';
-  }
 
-  // ── Cargar publicaciones propias ───────────────────────
-  const postsEl = document.getElementById('my-posts');
-  try {
-    const data  = await Posts.getAll({ user_id: user.id });
-    const posts = data.data ?? data;
+    // ── Cargar publicaciones propias ───────────────────────
+    const posts = data.posts ?? [];
     if (!posts.length) {
       postsEl.innerHTML = `<div class="text-center py-4" style="opacity:.65;">
         <i class="fas fa-newspaper fa-2x mb-2 d-block"></i> Aún no hay publicaciones.</div>`;
-      return;
-    }
+    } else {
     postsEl.innerHTML = posts.map(post => `
       <article class="card border-0 shadow-sm rounded-4 mb-3">
         <div class="card-body">
           <p class="mb-2">${post.content}</p>
-          ${post.media_path ? `<img src="http://localhost:8000/uploads/${post.media_path}"
-            class="img-fluid rounded-4 border" style="max-height:320px;object-fit:cover;width:100%;">` : ''}
+          ${post.media_path ? (post.content_type === 'video' ? `<video controls src="http://localhost:8000/uploads/${post.media_path}" class="w-100 rounded-4 border" style="max-height:320px;"></video>` : `<img src="http://localhost:8000/uploads/${post.media_path}" class="img-fluid rounded-4 border" style="max-height:320px;object-fit:cover;width:100%;">`) : ''}
           <div class="d-flex gap-3 mt-3" style="font-size:14px;opacity:.85;">
-            <span><i class="fas fa-heart me-1"></i>${post.likes_count ?? 0}</span>
+            <span><i class="fas fa-heart me-1"></i>${post.likes ?? 0}</span>
             <span><i class="fas fa-comment me-1"></i>${post.comments_count ?? 0}</span>
           </div>
         </div>
       </article>
     `).join('');
+    }
   } catch (e) {
+    // Fallback con datos locales si la API falla
+    document.getElementById('profile-name').textContent     = user.name ?? '—';
+    document.getElementById('profile-username').textContent = '@' + (user.username ?? '—');
+    document.getElementById('profile-email').textContent    = user.email ?? '—';
     postsEl.innerHTML = `<div class="text-center py-4 text-danger">Error al cargar publicaciones.</div>`;
   }
 
@@ -180,10 +180,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           <i class="fas fa-user-slash me-2"></i>No se encontraron usuarios.</td></tr>`;
         return;
       }
-      tbody.innerHTML = users.map(u => `
+      tbody.innerHTML = users.map(u => {
+        const avatarSrc = u.profile_picture ? `http://localhost:8000/uploads/${u.profile_picture}` : '../images/default-profile.jpg';
+        return `
         <tr>
           <td class="d-flex align-items-center gap-2">
-            <img src="imagenes/default-profile.jpg" style="width:36px;height:36px;border-radius:999px;object-fit:cover;">
+            <img src="${avatarSrc}" style="width:36px;height:36px;border-radius:999px;object-fit:cover;">
             <strong>@${u.username}</strong>
           </td>
           <td>${u.name}</td>
@@ -193,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </a>
           </td>
         </tr>
-      `).join('');
+      `}).join('');
     } catch (e) {
       tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error en la búsqueda.</td></tr>`;
     }

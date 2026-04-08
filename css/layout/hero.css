@@ -33,20 +33,20 @@
 
 /* Slide 1 - Imagen del estadio */
 .hero-slide:nth-child(1) {
-  background-image: url("../../imagenes/estadio.png");
+  background-image: url("../../images/estadio.png");
   animation-delay: 0s;
 }
 
 
 /* Slide 2 - Mundial con trofeo */
 .hero-slide:nth-child(2) {
-  background-image: url("../../imagenes/trofeo.png");
+  background-image: url("../../images/trofeo.png");
   animation-delay: 5s;
 }
 
 /* Slide 3 - Tu tercera imagen */
 .hero-slide:nth-child(3) {
-  background-image: url("../../imagenes/balon.png");
+  background-image: url("../../images/balon.png");
   animation-delay: 10s;
 }
 
@@ -238,7 +238,7 @@
   }
 }
 .hero-equipos {
-  background-image: url('/imagenes/equipos.jpg');
+  background-image: url('../../images/equipos.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
