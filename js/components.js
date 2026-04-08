@@ -88,6 +88,7 @@ function getNavHTML() {
           <li><a href="publicaciones.html"><i class="fas fa-calendar-alt"></i> <span>Publicaciones</span></a></li>
           <li><a href="stats.html"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a></li>
           <li><a href="chat.html"><i class="fas fa-comments"></i> <span>Chat</span></a></li>
+          <li><a href="amigos.html"><i class="fas fa-user-friends"></i> <span>Amigos</span></a></li>
         </ul>
         <div class="auth-buttons" id="auth-buttons">
           ${buildAuthButtons()}
