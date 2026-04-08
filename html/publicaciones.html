@@ -68,9 +68,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                class="img-fluid rounded-4 border w-100 mb-3" style="max-height:400px;object-fit:cover;">`
     ) : '';
 
-    const commentsHTML = comments.map(c => `
+    const commentsHTML = comments.map(c => {
+      const cAvatar = c.user?.profile_picture ? `http://localhost:8000/uploads/${c.user.profile_picture}` : '../images/default-profile.jpg';
+      return `
       <div class="d-flex gap-2 mb-2">
-        <img src="imagenes/default-profile.jpg" alt="Avatar"
+        <img src="${cAvatar}" alt="Avatar"
              style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
         <div class="p-2 rounded-4 bg-light flex-grow-1 border">
           <div class="d-flex justify-content-between">
@@ -80,11 +82,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div style="font-size:13px;">${c.content}</div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
+
+    const myAvatar = user?.profile_picture ? `http://localhost:8000/uploads/${user.profile_picture}` : '../images/default-profile.jpg';
 
     const commentFormHTML = user ? `
       <div class="d-flex gap-2 mt-2">
-        <img src="imagenes/default-profile.jpg" alt="Tu avatar"
+        <img src="${myAvatar}" alt="Tu avatar"
              style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
         <div class="flex-grow-1">
           <textarea class="form-control form-control-sm rounded-3 comment-input"
@@ -100,11 +104,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     ` : '';
 
+    const authorAvatar = post.user?.profile_picture ? `http://localhost:8000/uploads/${post.user.profile_picture}` : '../images/default-profile.jpg';
+
     return `
       <article class="mf-post mf-post--narrow card border-0 shadow-sm rounded-4 mb-4 mx-auto" style="max-width:600px;">
         <div class="card-body">
           <div class="d-flex align-items-center gap-2 mb-3">
-            <img src="imagenes/default-profile.jpg" alt="Avatar"
+            <img src="${authorAvatar}" alt="Avatar"
                  style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
             <div>
               <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
@@ -189,9 +195,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           const res = await Comments.create(postId, content);
           const box  = document.querySelector(`.comments-box-${postId}`);
           const user = getUser();
+          const myAvatar = user?.profile_picture ? `http://localhost:8000/uploads/${user.profile_picture}` : '../images/default-profile.jpg';
           box.insertAdjacentHTML('beforeend', `
             <div class="d-flex gap-2 mb-2">
-              <img src="imagenes/default-profile.jpg" alt="Avatar"
+              <img src="${myAvatar}" alt="Avatar"
                    style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
               <div class="p-2 rounded-4 bg-light flex-grow-1 border">
                 <strong style="font-size:12px;">${user?.name ?? 'Tú'}</strong>

@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     grid.innerHTML = list.map(c => {
       const flagSrc = c.flag
-        ? `http://localhost:8000/uploads/${c.flag}`
-        : `imagenes/default-profile.jpg`;
+        ? (c.flag.startsWith('http') ? c.flag : `http://localhost:8000/uploads/${c.flag}`)
+        : `../images/default-profile.jpg`;
       return `
         <article class="team-card">
           <a class="team-card__link" href="pais_detalle.html?id=${c.id}"

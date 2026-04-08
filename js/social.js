@@ -66,9 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (data.success) {
+                    const userStr = localStorage.getItem('mf_user');
+                    const currentUser = userStr ? JSON.parse(userStr) : {};
+                    const avatarSrc = currentUser.profile_picture ? `http://localhost:8000/uploads/${currentUser.profile_picture}` : '../imagenes/default-profile.jpg';
+
                     const nuevoHtml = `
                         <div class="d-flex gap-2 mb-2 mf-fade-in">
-                            <img src="/imagenes/default-profile.jpg" 
+                            <img src="${avatarSrc}" 
                                  style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
                             <div class="p-2 rounded-4 bg-light flex-grow-1 border">
                                 <div class="d-flex justify-content-between">
