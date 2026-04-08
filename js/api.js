@@ -181,6 +181,26 @@ const Users = {
   async deactivate() {
     return apiFetch('/users/me', { method: 'DELETE' });
   },
+
+  async getFriends() {
+    return apiFetch('/users/me/friends');
+  },
+
+  async getRequests() {
+    return apiFetch('/users/me/requests');
+  },
+
+  async sendRequest(userId) {
+    return apiFetch(`/users/me/requests/${userId}`, { method: 'POST' });
+  },
+
+  async acceptRequest(userId) {
+    return apiFetch(`/users/me/requests/${userId}/accept`, { method: 'POST' });
+  },
+
+  async declineRequest(userId) {
+    return apiFetch(`/users/me/requests/${userId}/decline`, { method: 'POST' });
+  },
 };
 
 // ─── Countries ────────────────────────────────────────────────────────────────

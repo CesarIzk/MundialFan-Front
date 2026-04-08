@@ -107,82 +107,150 @@
 <div id="mf-footer"></div>
 
 <script src="../js/components.js"></script>
+<script src="../js/api.js"></script>
 
 
 <script>
 
-const USUARIOS_EJEMPLO = [
-  { id: 1, nombre: "Carlos Méndez", username: "@carlosm10", equipo: "Argentina", pais: "🇦🇷", online: true, amigosMutuos: 5, avatar: "https://wallpapers.com/images/hd/pretty-profile-pictures-nxkpy9du2vqmiyo4.jpg", cover: "https://picsum.photos/id/433/400/120" },
-  { id: 2, nombre: "Laura Gómez", username: "@lauragomez", equipo: "España", pais: "🇪🇸", online: true, amigosMutuos: 3, avatar: "https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?cs=srgb&dl=pexels-andre-furtado-43594-1264210.jpg&fm=jpg", cover: "https://picsum.photos/id/15/400/120" },
-  { id: 3, nombre: "Mateo Rodríguez", username: "@mateor9", equipo: "Brasil", pais: "🇧🇷", online: false, amigosMutuos: 8, avatar: "https://i.pinimg.com/474x/e6/45/bb/e645bb9ec66ac3f742853d558f2a2db8.jpg", cover: "https://picsum.photos/id/20/400/120" },
-  { id: 4, nombre: "Valentina Silva", username: "@valefan", equipo: "Francia", pais: "🇫🇷", online: true, amigosMutuos: 2, avatar: "https://tse3.mm.bing.net/th/id/OIP.cMIt_J6HdjLRVR3g_sTsLwAAAA?rs=1&pid=ImgDetMain&o=7&rm=3", cover: "https://picsum.photos/id/26/400/120" },
-  { id: 5, nombre: "Javier López", username: "@javierl7", equipo: "Alemania", pais: "🇩🇪", online: false, amigosMutuos: 4, avatar: "https://i.pinimg.com/236x/bc/e0/b5/bce0b52ea8fc991cbee757c6e6ba8a46.jpg", cover: "https://picsum.photos/id/28/400/120" },
-  { id: 6, nombre: "Camila Torres", username: "@camilat", equipo: "Colombia", pais: "🇨🇴", online: true, amigosMutuos: 6, avatar: "https://i.pinimg.com/736x/12/78/e1/1278e16afe4d71c6beb8d75f0eedca89.jpg", cover: "https://picsum.photos/id/29/400/120" }
-];
+let myFriends = [];
 
+let pendingRequests = [];
 
+let suggestedUsers = [];
 
-// Función para renderizar tarjetas de amigos
-function renderizarAmigos(containerId, usuarios, esSolicitud = false) {
+// --- RENDER LOGIC ---
+function renderUserCards(containerId, users, listType) {
   const container = document.getElementById(containerId);
   if (!container) return;
   
-  if (!usuarios || usuarios.length === 0) {
+  if (!users || users.length === 0) {
     container.innerHTML = `<div class="empty-state"><i class="fas fa-user-friends"></i><p>No hay usuarios para mostrar</p></div>`;
     return;
   }
   
-  container.innerHTML = usuarios.map(user => `
+  container.innerHTML = users.map(user => {
+    
+    let actionButtons = '';
+    if (listType === 'requests') {
+      actionButtons = `
+        <button class="btn-amigo btn-amigo-primary" onclick="acceptFriendRequest(${user.id})"><i class="fas fa-check"></i> Accept</button>
+        <button class="btn-amigo btn-amigo-danger" onclick="declineFriendRequest(${user.id})"><i class="fas fa-times"></i> Decline</button>
+      `;
+    } else if (listType === 'suggestions') {
+      actionButtons = `
+        <button class="btn-amigo btn-amigo-primary" onclick="sendFriendRequest(${user.id})"><i class="fas fa-user-plus"></i> Add Friend</button>
+      `;
+    } else {
+      // listType === 'friends'
+      actionButtons = `
+        <button class="btn-amigo btn-amigo-primary" onclick="sendMessage(${user.id})"><i class="fas fa-comment"></i> Message</button>
+        <button class="btn-amigo btn-amigo-outline" onclick="viewProfile(${user.id})"><i class="fas fa-user"></i> Profile</button>
+      `;
+    }
+
+    return `
     <div class="amigo-card" data-user-id="${user.id}">
       <div class="amigo-cover" style="background-image: url('${user.cover || 'https://picsum.photos/id/1/400/120'}')"></div>
       <div class="amigo-avatar-wrapper">
         <div class="amigo-avatar" style="background-image: url('${user.avatar}'); background-size: cover;">
-          <div class="amigo-status ${user.online ? 'online' : 'offline'}"></div>
+          <div class="amigo-status ${user.isOnline ? 'online' : 'offline'}"></div>
         </div>
         <div class="amigo-menu" onclick="event.stopPropagation(); toggleMenu(this)">
           <i class="fas fa-ellipsis-h"></i>
           <div class="dropdown-menu-custom">
-            <a href="#"><i class="fas fa-comment"></i> Enviar mensaje</a>
-            <a href="#"><i class="fas fa-ban"></i> Eliminar amigo</a>
-            <a href="#"><i class="fas fa-flag"></i> Reportar</a>
+            <a href="#"><i class="fas fa-comment"></i> Send Message</a>
+            <a href="#"><i class="fas fa-ban"></i> Remove Friend</a>
+            <a href="#"><i class="fas fa-flag"></i> Report</a>
           </div>
         </div>
       </div>
       <div class="amigo-info">
-        <h4>${user.nombre} ${user.pais ? `<i class="fas fa-flag"></i>` : ''}</h4>
+        <h4>${user.name} ${user.countryFlag ? `<span title="${user.team}">${user.countryFlag}</span>` : ''}</h4>
         <div class="amigo-user">${user.username}</div>
-        ${user.amigosMutuos ? `<div class="amigo-mutuos"><i class="fas fa-user-friends"></i> ${user.amigosMutuos} amigos en común</div>` : ''}
-        <div class="amigo-equipo"><i class="fas fa-trophy"></i> ${user.equipo}</div>
+        ${user.mutualFriends ? `<div class="amigo-mutuos"><i class="fas fa-user-friends"></i> ${user.mutualFriends} mutual friends</div>` : ''}
+        <div class="amigo-equipo"><i class="fas fa-trophy"></i> ${user.team}</div>
         <div class="amigo-botones">
-          ${esSolicitud ? `
-            <button class="btn-amigo btn-amigo-primary" onclick="aceptarSolicitud(${user.id})"><i class="fas fa-check"></i> Aceptar</button>
-            <button class="btn-amigo btn-amigo-danger" onclick="rechazarSolicitud(${user.id})"><i class="fas fa-times"></i> Rechazar</button>
-          ` : `
-            <button class="btn-amigo btn-amigo-primary" onclick="enviarMensaje(${user.id})"><i class="fas fa-comment"></i> Mensaje</button>
-            <button class="btn-amigo btn-amigo-outline" onclick="verPerfil(${user.id})"><i class="fas fa-user"></i> Perfil</button>
-          `}
+          ${actionButtons}
         </div>
       </div>
     </div>
-  `).join('');
+    `
+  }).join('');
 }
 
-
-function renderizarHistorias() {
-  const container = document.getElementById('historiasGrid');
-  if (!container) return;
-  
-  container.innerHTML = HISTORIAS.map(historia => `
-    <div class="historia-card" onclick="verHistoria(${historia.id})">
-      <div class="historia-avatar">
-        <img src="${historia.avatar}" alt="${historia.nombre}">
-      </div>
-      <span>${historia.nombre}</span>
-    </div>
-  `).join('');
+function updateCounters() {
+  document.getElementById('contadorAmigos').innerText = myFriends.length;
+  document.getElementById('contadorSolicitudes').innerText = pendingRequests.length;
 }
 
+function refreshAllViews() {
+  renderUserCards('misAmigos', myFriends, 'friends');
+  renderUserCards('solicitudesAmistad', pendingRequests, 'requests');
+  renderUserCards('sugerenciasAmistad', suggestedUsers, 'suggestions');
+  updateCounters();
+}
 
+// --- ACTIONS LOGIC ---
+
+async function sendFriendRequest(userId) {
+  // Find user in suggestions
+  const userIndex = suggestedUsers.findIndex(u => u.id === userId);
+  if (userIndex > -1) {
+    const user = suggestedUsers[userIndex];
+    
+    try {
+      await Users.sendRequest(userId);
+      // Remove from suggestions
+      suggestedUsers.splice(userIndex, 1);
+      refreshAllViews();
+    } catch (e) {
+      console.error(e);
+      alert('Error sending request.');
+    }
+  }
+}
+
+async function acceptFriendRequest(userId) {
+  const requestIndex = pendingRequests.findIndex(u => u.id === userId);
+  if (requestIndex > -1) {
+    const user = pendingRequests[requestIndex];
+    try {
+      await Users.acceptRequest(userId);
+      // Move from pending to friends
+      pendingRequests.splice(requestIndex, 1);
+      myFriends.push(user);
+      refreshAllViews();
+    } catch (e) {
+      console.error(e);
+      alert('Error accepting request.');
+    }
+  }
+}
+
+async function declineFriendRequest(userId) {
+  const requestIndex = pendingRequests.findIndex(u => u.id === userId);
+  if (requestIndex > -1) {
+    try {
+      await Users.declineRequest(userId);
+      // Remove from pending
+      pendingRequests.splice(requestIndex, 1);
+      refreshAllViews();
+    } catch (e) {
+      console.error(e);
+      alert('Error declining request.');
+    }
+  }
+}
+
+function sendMessage(userId) {
+  alert(`Opening chat with user ID: ${userId}`);
+}
+
+function viewProfile(userId) {
+  alert(`Viewing profile of user ID: ${userId}`);
+}
+
+// --- UTILS ---
 function toggleMenu(btn) {
   const dropdown = btn.querySelector('.dropdown-menu-custom');
   if (dropdown) {
@@ -190,27 +258,7 @@ function toggleMenu(btn) {
   }
 }
 
-function aceptarSolicitud(id) {
-  alert(`Solicitud de amistad aceptada (ID: ${id})`);
-}
-
-function rechazarSolicitud(id) {
-  alert(`Solicitud rechazada (ID: ${id})`);
-}
-
-function enviarMensaje(id) {
-  alert(`Abriendo chat con usuario ID: ${id}`);
-}
-
-function verPerfil(id) {
-  alert(`Ver perfil del usuario ID: ${id}`);
-}
-
-function verHistoria(id) {
-  alert(`Ver historia del usuario ID: ${id}`);
-}
-
-// Cerrar dropdowns al hacer click fuera
+// Close dropdowns when clicking outside
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.amigo-menu')) {
     document.querySelectorAll('.dropdown-menu-custom').forEach(dropdown => {
@@ -219,29 +267,92 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// Inicializar con datos de ejemplo
-document.addEventListener('DOMContentLoaded', function() {
-  renderizarHistorias();
-  renderizarAmigos('misAmigos', USUARIOS_EJEMPLO.slice(0, 3), false);
-  renderizarAmigos('solicitudesAmistad', USUARIOS_EJEMPLO.slice(3, 5), true);
-  renderizarAmigos('sugerenciasAmistad', USUARIOS_EJEMPLO.slice(5), false);
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', async function() {
   
-  // Actualizar contadores
-  document.getElementById('contadorAmigos').innerText = '3';
-  document.getElementById('contadorSolicitudes').innerText = '2';
-  
-  
-  // Búsqueda
+  // Guard: require session
+  if (!isLoggedIn()) {
+    window.location.href = 'auth.html';
+    return;
+  }
+
+  try {
+    // Fetch accepted friends from API
+    const friendsData = await Users.getFriends();
+    const apiFriends = friendsData.data ?? friendsData;
+    
+    myFriends = apiFriends.map(u => ({
+      id: u.id,
+      name: u.name,
+      username: "@" + u.username,
+      team: u.country || "Unknown",
+      countryFlag: "",
+      isOnline: Math.random() > 0.5,
+      mutualFriends: 0,
+      avatar: u.profile_picture ? `http://localhost:8000/uploads/${u.profile_picture}` : "../images/default-profile.jpg",
+      cover: `https://picsum.photos/seed/${u.id}/400/120`
+    }));
+  } catch (error) {
+    console.error("Error fetching friends:", error);
+  }
+
+  try {
+    // Fetch pending requests from API
+    const reqData = await Users.getRequests();
+    const apiRequests = reqData.data ?? reqData;
+    
+    pendingRequests = apiRequests.map(u => ({
+      id: u.id,
+      name: u.name,
+      username: "@" + u.username,
+      team: u.country || "Unknown",
+      countryFlag: "",
+      isOnline: Math.random() > 0.5,
+      mutualFriends: 0,
+      avatar: u.profile_picture ? `http://localhost:8000/uploads/${u.profile_picture}` : "../images/default-profile.jpg",
+      cover: `https://picsum.photos/seed/${u.id}/400/120`
+    }));
+  } catch (error) {
+    console.error("Error fetching requests:", error);
+  }
+
+  try {
+    // Fetch all users from the database (the backend already excludes the auth user)
+    const data = await Users.search('');
+    const apiUsers = data.data ?? data;
+    
+    // Map database user format to our UI card format
+    // Filter out users who already sent us a request AND users who are already our friends
+    suggestedUsers = apiUsers
+      .filter(u => !pendingRequests.find(pr => pr.id === u.id) && !myFriends.find(mf => mf.id === u.id))
+      .map(u => ({
+      id: u.id,
+      name: u.name,
+      username: "@" + u.username,
+      team: u.country || "Unknown",
+      countryFlag: "", // Empty for now, unless you add a country-to-emoji mapper
+      isOnline: Math.random() > 0.5, // Mock online status
+      mutualFriends: 0, // Mock mutuals
+      avatar: u.profile_picture ? `http://localhost:8000/uploads/${u.profile_picture}` : "../images/default-profile.jpg",
+      cover: `https://picsum.photos/seed/${u.id}/400/120` // Random cover based on user ID
+    }));
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+
+  refreshAllViews();
+    
+  // Search functionality over suggestions
   const searchInput = document.getElementById('buscarPersona');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase();
-      const filtered = USUARIOS_EJEMPLO.filter(u => 
-        u.nombre.toLowerCase().includes(term) || 
+      const filtered = suggestedUsers.filter(u => 
+        u.name.toLowerCase().includes(term) || 
         u.username.toLowerCase().includes(term) ||
-        u.equipo.toLowerCase().includes(term)
+        u.team.toLowerCase().includes(term)
       );
-      renderizarAmigos('sugerenciasAmistad', filtered, false);
+      renderUserCards('sugerenciasAmistad', filtered, 'suggestions');
     });
   }
 });
