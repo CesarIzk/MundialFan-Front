@@ -5,6 +5,33 @@
  */
 
 const API_BASE = 'http://localhost:8000/api';
+const BACKEND_URL = 'http://localhost:8000/';
+
+// ─── Interceptor para formatear fechas automáticamente ─────────────────────────
+function formatDates(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  for (const key in obj) {
+    if (obj[key] && typeof obj[key] === 'object') {
+      formatDates(obj[key]);
+    } else if (typeof obj[key] === 'string') {
+      if (obj[key].match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+        const date = new Date(obj[key]);
+        if (!isNaN(date)) {
+          obj[key] = date.toLocaleString('es-ES', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+      }
+      else if (obj[key].match(/\.(jpg|jpeg|png|gif|webp|mp4|webm)$/i)) {
+        let clean = obj[key].replace(/^https?:\/\/[^\/]+\//, '');
+        clean = clean.replace(/^\/+/, '');
+        while (clean.startsWith('uploads/')) {
+          clean = clean.substring(8);
+        }
+        obj[key] = clean;
+      }
+    }
+  }
+  return obj;
+}
 
 // ─── Fetch helper ─────────────────────────────────────────────────────────────
 
@@ -28,7 +55,7 @@ async function apiFetch(endpoint, options = {}) {
     throw { status: response.status, message: data.message || 'Error en la solicitud', data };
   }
 
-  return data;
+  return formatDates(data);
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
@@ -79,7 +106,7 @@ const Posts = {
     });
     const data = await response.json();
     if (!response.ok) throw data;
-    return data;
+    return formatDates(data);
   },
 
   async delete(id) {
@@ -141,7 +168,7 @@ const Users = {
     });
     const data = await response.json();
     if (!response.ok) throw data;
-    return data;
+    return formatDates(data);
   },
 
   async updatePassword(actual, nueva) {

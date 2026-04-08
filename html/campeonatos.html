@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <section class="wc-result mb-4">
         <div class="wc-card">
           <div class="wc-card__head">
-            <h2>${c.host ?? ''} ${c.year ?? ''}</h2>
+            <h2>${c.host_country ?? ''} ${c.year ?? ''}</h2>
           </div>
           <div class="wc-grid">
             <div class="wc-box">
@@ -91,10 +91,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="wc-box">
               <h3>Datos</h3>
               <ul class="wc-list">
-                <li><strong>Sede:</strong> ${c.host ?? '—'}</li>
-                <li><strong>Equipos:</strong> ${c.teams ?? '—'}</li>
+                <li><strong>Sede:</strong> ${c.host_country ?? '—'}</li>
+                <li><strong>Equipos:</strong> ${c.participating_teams ?? '—'}</li>
                 <li><strong>Partidos:</strong> ${c.matches ?? '—'}</li>
-                <li><strong>Goles:</strong> ${c.goals ?? '—'}</li>
+                <li><strong>Goles:</strong> ${c.total_goals ?? '—'}</li>
               </ul>
             </div>
             ${c.top_scorer || c.golden_ball ? `
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const lower = q.toLowerCase();
     const filtered = allChampionships.filter(c =>
       (c.year?.toString().includes(lower)) ||
-      (c.host?.toLowerCase().includes(lower)) ||
+      (c.host_country?.toLowerCase().includes(lower)) ||
       (c.champion?.toLowerCase().includes(lower))
     );
     document.getElementById('lista-campeonatos').innerHTML =

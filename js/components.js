@@ -24,7 +24,7 @@ function isLoggedIn() {
 function logout() {
   localStorage.removeItem('mf_token');
   localStorage.removeItem('mf_user');
-  window.location.href = '/front/auth.html';
+  window.location.href = 'auth.html';
 }
 
 // ─── Nav dinámico según sesión ────────────────────────────────────────────────
@@ -34,12 +34,16 @@ function buildAuthButtons() {
 
   if (user) {
     const initial = (user.name || user.username || 'U')[0].toUpperCase();
+    const avatarHTML = user.profile_picture 
+      ? `<img src="${BASE_URL}/uploads/${user.profile_picture}" alt="Avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--btn);">` 
+      : `<img src="../images/default-profile.jpg" alt="Avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--btn);">`;
+
     return `
       <a href="crear-publicacion.html" class="btn-crear-post" title="Nueva Publicación">
         <i class="fas fa-plus-circle"></i> <span>Publicar</span>
       </a>
       <a href="perfil.html" class="user-profile">
-        <div class="user-avatar">${initial}</div>
+        ${avatarHTML}
         <span>${user.name || user.username}</span>
       </a>
       ${user.role === 'admin' ? `<a href="../backend/admin" class="btn btn-warning btn-sm"><i class="fas fa-shield-halved"></i></a>` : ''}
@@ -110,6 +114,14 @@ function getFooterHTML() {
 // ─── Inyección en el DOM ──────────────────────────────────────────────────────
 
 function injectComponents() {
+  // Evitar error 404 del favicon inyectando uno vacío automáticamente
+  if (!document.querySelector('link[rel="icon"]')) {
+    const favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.href = 'data:image/x-icon;base64,'; 
+    document.head.appendChild(favicon);
+  }
+
   // Header
   const headerSlot = document.getElementById('mf-header');
   if (headerSlot) headerSlot.innerHTML = getHeaderHTML();

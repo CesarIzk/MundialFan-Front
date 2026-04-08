@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     formData.append('content', content);
     formData.append('category_id', catId);
     formData.append('content_type', tipo);
-    if (archivo) formData.append('archivo', archivo);
+    if (archivo) formData.append('media', archivo);
 
     try {
       await Posts.create(formData);

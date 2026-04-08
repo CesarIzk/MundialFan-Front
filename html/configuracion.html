@@ -66,14 +66,17 @@
       <h5 class="mb-0"><i class="fas fa-camera"></i> Actualizar Foto de Perfil</h5>
     </div>
     <div class="card-body">
-      <div class="mb-3">
-        <label class="form-label">Selecciona una nueva foto</label>
-        <input type="file" class="form-control" id="cfg-avatar" accept="image/*">
-        <small class="text-muted d-block mt-1">JPG, PNG, GIF, WEBP. Máximo 5MB.</small>
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <img id="cfg-avatar-preview" src="../images/default-profile.jpg" alt="Tu foto actual" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #ccc;">
+        <div class="flex-grow-1">
+          <label class="form-label">Selecciona una nueva foto</label>
+          <input type="file" class="form-control mb-2" id="cfg-avatar" accept="image/*">
+          <button class="btn btn-primary btn-sm" id="btn-save-avatar">
+            <i class="fas fa-save"></i> Guardar Foto Seleccionada
+          </button>
+          <small class="text-muted d-block mt-1">JPG, PNG, GIF, WEBP. Máximo 5MB.</small>
+        </div>
       </div>
-      <button class="btn btn-secondary" id="btn-save-avatar">
-        <i class="fas fa-upload"></i> Subir nueva foto
-      </button>
     </div>
   </div>
 
@@ -85,15 +88,15 @@
     <div class="card-body">
       <div class="mb-3">
         <label class="form-label">Contraseña Actual</label>
-        <input type="password" class="form-control" id="cfg-pass-actual" required>
+        <input type="password" class="form-control" id="cfg-pass-actual" autocomplete="new-password" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Nueva Contraseña</label>
-        <input type="password" class="form-control" id="cfg-pass-nueva" minlength="4" required>
+        <input type="password" class="form-control" id="cfg-pass-nueva" minlength="4" autocomplete="new-password" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Confirmar Nueva Contraseña</label>
-        <input type="password" class="form-control" id="cfg-pass-confirmar" minlength="4" required>
+        <input type="password" class="form-control" id="cfg-pass-confirmar" minlength="4" autocomplete="new-password" required>
       </div>
       <button class="btn btn-success" id="btn-save-password">
         <i class="fas fa-key"></i> Actualizar Contraseña
@@ -143,12 +146,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const user = getUser();
     const data = await Users.getProfile(user.id);
-    const u = data.data ?? data;
+    const u = data.user ?? data;
     document.getElementById('cfg-name').value  = u.name ?? '';
     document.getElementById('cfg-bio').value   = u.bio ?? '';
-    document.getElementById('cfg-birth').value = u.birth_date ?? '';
+    
+    // Convertir la fecha de DD/MM/YYYY a YYYY-MM-DD para que el input date la entienda
+    let fechaNac = u.birth_date ?? '';
+    if (fechaNac.includes('/')) {
+      const partes = fechaNac.split(',')[0].split('/'); // ["14", "10", "2004"]
+      if (partes.length === 3) {
+        fechaNac = `${partes[2]}-${partes[1]}-${partes[0]}`;
+      }
+    } else if (fechaNac.includes('T')) {
+      fechaNac = fechaNac.split('T')[0];
+    }
+    document.getElementById('cfg-birth').value = fechaNac;
+
     document.getElementById('cfg-email').value = u.email ?? '';
     if (u.gender) document.getElementById('cfg-gender').value = u.gender;
+
+    if (u.profile_picture) {
+      document.getElementById('cfg-avatar-preview').src = `http://localhost:8000/uploads/${u.profile_picture}`;
+    }
   } catch (e) {
     const user = getUser();
     document.getElementById('cfg-name').value  = user?.name ?? '';
@@ -171,6 +190,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // ── Previsualizar avatar al seleccionarlo ──────────────
+  document.getElementById('cfg-avatar').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      document.getElementById('cfg-avatar-preview').src = URL.createObjectURL(file);
+    }
+  });
+
   // ── Subir avatar ───────────────────────────────────────
   document.getElementById('btn-save-avatar').addEventListener('click', async () => {
     const file = document.getElementById('cfg-avatar').files[0];
@@ -178,8 +205,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formData = new FormData();
     formData.append('avatar', file);
     try {
-      await Users.updateAvatar(formData);
+      const res = await Users.updateAvatar(formData);
+    
+      const currentUser = getUser();
+      currentUser.profile_picture = res.profile_picture;
+      localStorage.setItem('mf_user', JSON.stringify(currentUser));
+
       showAlert('✅ Foto de perfil actualizada.');
+      setTimeout(() => location.reload(), 1500); 
     } catch (err) {
       showAlert(err.message || 'Error al subir la foto.', 'danger');
     }
