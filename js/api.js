@@ -181,6 +181,52 @@ const Users = {
   async deactivate() {
     return apiFetch('/users/me', { method: 'DELETE' });
   },
+
+  async getFriends() {
+    return apiFetch('/users/me/friends');
+  },
+
+  async getRequests() {
+    return apiFetch('/users/me/requests');
+  },
+
+  async sendRequest(userId) {
+    return apiFetch(`/users/me/requests/${userId}`, { method: 'POST' });
+  },
+
+  async acceptRequest(userId) {
+    return apiFetch(`/users/me/requests/${userId}/accept`, { method: 'POST' });
+  },
+
+  async declineRequest(userId) {
+    return apiFetch(`/users/me/requests/${userId}/decline`, { method: 'POST' });
+  },
+};
+
+// ─── Chats ────────────────────────────────────────────────────────────────────
+
+const Chats = {
+  async getSidebar() {
+    return apiFetch('/users/me/chats');
+  },
+  async getHistory(friendId) {
+    return apiFetch(`/users/me/chats/${friendId}`);
+  },
+  async sendMessage(friendId, content, mediaFile) {
+    const formData = new FormData();
+    if (content) formData.append('content', content);
+    if (mediaFile) formData.append('media', mediaFile);
+
+    const token = localStorage.getItem('mf_token');
+    const response = await fetch(`${API_BASE}/users/me/chats/${friendId}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return formatDates(data);
+  }
 };
 
 // ─── Countries ────────────────────────────────────────────────────────────────
