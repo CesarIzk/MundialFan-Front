@@ -90,6 +90,7 @@ function getNavHTML() {
           <li><a href="campeonatos.html"><i class="fas fa-trophy"></i> <span>Campeonatos</span></a></li>
           <li><a href="equipo.html"><i class="fas fa-users"></i> <span>Equipos</span></a></li>
           <li><a href="publicaciones.html"><i class="fas fa-calendar-alt"></i> <span>Publicaciones</span></a></li>
+          <li><a href="notificaciones.html"><i class="fas fa-bell"></i> <span>Notificaciones</span></a></li>
           <li><a href="stats.html"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a></li>
           <li><a href="chat.html"><i class="fas fa-comments"></i> <span>Chat</span></a></li>
           <li><a href="amigos.html"><i class="fas fa-user-friends"></i> <span>Amigos</span></a></li>
