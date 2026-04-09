@@ -3,23 +3,28 @@
    ======================= */
 
 .tienda-header {
-  background: linear-gradient(135deg, var(--btn) 0%, var(--primary-blue) 100%);
-  color: white;
-  padding: var(--spacing-4xl) var(--spacing-lg);
-  text-align: center;
-  margin-bottom: var(--spacing-3xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card, #fff);
+  padding: 1rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin: 2rem auto;
+  max-width: 1200px;
+  width: 95%;
 }
 
 .tienda-header h1 {
-  margin-bottom: var(--spacing-md);
-  font-size: 2.4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+  color: var(--text, #1a1a1a);
 }
 
 .tienda-header p {
-  font-size: var(--text-lg);
-  max-width: 600px;
-  margin: 0 auto;
-  opacity: 0.95;
+  display: none;
 }
 
 /* ===== GRID DE PRODUCTOS ===== */
@@ -220,14 +225,6 @@
 }
 
 @media (max-width: 768px) {
-  .tienda-header {
-    padding: var(--spacing-2xl) var(--spacing-md);
-  }
-
-  .tienda-header h1 {
-    font-size: 1.8rem;
-  }
-
   .productos {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     padding: var(--spacing-2xl) var(--spacing-md);
@@ -260,18 +257,6 @@
 }
 
 @media (max-width: 576px) {
-  .tienda-header {
-    padding: var(--spacing-xl) var(--spacing-sm);
-  }
-
-  .tienda-header h1 {
-    font-size: 1.4rem;
-  }
-
-  .tienda-header p {
-    font-size: var(--text-base);
-  }
-
   .productos {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: var(--spacing-sm);

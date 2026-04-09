@@ -4,26 +4,28 @@
 
 /* HERO específico */
 .hero-campeonatos {
-  min-height: 400px;
-  background: linear-gradient(
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.6)
-    ),
-    url("../../imagenes/mundial-banner.jpg") center/cover no-repeat;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card, #fff);
+  padding: 1rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin: 2rem auto;
+  max-width: 1200px;
+  width: 95%;
 }
 
 .hero-campeonatos .hero-contenido h2 {
-  font-size: 2.8rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+  color: var(--text, #1a1a1a);
 }
 
 .hero-campeonatos .hero-contenido p {
-  font-size: 1.2rem;
-  max-width: 700px;
-  margin: 0 auto var(--spacing-xl);
-  color: #f2f2f2;
+  display: none;
 }
 
 /* ===== LISTAS DE CONTENIDO ===== */
@@ -136,10 +138,6 @@ body.dark-mode #jugadores strong {
   .flag {
     width: 36px;
     height: 24px;
-  }
-
-  .hero-campeonatos .hero-contenido h2 {
-    font-size: 2rem;
   }
 }
 /* =======================

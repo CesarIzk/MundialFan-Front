@@ -3,23 +3,28 @@
    ======================= */
 
 .posts-header {
-  background: linear-gradient(135deg, var(--btn) 0%, var(--primary-blue) 100%);
-  color: white;
-  padding: var(--spacing-4xl) var(--spacing-lg);
-  text-align: center;
-  margin-bottom: var(--spacing-3xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card, #fff);
+  padding: 1rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin: 2rem auto;
+  max-width: 1200px;
+  width: 95%;
 }
 
 .posts-header h1 {
-  margin-bottom: var(--spacing-md);
-  font-size: 2.4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+  color: var(--text, #1a1a1a);
 }
 
 .posts-header p {
-  font-size: var(--text-lg);
-  max-width: 600px;
-  margin: 0 auto;
-  opacity: 0.95;
+  display: none;
 }
 
 /* ===== GRID DE POSTS ===== */
@@ -300,14 +305,6 @@
     padding: var(--spacing-2xl) var(--spacing-md);
   }
 
-  .posts-header {
-    padding: var(--spacing-2xl) var(--spacing-md);
-  }
-
-  .posts-header h1 {
-    font-size: 1.8rem;
-  }
-
   .posts-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
@@ -337,14 +334,6 @@
 @media (max-width: 576px) {
   .posts-container {
     padding: var(--spacing-lg) var(--spacing-sm);
-  }
-
-  .posts-header {
-    padding: var(--spacing-xl) var(--spacing-sm);
-  }
-
-  .posts-header h1 {
-    font-size: 1.4rem;
   }
 
   .posts-grid {
