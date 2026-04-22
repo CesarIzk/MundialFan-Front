@@ -159,7 +159,8 @@ const Users = {
     });
   },
 
-  async updateAvatar(formData) {
+ 
+async updateAvatar(formData) {
     const token = localStorage.getItem('mf_token');
     const response = await fetch(`${API_BASE}/users/me/avatar`, {
       method: 'POST',
@@ -171,6 +172,18 @@ const Users = {
     return formatDates(data);
   },
 
+  // ← NUEVO
+  async updateCover(formData) {
+    const token = localStorage.getItem('mf_token');
+    const response = await fetch(`${API_BASE}/users/me/cover`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return formatDates(data);
+  },
   async updatePassword(actual, nueva) {
     return apiFetch('/users/me/password', {
       method: 'PUT',

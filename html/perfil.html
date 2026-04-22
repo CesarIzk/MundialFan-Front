@@ -51,15 +51,34 @@
   </section>
 
   <!-- PERFIL DEL USUARIO ACTUAL -->
-  <section class="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden" id="profile-section">
-    <div style="height:140px; background: linear-gradient(90deg, #b00000 0%, #8b1538 40%, #2d3b87 100%);"></div>
-    <div class="card-body p-4">
-      <div class="d-flex flex-column flex-md-row align-items-md-end gap-3" style="margin-top:-70px;">
+  <section class="card shadow-sm border-0 rounded-4 mb-4 overflow-visible" id="profile-section">
+
+    <!-- Portada + avatar superpuesto -->
+    <div style="position:relative;">
+      <!-- Portada: overflow hidden solo aquí para respetar el border-radius -->
+      <div style="border-radius: 1rem 1rem 0 0; overflow:hidden; position:relative;">
+        <div id="profile-cover" style="height:200px; background: linear-gradient(90deg, #b00000 0%, #8b1538 40%, #2d3b87 100%); background-size:cover; background-position:center;"></div>
+        <!-- Botón cambiar portada -->
+        <label for="cover-upload" title="Cambiar portada"
+               style="position:absolute;bottom:10px;right:12px;cursor:pointer;background:rgba(0,0,0,.55);color:#fff;border-radius:8px;padding:5px 12px;font-size:13px;display:flex;align-items:center;gap:6px;z-index:2;">
+          <i class="fas fa-camera"></i> Cambiar portada
+        </label>
+        <input type="file" id="cover-upload" accept="image/*" style="display:none;">
+      </div>
+
+      <!-- Avatar fuera del overflow:hidden para que pueda sobresalir -->
+      <div style="position:absolute; bottom:-50px; left:28px; z-index:3;">
         <img src="../images/default-profile.jpg" alt="Foto de perfil" id="profile-avatar"
-             style="width:140px;height:140px;border-radius:999px;object-fit:cover;border:6px solid var(--surface); flex-shrink: 0;">
-        <div class="flex-grow-1" style="min-width: 0; word-break: break-word;">
+             style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid var(--surface,#fff);display:block;box-shadow:0 2px 8px rgba(0,0,0,.25);">
+      </div>
+    </div>
+
+    <!-- Info del perfil -->
+    <div class="card-body p-4" style="padding-top:4.5rem !important; border-radius: 0 0 1rem 1rem;">
+      <div class="d-flex flex-column flex-md-row align-items-md-start gap-3">
+        <div class="flex-grow-1" style="min-width:0; word-break:break-word;">
           <h2 class="m-0 fw-bold" id="profile-name">—</h2>
-          <p class="m-0 text-truncate" style="opacity:.7;" id="profile-username">@—</p>
+          <p class="m-0" style="opacity:.7;" id="profile-username">@—</p>
         </div>
         <div class="d-grid gap-2" style="min-width:220px;">
           <a href="chat.html" class="btn btn-outline-primary">
@@ -80,6 +99,16 @@
         <div class="col-12 col-md-6">
           <div class="p-3 rounded-4" style="background:var(--bg); border:1px solid var(--border);">
             <p class="m-0"><strong><i class="fas fa-cake-candles me-2"></i>Nacimiento:</strong> <span id="profile-birth">—</span></p>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="p-3 rounded-4" style="background:var(--bg); border:1px solid var(--border);">
+            <p class="m-0"><strong><i class="fas fa-city me-2"></i>Ciudad:</strong> <span id="profile-city">—</span></p>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="p-3 rounded-4" style="background:var(--bg); border:1px solid var(--border);">
+            <p class="m-0"><strong><i class="fas fa-earth-americas me-2"></i>País:</strong> <span id="profile-country">—</span></p>
           </div>
         </div>
       </div>
@@ -111,97 +140,6 @@
 
 <script src="../js/components.js"></script>
 <script src="../js/api.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-
-  if (!isLoggedIn()) {
-    window.location.href = 'auth.html';
-    return;
-  }
-
-  const user = getUser();
-  const postsEl = document.getElementById('my-posts');
-
-  // ── Llenar datos del perfil ────────────────────────────
-  try {
-    const data = await Users.getProfile(user.id);
-    const u = data.user ?? data;
-    document.getElementById('profile-name').textContent     = u.name ?? '—';
-    document.getElementById('profile-username').textContent = '@' + (u.username ?? '—');
-    document.getElementById('profile-email').textContent    = u.email ?? '—';
-    
-    let fechaNac = u.birth_date ?? '—';
-    if (fechaNac.includes(',')) fechaNac = fechaNac.split(',')[0]; // Quita la hora si ya fue formateada
-    else if (fechaNac.includes('T')) fechaNac = fechaNac.split('T')[0]; // Por si viene en formato crudo
-    document.getElementById('profile-birth').textContent    = fechaNac;
-
-    if (u.profile_picture) {
-      document.getElementById('profile-avatar').src = `http://localhost:8000/uploads/${u.profile_picture}`;
-    }
-
-    // ── Cargar publicaciones propias ───────────────────────
-    const posts = data.posts ?? [];
-    if (!posts.length) {
-      postsEl.innerHTML = `<div class="text-center py-4" style="opacity:.65;">
-        <i class="fas fa-newspaper fa-2x mb-2 d-block"></i> Aún no hay publicaciones.</div>`;
-    } else {
-    postsEl.innerHTML = posts.map(post => `
-      <article class="card border-0 shadow-sm rounded-4 mb-3">
-        <div class="card-body">
-          <p class="mb-2">${post.content}</p>
-          ${post.media_path ? (post.content_type === 'video' ? `<video controls src="http://localhost:8000/uploads/${post.media_path}" class="w-100 rounded-4 border" style="max-height:320px;"></video>` : `<img src="http://localhost:8000/uploads/${post.media_path}" class="img-fluid rounded-4 border" style="max-height:320px;object-fit:cover;width:100%;">`) : ''}
-          <div class="d-flex gap-3 mt-3" style="font-size:14px;opacity:.85;">
-            <span><i class="fas fa-heart me-1"></i>${post.likes ?? 0}</span>
-            <span><i class="fas fa-comment me-1"></i>${post.comments_count ?? 0}</span>
-          </div>
-        </div>
-      </article>
-    `).join('');
-    }
-  } catch (e) {
-    // Fallback con datos locales si la API falla
-    document.getElementById('profile-name').textContent     = user.name ?? '—';
-    document.getElementById('profile-username').textContent = '@' + (user.username ?? '—');
-    document.getElementById('profile-email').textContent    = user.email ?? '—';
-    postsEl.innerHTML = `<div class="text-center py-4 text-danger">Error al cargar publicaciones.</div>`;
-  }
-
-  // ── Búsqueda de usuarios ───────────────────────────────
-  document.getElementById('btn-user-search').addEventListener('click', async () => {
-    const q = document.getElementById('user-search-input').value.trim();
-    if (!q) return;
-    const tbody = document.getElementById('users-table-body');
-    tbody.innerHTML = `<tr><td colspan="3" class="text-center"><i class="fas fa-spinner fa-spin"></i></td></tr>`;
-    try {
-      const data  = await Users.search(q);
-      const users = data.data ?? data;
-      if (!users.length) {
-        tbody.innerHTML = `<tr><td colspan="3" class="text-center py-3" style="opacity:.65;">
-          <i class="fas fa-user-slash me-2"></i>No se encontraron usuarios.</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = users.map(u => {
-        const avatarSrc = u.profile_picture ? `http://localhost:8000/uploads/${u.profile_picture}` : '../images/default-profile.jpg';
-        return `
-        <tr>
-          <td class="d-flex align-items-center gap-2">
-            <img src="${avatarSrc}" style="width:36px;height:36px;border-radius:999px;object-fit:cover;">
-            <strong>@${u.username}</strong>
-          </td>
-          <td>${u.name}</td>
-          <td>
-            <a href="chat.html?with=${u.id}" class="btn btn-outline-secondary btn-sm">
-              <i class="fas fa-comment-dots me-1"></i> Chat
-            </a>
-          </td>
-        </tr>
-      `}).join('');
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error en la búsqueda.</td></tr>`;
-    }
-  });
-
-});
-</script>
+<script src="../js/perfil.js"></script>
 </body>
 </html>
