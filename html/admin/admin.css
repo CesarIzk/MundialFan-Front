@@ -500,3 +500,13 @@ a { color: inherit; text-decoration: none; }
   .adm-main { padding: 1rem; }
   .adm-form-grid { grid-template-columns: 1fr; }
 }
+.btn-outline-danger {
+  background: transparent;
+  border: 1px solid var(--adm-accent);
+  color: var(--adm-accent2);
+}
+
+.btn-outline-danger:hover {
+  background: var(--adm-accent);
+  color: white;
+}

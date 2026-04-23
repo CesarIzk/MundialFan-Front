@@ -27,8 +27,8 @@
         </select>
         <select class="adm-select" id="filter-type" style="max-width:160px;">
           <option value="">Todos los tipos</option>
-          <option value="texto">Solo texto</option>
-          <option value="imagen">Imagen</option>
+          <option value="text">Solo texto</option>
+          <option value="image">Imagen</option>
           <option value="video">Video</option>
         </select>
         <button class="adm-btn adm-btn--ghost" id="btn-search"><i class="fas fa-search"></i> Buscar</button>
@@ -58,91 +58,19 @@
   </main>
 </div>
 
-<script src="admin.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+<script src="js/admin.js"></script>
+<script src="js/publicaciones.js"></script>
 
-  const typeIcon = { texto: 'fas fa-align-left', imagen: 'fas fa-image', video: 'fas fa-video' };
 
-  function renderPosts(list) {
-    const tbody = document.getElementById('posts-tbody');
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="9" class="adm-empty"><i class="fas fa-newspaper"></i>Sin publicaciones</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = list.map(p => `
-      <tr>
-        <td>
-          <div class="adm-user-cell">
-            <div class="adm-avatar-placeholder">${(p.user?.name||'U')[0].toUpperCase()}</div>
-            <span style="white-space:nowrap;">${p.user?.name ?? '—'}</span>
-          </div>
-        </td>
-        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.content}">
-          ${p.content}
-        </td>
-        <td><i class="${typeIcon[p.content_type]||'fas fa-file'}" title="${p.content_type}"></i></td>
-        <td style="color:var(--adm-muted);font-size:.8rem;">${p.category?.name ?? '—'}</td>
-        <td>${p.likes_count ?? 0}</td>
-        <td>${p.comments_count ?? 0}</td>
-        <td><span class="adm-badge ${p.status==='public'?'adm-badge--green':'adm-badge--gray'}">${p.status}</span></td>
-        <td style="color:var(--adm-muted);font-size:.8rem;white-space:nowrap;">${p.created_at?.slice(0,10) ?? '—'}</td>
-        <td>
-          <div style="display:flex;gap:.4rem;">
-            <button class="adm-btn adm-btn--ghost adm-btn--sm"
-              onclick="togglePost(${p.id},'${p.status==='public'?'hidden':'public'}')"
-              title="${p.status==='public'?'Ocultar':'Publicar'}">
-              <i class="fas fa-${p.status==='public'?'eye-slash':'eye'}"></i>
-            </button>
-            <button class="adm-btn adm-btn--danger adm-btn--sm" onclick="deletePost(${p.id})">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+<!-- Estilos adicionales para el nuevo botón info -->
+<style>
+  .adm-btn--info {
+    background: #f20222;
+    color: white;
   }
-
-  async function loadPosts() {
-    try {
-      const q      = document.getElementById('search-input').value.trim();
-      const status = document.getElementById('filter-status').value;
-      const type   = document.getElementById('filter-type').value;
-      const params = new URLSearchParams();
-      if (q)      params.set('q', q);
-      if (status) params.set('status', status);
-      if (type)   params.set('type', type);
-
-      const data  = await adminFetch(`/admin/posts?${params}`);
-      renderPosts(data.data ?? data);
-    } catch(e) {
-      document.getElementById('posts-tbody').innerHTML =
-        `<tr><td colspan="9" class="adm-empty">Error al cargar</td></tr>`;
-    }
+  .adm-btn--info:hover {
+    background: #0b5ed7;
   }
-
-  window.togglePost = async (id, newStatus) => {
-    try {
-      await adminFetch(`/admin/posts/${id}`, { method: 'PUT', body: JSON.stringify({ status: newStatus }) });
-      showAlert('page-alert', `Publicación ${newStatus === 'public' ? 'publicada' : 'ocultada'}.`);
-      loadPosts();
-    } catch(e) { showAlert('page-alert', e.message || 'Error', 'danger'); }
-  };
-
-  window.deletePost = (id) => {
-    confirmAction('¿Eliminar esta publicación permanentemente?', async () => {
-      try {
-        await adminFetch(`/admin/posts/${id}`, { method: 'DELETE' });
-        showAlert('page-alert', 'Publicación eliminada.');
-        loadPosts();
-      } catch(e) { showAlert('page-alert', e.message || 'Error', 'danger'); }
-    });
-  };
-
-  document.getElementById('btn-search').addEventListener('click', loadPosts);
-  document.getElementById('search-input').addEventListener('keydown', e => e.key === 'Enter' && loadPosts());
-  loadPosts();
-});
-</script>
+</style>
 </body>
 </html>

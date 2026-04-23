@@ -14,14 +14,14 @@ function adminGetUser()   { const r = localStorage.getItem('mf_user'); return r 
 function adminGuard() {
   const user = adminGetUser();
   if (!user || user.role !== 'admin') {
-    window.location.href = '../front/auth.html';
+    window.location.href = '../index.html';
   }
 }
 
 function adminLogout() {
   localStorage.removeItem('mf_token');
   localStorage.removeItem('mf_user');
-  window.location.href = '../front/auth.html';
+  window.location.href = '../index.html';
 }
 
 // ─── API fetch helper ─────────────────────────────────────────────────────────
@@ -82,7 +82,7 @@ function getAdminSidebarHTML() {
     ${link('crear-admin.html', 'fas fa-user-shield',    'Crear Admin')}
 
     <span class="adm-sidebar__label" style="margin-top:auto;"></span>
-    <a class="adm-sidebar__link" href="../front/index.html" target="_blank" style="margin-top:auto;">
+    <a class="adm-sidebar__link" href="../index.html" target="_blank" style="margin-top:auto;">
       <i class="fas fa-globe"></i> Ver Sitio
     </a>
   `;

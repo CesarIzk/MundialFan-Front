@@ -68,7 +68,7 @@ function buildAuthButtons() {
         <span class="mf-user-chip__name">${displayName}</span>
       </a>
 
-      ${user.role === 'admin' ? `<a href="../backend/admin" class="btn btn-warning btn-sm"><i class="fas fa-shield-halved"></i></a>` : ''}
+      ${user.role === 'admin' ? `<a href="../html/admin/dashboard.html" class="btn btn-warning btn-sm"><i class="fas fa-shield-halved"></i></a>` : ''}
       <button onclick="logout()" class="btn btn-danger btn-sm" title="Cerrar sesión">
         <i class="fas fa-sign-out-alt"></i>
       </button>
