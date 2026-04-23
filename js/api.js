@@ -269,3 +269,19 @@ const Categories = {
     return apiFetch('/categories');
   },
 };
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+const Notifications = {
+  async getAll(limit = 20) {
+    return apiFetch(`/users/me/notifications?limit=${limit}`);
+  },
+
+  async unreadCount() {
+    return apiFetch('/users/me/notifications/unread-count');
+  },
+
+  async markAllRead() {
+    return apiFetch('/users/me/notifications/read', { method: 'POST' });
+  },
+};

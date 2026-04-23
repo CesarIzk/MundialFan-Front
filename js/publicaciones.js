@@ -77,14 +77,17 @@ document.addEventListener('DOMContentLoaded', async () => {
               <i class="${liked ? 'fas' : 'far'} fa-heart me-1"></i>
               <span class="like-count">${likes}</span>
             </button>
-            <span class="text-muted" style="font-size:14px;">
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 btn-toggle-comments"
+                    data-post-id="${post.id}">
               <i class="far fa-comment me-1"></i>
               <span class="comment-count-${post.id}">${comments.length}</span> comentarios
-            </span>
+            </button>
           </div>
-          <hr class="my-3 opacity-25">
-          <div class="comments-box-${post.id}">${commentsHTML}</div>
-          ${commentFormHTML}
+          <div class="comments-section-${post.id}" style="display:none;">
+            <hr class="my-3 opacity-25">
+            <div class="comments-box-${post.id} mb-2">${commentsHTML}</div>
+            ${commentFormHTML}
+          </div>
         </div>
       </article>
     `;
@@ -130,7 +133,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
 
-    // Comentarios
+    // Toggle sección de comentarios
+    document.querySelectorAll('.btn-toggle-comments').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const postId  = btn.dataset.postId;
+        const section = document.querySelector(`.comments-section-${postId}`);
+        if (!section) return;
+        const isOpen  = section.style.display !== 'none';
+        section.style.display = isOpen ? 'none' : 'block';
+        const icon = btn.querySelector('i');
+        icon.classList.toggle('fas', !isOpen);
+        icon.classList.toggle('far',  isOpen);
+      });
+    });
+
+    // Enviar comentario
     document.querySelectorAll('.btn-comment').forEach(btn => {
       btn.addEventListener('click', async () => {
         const postId   = btn.dataset.postId;

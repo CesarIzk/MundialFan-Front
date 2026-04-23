@@ -109,3 +109,44 @@ body.dark-mode .mf-notif-meta { color: #bcbcbc; }
   .mf-notif-card { flex-direction: column; }
   .mf-notif-card__icon { margin-bottom: 2px; }
 }
+
+/* Tarjeta no leída */
+.mf-notif-card--unread {
+  border-left: 3px solid var(--btn);
+  background: rgba(176, 0, 0, 0.03);
+}
+
+body.dark-mode .mf-notif-card--unread {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Badge "Nuevo" */
+.mf-notif-card__badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--btn);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* Estado vacío / loading */
+.mf-notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 1rem;
+}
+
+.mf-notif-empty i {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+body.dark-mode .mf-notif-empty {
+  color: #666;
+}

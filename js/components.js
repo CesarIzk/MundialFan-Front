@@ -193,7 +193,8 @@ function injectComponents() {
 
   // Inicializar dropdown de notificaciones y cargar contador (solo si hay sesión)
   if (isLoggedIn()) {
-    loadNotifCount();
+    loadNotifCount();      // Carga inmediata
+    startNotifPolling();   // Polling cada 30s
     initNotifDropdown();
   }
 }
@@ -283,19 +284,59 @@ function setNotifBadge(count) {
  */
 async function loadNotifCount() {
   try {
-    // ── MOCK ──
-    setNotifBadge(3);
-    // ─────────
-
-    /* BACKEND (descomentar cuando esté listo):
     const res  = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
                    { headers: { Authorization: `Bearer ${getToken()}` } });
     const data = await res.json();
     setNotifBadge(data.count ?? 0);
-    */
   } catch (e) {
     console.warn('No se pudo cargar el conteo de notificaciones:', e);
   }
+}
+
+
+// ─── Notificaciones: polling adaptativo ──────────────────────────────────────
+// SSE con PHP-FPM bloquea un worker por usuario → congela la página.
+// Este polling usa setTimeout (no setInterval) para ajustar la frecuencia:
+//   · 5s  mientras haya actividad reciente (conteo cambió)
+//   · 15s después de 3 checks sin cambio
+//   · 30s después de 8 checks sin cambio
+
+let _notifTimer      = null;
+let _notifLastCount  = -1;
+let _notifSameStreak = 0;
+
+function _notifInterval() {
+  if (_notifSameStreak < 3) return 5000;
+  if (_notifSameStreak < 8) return 15000;
+  return 30000;
+}
+
+async function _notifTick() {
+  if (!isLoggedIn()) return;
+  try {
+    const res   = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
+                    { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (!res.ok) return;
+    const data  = await res.json();
+    const count = data.count ?? 0;
+
+    if (count !== _notifLastCount) {
+      _notifLastCount  = count;
+      _notifSameStreak = 0;
+      setNotifBadge(count);
+      const panel = document.getElementById('mf-notif-panel');
+      if (panel && panel.classList.contains('open')) loadNotifPanel();
+    } else {
+      _notifSameStreak++;
+    }
+  } catch (_) { /* error de red, ignorar */ }
+
+  _notifTimer = setTimeout(_notifTick, _notifInterval());
+}
+
+function startNotifPolling() {
+  if (!isLoggedIn() || _notifTimer) return;
+  _notifTick(); // primera llamada inmediata
 }
 
 // ─── Notificaciones: dropdown ─────────────────────────────────────────────────
@@ -313,27 +354,15 @@ async function loadNotifPanel() {
   const list = document.getElementById('mf-notif-panel-list');
   if (!list) return;
 
-  // ── MOCK ──
-  const mockNotifs = [
-    { type: 'social',  icon: 'fa-user-plus',     title: 'Solicitud de amistad',  text: '<strong>Carlos Mendoza</strong> te envió una solicitud de amistad.',        time: 'Hace 2 min',  unread: true  },
-    { type: 'post',    icon: 'fa-heart',          title: 'Nuevo like',            text: 'A <strong>Ana Torres</strong> le gustó tu publicación.',                    time: 'Hace 8 min',  unread: true  },
-    { type: 'post',    icon: 'fa-comment-dots',   title: 'Nuevo comentario',      text: '<strong>Luis Herrera</strong> comentó: "Gran dato, no lo recordaba".',      time: 'Hace 15 min', unread: true  },
-    { type: 'system',  icon: 'fa-check-circle',   title: 'Publicación realizada', text: 'Tu publicación ya es visible para otros usuarios.',                         time: 'Hace 35 min', unread: false },
-    { type: 'message', icon: 'fa-envelope',       title: 'Nuevo mensaje',         text: '<strong>Diego Ramírez</strong> te envió un mensaje privado.',               time: 'Hace 1 h',    unread: false },
-  ];
-  renderNotifPanel(mockNotifs);
-  // ─────────
-
-  /* BACKEND (descomentar cuando esté listo):
   try {
     const res  = await fetch(`${BASE_URL}/api/users/me/notifications?limit=5`,
                    { headers: { Authorization: `Bearer ${getToken()}` } });
     const data = await res.json();
-    renderNotifPanel(data.notifications ?? data);
+    const notifs = (data.notifications ?? []).map(notifToPanel);
+    renderNotifPanel(notifs);
   } catch (e) {
     list.innerHTML = `<div class="mf-notif-panel__empty">Error al cargar.</div>`;
   }
-  */
 }
 
 function renderNotifPanel(notifs) {
@@ -380,6 +409,52 @@ function initNotifDropdown() {
       panel.classList.remove('open');
     }
   });
+}
+
+
+// ─── Notificaciones: mapa tipo → icono/título ─────────────────────────────────
+
+const NOTIF_META = {
+  friend_request:  { type: 'social',  icon: 'fa-user-plus',   title: 'Solicitud de amistad' },
+  friend_accepted: { type: 'social',  icon: 'fa-user-check',  title: 'Solicitud aceptada'   },
+  post_like:       { type: 'post',    icon: 'fa-heart',        title: 'Nuevo like'           },
+  post_comment:    { type: 'post',    icon: 'fa-comment-dots', title: 'Nuevo comentario'     },
+  message:         { type: 'message', icon: 'fa-envelope',     title: 'Nuevo mensaje'        },
+  group_message:   { type: 'message', icon: 'fa-users',        title: 'Mensaje de grupo'     },
+  group_added:     { type: 'social',  icon: 'fa-user-friends', title: 'Nuevo grupo'          },
+  system:          { type: 'system',  icon: 'fa-check-circle', title: 'Notificación'         },
+};
+
+function notifToPanel(n) {
+  const meta  = NOTIF_META[n.type] ?? NOTIF_META.system;
+  const actor = n.actor?.name ?? 'Alguien';
+  const texts = {
+    friend_request:  `<strong>${actor}</strong> te envió una solicitud de amistad.`,
+    friend_accepted: `<strong>${actor}</strong> aceptó tu solicitud de amistad.`,
+    post_like:       `A <strong>${actor}</strong> le gustó tu publicación.`,
+    post_comment:    `<strong>${actor}</strong> comentó tu publicación.`,
+    message:         `<strong>${actor}</strong> te envió un mensaje privado.`,
+    group_message:   `Nuevo mensaje en el grupo.`,
+    group_added:     `Te agregaron a un grupo.`,
+    system:          n.body ?? 'Notificación del sistema.',
+  };
+  return {
+    type:   meta.type,
+    icon:   meta.icon,
+    title:  meta.title,
+    text:   texts[n.type] ?? n.body ?? '',
+    time:   timeAgo(n.created_at),
+    unread: !n.is_read,
+  };
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (diff < 60)   return 'Hace un momento';
+  if (diff < 3600) return `Hace ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `Hace ${Math.floor(diff / 3600)} h`;
+  return `Hace ${Math.floor(diff / 86400)} días`;
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
