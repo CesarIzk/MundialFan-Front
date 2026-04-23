@@ -33,21 +33,43 @@ function buildAuthButtons() {
   const user = getUser();
 
   if (user) {
-    const initial = (user.name || user.username || 'U')[0].toUpperCase();
-    const avatarHTML = user.profile_picture 
-      ? `<img src="${BASE_URL}/uploads/${user.profile_picture}" alt="Avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--btn);">` 
-      : `<img src="../images/default-profile.jpg" alt="Avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--btn);">`;
+    const avatarSrc = user.profile_picture
+      ? `${BASE_URL}/uploads/${user.profile_picture}`
+      : `../images/default-profile.jpg`;
+    const displayName = user.username || user.name || 'Usuario';
 
     return `
       <a href="crear-publicacion.html" class="btn-crear-post" title="Nueva Publicación">
         <i class="fas fa-plus-circle"></i> <span>Publicar</span>
       </a>
-      <a href="perfil.html" class="user-profile">
-        ${avatarHTML}
-        <span>${user.name || user.username}</span>
+
+      <!-- Campana con dropdown -->
+      <div class="mf-notif-dropdown" id="mf-notif-dropdown">
+        <button class="mf-notif-btn" id="mf-notif-btn" aria-label="Notificaciones" title="Notificaciones">
+          <i class="fas fa-bell"></i>
+          <span class="nav-notif-badge" id="nav-notif-badge" style="display:none;">0</span>
+        </button>
+        <div class="mf-notif-panel" id="mf-notif-panel">
+          <div class="mf-notif-panel__header">
+            <span>Notificaciones</span>
+            <a href="notificaciones.html" class="mf-notif-panel__vermas">Ver todas</a>
+          </div>
+          <div class="mf-notif-panel__list" id="mf-notif-panel-list">
+            <div class="mf-notif-panel__loading">
+              <i class="fas fa-spinner fa-spin"></i> Cargando...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perfil: foto + username -->
+      <a href="perfil.html" class="mf-user-chip">
+        <img src="${avatarSrc}" alt="Avatar" class="mf-user-chip__avatar">
+        <span class="mf-user-chip__name">${displayName}</span>
       </a>
+
       ${user.role === 'admin' ? `<a href="../backend/admin" class="btn btn-warning btn-sm"><i class="fas fa-shield-halved"></i></a>` : ''}
-      <button onclick="logout()" class="btn btn-danger btn-sm">
+      <button onclick="logout()" class="btn btn-danger btn-sm" title="Cerrar sesión">
         <i class="fas fa-sign-out-alt"></i>
       </button>
     `;
@@ -86,13 +108,38 @@ function getNavHTML() {
           <i class="fas fa-bars"></i>
         </button>
         <ul class="navbar" id="navbar-menu">
-          <li><a href="index.html"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-          <li><a href="campeonatos.html"><i class="fas fa-trophy"></i> <span>Campeonatos</span></a></li>
-          <li><a href="equipo.html"><i class="fas fa-users"></i> <span>Equipos</span></a></li>
-          <li><a href="publicaciones.html"><i class="fas fa-calendar-alt"></i> <span>Publicaciones</span></a></li>
-          <li><a href="stats.html"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a></li>
-          <li><a href="chat.html"><i class="fas fa-comments"></i> <span>Chat</span></a></li>
-          <li><a href="amigos.html"><i class="fas fa-user-friends"></i> <span>Amigos</span></a></li>
+
+          <!-- Inicio -->
+          <li>
+            <a href="index.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
+          </li>
+
+          <!-- Deportes -->
+          <li class="mf-nav-group" id="mf-nav-deportes">
+            <button class="mf-nav-group__btn" aria-expanded="false" aria-haspopup="true">
+              <i class="fas fa-futbol"></i> <span>Deportes</span>
+              <i class="fas fa-chevron-down mf-nav-group__arrow"></i>
+            </button>
+            <ul class="mf-nav-group__dropdown">
+              <li><a href="campeonatos.html"><i class="fas fa-trophy"></i> Campeonatos</a></li>
+              <li><a href="equipo.html"><i class="fas fa-users"></i> Equipos</a></li>
+              <li><a href="stats.html"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+            </ul>
+          </li>
+
+          <!-- Social -->
+          <li class="mf-nav-group" id="mf-nav-social">
+            <button class="mf-nav-group__btn" aria-expanded="false" aria-haspopup="true">
+              <i class="fas fa-users"></i> <span>Social</span>
+              <i class="fas fa-chevron-down mf-nav-group__arrow"></i>
+            </button>
+            <ul class="mf-nav-group__dropdown">
+              <li><a href="publicaciones.html"><i class="fas fa-calendar-alt"></i> Publicaciones</a></li>
+              <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+              <li><a href="amigos.html"><i class="fas fa-user-friends"></i> Amigos</a></li>
+            </ul>
+          </li>
+
         </ul>
         <div class="auth-buttons" id="auth-buttons">
           ${buildAuthButtons()}
@@ -140,6 +187,15 @@ function injectComponents() {
 
   // Inicializar menú hamburguesa
   initMobileMenu();
+
+  // Inicializar dropdowns de grupos del nav
+  initNavGroups();
+
+  // Inicializar dropdown de notificaciones y cargar contador (solo si hay sesión)
+  if (isLoggedIn()) {
+    loadNotifCount();
+    initNotifDropdown();
+  }
 }
 
 function highlightActiveNav() {
@@ -159,6 +215,171 @@ function initMobileMenu() {
       menu.classList.toggle('open');
     });
   }
+}
+
+function initNavGroups() {
+  document.addEventListener('click', (e) => {
+    const groups = document.querySelectorAll('.mf-nav-group');
+
+    groups.forEach(group => {
+      const btn = group.querySelector('.mf-nav-group__btn');
+      if (!btn) return;
+
+      if (btn.contains(e.target)) {
+        const isOpen = group.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen);
+        // Cerrar los demás
+        groups.forEach(other => {
+          if (other !== group) {
+            other.classList.remove('open');
+            other.querySelector('.mf-nav-group__btn')?.setAttribute('aria-expanded', 'false');
+          }
+        });
+        return;
+      }
+
+      // Clic fuera → cerrar
+      if (!group.contains(e.target)) {
+        group.classList.remove('open');
+        btn.querySelector && btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  // Marcar grupo activo si algún hijo coincide con la página actual
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.mf-nav-group').forEach(group => {
+    group.querySelectorAll('a').forEach(link => {
+      if (link.getAttribute('href') === currentPage) {
+        group.classList.add('active');
+        link.classList.add('active');
+      }
+    });
+  });
+}
+
+// ─── Notificaciones: badge ────────────────────────────────────────────────────
+
+function setNotifBadge(count) {
+  const badge = document.getElementById('nav-notif-badge');
+  if (!badge) return;
+  
+  if (count > 0) {
+    badge.textContent = count > 99 ? '99+' : count;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+/**
+ * Carga el conteo de no leídas.
+ * ── Para conectar al backend reemplaza el bloque MOCK por: ──────────────────
+ *   const res  = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
+ *                  { headers: { Authorization: `Bearer ${getToken()}` } });
+ *   const data = await res.json();
+ *   setNotifBadge(data.count ?? 0);
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+async function loadNotifCount() {
+  try {
+    // ── MOCK ──
+    setNotifBadge(3);
+    // ─────────
+
+    /* BACKEND (descomentar cuando esté listo):
+    const res  = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
+                   { headers: { Authorization: `Bearer ${getToken()}` } });
+    const data = await res.json();
+    setNotifBadge(data.count ?? 0);
+    */
+  } catch (e) {
+    console.warn('No se pudo cargar el conteo de notificaciones:', e);
+  }
+}
+
+// ─── Notificaciones: dropdown ─────────────────────────────────────────────────
+
+/**
+ * Carga las últimas notificaciones en el panel.
+ * ── Para conectar al backend reemplaza el bloque MOCK por: ──────────────────
+ *   const res   = await fetch(`${BASE_URL}/api/users/me/notifications?limit=5`,
+ *                   { headers: { Authorization: `Bearer ${getToken()}` } });
+ *   const data  = await res.json();
+ *   renderNotifPanel(data.notifications ?? data);
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+async function loadNotifPanel() {
+  const list = document.getElementById('mf-notif-panel-list');
+  if (!list) return;
+
+  // ── MOCK ──
+  const mockNotifs = [
+    { type: 'social',  icon: 'fa-user-plus',     title: 'Solicitud de amistad',  text: '<strong>Carlos Mendoza</strong> te envió una solicitud de amistad.',        time: 'Hace 2 min',  unread: true  },
+    { type: 'post',    icon: 'fa-heart',          title: 'Nuevo like',            text: 'A <strong>Ana Torres</strong> le gustó tu publicación.',                    time: 'Hace 8 min',  unread: true  },
+    { type: 'post',    icon: 'fa-comment-dots',   title: 'Nuevo comentario',      text: '<strong>Luis Herrera</strong> comentó: "Gran dato, no lo recordaba".',      time: 'Hace 15 min', unread: true  },
+    { type: 'system',  icon: 'fa-check-circle',   title: 'Publicación realizada', text: 'Tu publicación ya es visible para otros usuarios.',                         time: 'Hace 35 min', unread: false },
+    { type: 'message', icon: 'fa-envelope',       title: 'Nuevo mensaje',         text: '<strong>Diego Ramírez</strong> te envió un mensaje privado.',               time: 'Hace 1 h',    unread: false },
+  ];
+  renderNotifPanel(mockNotifs);
+  // ─────────
+
+  /* BACKEND (descomentar cuando esté listo):
+  try {
+    const res  = await fetch(`${BASE_URL}/api/users/me/notifications?limit=5`,
+                   { headers: { Authorization: `Bearer ${getToken()}` } });
+    const data = await res.json();
+    renderNotifPanel(data.notifications ?? data);
+  } catch (e) {
+    list.innerHTML = `<div class="mf-notif-panel__empty">Error al cargar.</div>`;
+  }
+  */
+}
+
+function renderNotifPanel(notifs) {
+  const list = document.getElementById('mf-notif-panel-list');
+  if (!list) return;
+
+  if (!notifs.length) {
+    list.innerHTML = `<div class="mf-notif-panel__empty"><i class="fas fa-bell-slash"></i> Sin notificaciones nuevas.</div>`;
+    return;
+  }
+
+  list.innerHTML = notifs.map(n => `
+    <div class="mf-notif-panel__item ${n.unread ? 'unread' : ''}">
+      <div class="mf-notif-panel__item-icon ${n.type}">
+        <i class="fas ${n.icon}"></i>
+      </div>
+      <div class="mf-notif-panel__item-body">
+        <p class="mf-notif-panel__item-title">${n.title}</p>
+        <p class="mf-notif-panel__item-text">${n.text}</p>
+        <span class="mf-notif-panel__item-time"><i class="far fa-clock"></i> ${n.time}</span>
+      </div>
+      ${n.unread ? '<span class="mf-notif-panel__dot"></span>' : ''}
+    </div>
+  `).join('');
+}
+
+function initNotifDropdown() {
+  // El DOM aún no tiene el botón en este punto, usar delegación desde document
+  document.addEventListener('click', (e) => {
+    const btn   = document.getElementById('mf-notif-btn');
+    const panel = document.getElementById('mf-notif-panel');
+    if (!btn || !panel) return;
+
+    // Abrir/cerrar al hacer clic en la campana
+    if (btn.contains(e.target)) {
+      const isOpen = panel.classList.toggle('open');
+      if (isOpen) loadNotifPanel();
+      return;
+    }
+
+    // Cerrar si se hace clic fuera
+    const dropdown = document.getElementById('mf-notif-dropdown');
+    if (dropdown && !dropdown.contains(e.target)) {
+      panel.classList.remove('open');
+    }
+  });
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
