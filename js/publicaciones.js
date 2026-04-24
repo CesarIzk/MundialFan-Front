@@ -1,3 +1,20 @@
+// ─── Importar API y helpers de auth ───────────────────────────────────────────
+import { Posts, Likes, Comments, Users, Chats } from './api.js';
+
+// Helpers de sesión (definidos aquí para no depender de components.js)
+function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem('mf_user')) || null;
+  } catch { return null; }
+}
+function isLoggedIn() {
+  return !!localStorage.getItem('mf_token') && !!getUser();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PUBLICACIONES — feed principal
+// ══════════════════════════════════════════════════════════════
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   const feed = document.getElementById('posts-feed');
@@ -122,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ──────────────────────────────────────────────────────────────
-  // PUBLICACIONES (código existente)
+  // PUBLICACIONES
   // ──────────────────────────────────────────────────────────────
 
   function renderPost(post) {
@@ -311,65 +328,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadPosts({ ...(q ? { q } : {}), orden });
   });
 
-  // Cargar amigos y publicaciones
   await loadFriendsList();
   await loadPosts();
 
-  // Actualizar amigos cada 10 segundos
   setInterval(async () => {
-    if (isLoggedIn()) {
-      await loadFriendsList();
-    }
+    if (isLoggedIn()) await loadFriendsList();
   }, 10000);
 
 });
 
 // ══════════════════════════════════════════════════════════════
-//  publicaciones-perfil.js
-//  Carga los datos del usuario en la sidebar izquierda de
-//  publicaciones.html (foto, portada, nombre, @handle)
+//  Sidebar de perfil (antes publicaciones-perfil.js)
 // ══════════════════════════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', async () => {
 
   if (!isLoggedIn()) return;
 
-  const user        = getUser();
-  const coverEl     = document.getElementById('profile-sidebar-cover');
-  const avatarEl    = document.getElementById('profile-avatar');
-  const nameEl      = document.getElementById('profile-name');
-  const handleEl    = document.getElementById('profile-handle');
+  const user     = getUser();
+  const coverEl  = document.getElementById('profile-sidebar-cover');
+  const avatarEl = document.getElementById('profile-avatar');
+  const nameEl   = document.getElementById('profile-name');
+  const handleEl = document.getElementById('profile-handle');
 
-  // ── Datos básicos desde localStorage (instantáneo) ────────
   if (avatarEl && user?.profile_picture) {
     avatarEl.src = `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`;
   }
   if (nameEl)   nameEl.textContent   = user?.name ?? 'Usuario';
   if (handleEl) handleEl.textContent = '@' + (user?.username ?? user?.email?.split('@')[0] ?? 'usuario');
 
-  // ── Datos completos desde la API (portada) ─────────────────
   try {
     const data = await Users.getProfile(user.id);
     const u    = data.user ?? data;
 
-    // Portada real — igual que en perfil.js
     if (u.cover_picture && coverEl) {
       coverEl.style.backgroundImage    = `url('https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}')`;
       coverEl.style.backgroundSize     = 'cover';
       coverEl.style.backgroundPosition = 'center';
     }
-
-    // Si el avatar en la API es más reciente que en localStorage, actualizarlo
     if (u.profile_picture && avatarEl) {
       avatarEl.src = `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`;
     }
-
-    // Nombre y handle actualizados desde la API
     if (nameEl)   nameEl.textContent   = u.name ?? user?.name ?? 'Usuario';
     if (handleEl) handleEl.textContent = '@' + (u.username ?? user?.username ?? 'usuario');
 
   } catch (e) {
-    // Si falla la API, los datos del localStorage ya están cargados — no pasa nada
     console.warn('No se pudo cargar el perfil completo:', e);
   }
 
