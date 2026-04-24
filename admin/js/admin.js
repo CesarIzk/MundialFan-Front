@@ -6,8 +6,8 @@
 
 const API = window.API_CONFIG?.API_BASE || 
                  (window.location.hostname === 'localhost' 
-                  ? 'https://mundialfan-api.railway.internal/api' 
-                  : 'https://mundialfan-api.railway.internal/api');
+                  ? 'https://mundialfan-api-production.up.railway.app/api' 
+                  : 'https://mundialfan-api-production.up.railway.app/api');
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
@@ -149,3 +149,4 @@ function confirmAction(msg, callback) {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', injectAdminLayout);
+

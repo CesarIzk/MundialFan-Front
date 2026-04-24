@@ -12,11 +12,11 @@ const isDevelopment = window.location.hostname === 'localhost' ||
 // URL base del backend - CORREGIDO
 const API_BASE = isDevelopment
     ? 'http://localhost:8000/api'  // Desarrollo local (cambia el puerto si es necesario)
-    : 'https://mundialfan-api.railway.internal/api';  // Producción Railway
+    : 'https://mundialfan-api-production.up.railway.app/api';  // Producción Railway
 
 const BACKEND_URL = isDevelopment
     ? 'http://localhost:8000/'
-    : 'https://mundialfan-api.railway.internal/';
+    : 'https://mundialfan-api-production.up.railway.app/';
 
 // Configuración global
 window.API_CONFIG = {

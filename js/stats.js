@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   try {
-    const res  = await fetch('https://mundialfan-api.railway.internal/api/stats/general', { headers });
+    const res  = await fetch('https://mundialfan-api-production.up.railway.app/api/stats/general', { headers });
     const data = await res.json();
 
     // ── Resumen ──────────────────────────────────────────────
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <tr>
             <td>${rankBadge(i)}</td>
             <td>
-              ${t.flag ? `<img src="https://mundialfan-api.railway.internal/uploads/${t.flag}" style="width:22px;height:16px;object-fit:cover;border-radius:2px;margin-right:6px;">` : ''}
+              ${t.flag ? `<img src="https://mundialfan-api-production.up.railway.app/uploads/${t.flag}" style="width:22px;height:16px;object-fit:cover;border-radius:2px;margin-right:6px;">` : ''}
               <strong>${t.name ?? '—'}</strong>
             </td>
             <td>${t.titles ?? 0}</td>
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <tr>
             <td>${rankBadge(i)}</td>
             <td>
-              ${c.flag ? `<img src="https://mundialfan-api.railway.internal/uploads/${c.flag}" style="width:22px;height:16px;object-fit:cover;border-radius:2px;margin-right:6px;">` : ''}
+              ${c.flag ? `<img src="https://mundialfan-api-production.up.railway.app/uploads/${c.flag}" style="width:22px;height:16px;object-fit:cover;border-radius:2px;margin-right:6px;">` : ''}
               <strong>${c.name ?? '—'}</strong>
             </td>
             <td>${c.continent ?? '—'}</td>
