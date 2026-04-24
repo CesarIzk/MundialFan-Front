@@ -9,20 +9,21 @@
 const isDevelopment = window.location.hostname === 'localhost' || 
                      window.location.hostname === '127.0.0.1';
 
-// URL base del backend
-const API_BASE_URL = isDevelopment
-    ? 'https://mundialfan-api-production.up.railway.app/api'      // Desarrollo local
+// URL base del backend - CORREGIDO
+const API_BASE = isDevelopment
+    ? 'http://localhost:8000/api'  // Desarrollo local (cambia el puerto si es necesario)
     : 'https://mundialfan-api-production.up.railway.app/api';  // Producción Railway
 
 const BACKEND_URL = isDevelopment
-    ? 'https://mundialfan-api-production.up.railway.app/'
+    ? 'http://localhost:8000/'
     : 'https://mundialfan-api-production.up.railway.app/';
 
-// Exportar para usar en otros archivos
+// Configuración global
 window.API_CONFIG = {
-    API_BASE: API_BASE_URL,
+    API_BASE: API_BASE,
     BACKEND_URL: BACKEND_URL
 };
+
 
 // ─── Interceptor para formatear fechas automáticamente ─────────────────────────
 function formatDates(obj) {

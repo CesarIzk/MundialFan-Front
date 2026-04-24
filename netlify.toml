@@ -11,3 +11,15 @@
   for = "/js/*"
   [headers.values]
     Content-Type = "application/javascript"
+    [[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
+# Ignorar archivos específicos
+[[redirects]]
+  from = "/webpage_content_reporter.js"
+  to = "/dev/null"
+  status = 200
+  force = true
