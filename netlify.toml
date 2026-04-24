@@ -1,14 +1,34 @@
 [build]
-  publish = "."
+  publish = "html"
   command = ""
 
 [[redirects]]
-  from = "/*"
-  to = "html/index.html"
+  from = "/css/*"
+  to = "/css/:splat"
   status = 200
 
+[[redirects]]
+  from = "/js/*"
+  to = "/js/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/images/*"
+  to = "/images/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Asegurar que los archivos estáticos se sirvan correctamente
 [[headers]]
-  for = "/*"
+  for = "/css/*"
   [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
+    Content-Type = "text/css"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Content-Type = "application/javascript"
