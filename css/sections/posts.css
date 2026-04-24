@@ -363,15 +363,6 @@
   }
 }
 
-/* Post ocupa todo el ancho del feed */
-.mf-post--narrow,
-.mf-post {
-  width: 100%;
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-}
-
 
 /* ===== POSTS EN FEED (publicaciones.html) ===== */
 
@@ -379,18 +370,31 @@
 .mf-post--narrow,
 .mf-post {
   width: 100%;
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: 0;
+  max-width: 680px;   /* limita el ancho máximo de la card */
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Imagen completa sin recorte — object-fit: contain */
-.mf-post--narrow img,
-.mf-post img,
-.mf-post video {
-  max-height: 420px;
+/* Contenedor de imagen: se adapta a la proporción natural */
+.mf-post--narrow .post-media,
+.mf-post .post-media {
   width: 100%;
+  background: var(--surface, #f5f5f5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Imagen completa sin recorte — se ve toda sin importar tamaño */
+.mf-post--narrow .post-media img,
+.mf-post .post-media img,
+.mf-post--narrow .post-media video,
+.mf-post .post-media video {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
   object-fit: contain;
-  background: #f5f5f5;
+  display: block;
   border-radius: 10px;
 }

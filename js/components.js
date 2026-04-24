@@ -90,46 +90,19 @@ function buildAuthButtons() {
 function getHeaderHTML() {
   return `
     <header>
-      <div class="header-contenido contenedor">
+      <div class="header-contenido">
         <a href="index.html" class="logo">
           <i class="fas fa-futbol"></i>
           <h1>MundialFan</h1>
         </a>
-      </div>
-    </header>
-  `;
-}
-
-function getNavHTML() {
-  return `
-    <nav>
-      <div class="nav-wrap">
         <button class="menu-toggle" aria-label="Menú">
           <i class="fas fa-bars"></i>
         </button>
         <ul class="navbar" id="navbar-menu">
-
-          <!-- Inicio -->
-          <li>
-            <a href="index.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-          </li>
-
-          <!-- Campeonatos (enlace directo) -->
-          <li>
-            <a href="campeonatos.html"><i class="fas fa-trophy"></i> <span>Campeonatos</span></a>
-          </li>
-
-          <!-- Equipos (enlace directo) -->
-          <li>
-            <a href="equipo.html"><i class="fas fa-users"></i> <span>Equipos</span></a>
-          </li>
-
-          <!-- Estadísticas (enlace directo) -->
-          <li>
-            <a href="stats.html"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a>
-          </li>
-
-          <!-- Social (dropdown) -->
+          <li><a href="index.html"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+          <li><a href="campeonatos.html"><i class="fas fa-trophy"></i> <span>Campeonatos</span></a></li>
+          <li><a href="equipo.html"><i class="fas fa-users"></i> <span>Equipos</span></a></li>
+          <li><a href="stats.html"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a></li>
           <li class="mf-nav-group" id="mf-nav-social">
             <button class="mf-nav-group__btn" aria-expanded="false" aria-haspopup="true">
               <i class="fas fa-users"></i> <span>Social</span>
@@ -141,14 +114,17 @@ function getNavHTML() {
               <li><a href="amigos.html"><i class="fas fa-user-friends"></i> Amigos</a></li>
             </ul>
           </li>
-
         </ul>
         <div class="auth-buttons" id="auth-buttons">
           ${buildAuthButtons()}
         </div>
       </div>
-    </nav>
+    </header>
   `;
+}
+
+function getNavHTML() {
+  return ''; // Unificado en el header
 }
 
 function getFooterHTML() {

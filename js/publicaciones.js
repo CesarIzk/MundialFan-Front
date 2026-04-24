@@ -133,11 +133,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const mediaHTML = post.media_path ? (
       post.content_type === 'video'
-        ? `<video controls class="w-100 rounded-4 border mb-3" style="max-height:400px;">
+        ? `<video controls class="rounded-4 border mb-3" style="width:100%;max-height:500px;object-fit:contain;background:#000;display:block;">
              <source src="http://localhost:8000/uploads/${post.media_path}">
            </video>`
         : `<img src="http://localhost:8000/uploads/${post.media_path}" alt="Imagen"
-               class="img-fluid rounded-4 border w-100 mb-3" style="max-height:400px;object-fit:cover;">`
+               class="rounded-4 border mb-3" style="width:100%;max-width:100%;height:auto;max-height:min(600px,80vh);display:block;object-fit:contain;">`
     ) : '';
 
     const commentsHTML = comments.map(c => {

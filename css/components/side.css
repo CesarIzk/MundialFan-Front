@@ -1,5 +1,4 @@
-
-    /* ── Contenedor — margen cómodo en laptop ────────────── */
+/* ── Contenedor — margen cómodo en laptop ────────────── */
     .contenedor {
       max-width: 1300px !important;
       width: 96% !important;
@@ -19,11 +18,13 @@
     /* ── Feed central ───────────────────────────────────── */
     .feed-container {
       min-width: 0;
+      max-width: 680px;
+      justify-self: center;
+      width: 100%;
     }
 
     .mf-post {
-      max-width: 100% !important;
-      width: 100% !important;
+      width: 100%;
     }
 
     /* ── Sidebar base (compartida por perfil y chats) ───── */
@@ -234,4 +235,3 @@
       .feed-container   { order: 2; }
       .friends-sidebar  { order: 3; position: static; max-height: 260px; }
     }
-  
