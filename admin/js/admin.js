@@ -4,7 +4,10 @@
  * y expone helpers de API y utilidades.
  */
 
-const API = 'http://localhost:8000/api';
+const API = window.API_CONFIG?.API_BASE || 
+                 (window.location.hostname === 'localhost' 
+                  ? 'http://localhost:8000/api' 
+                  : 'https://mundialfan-api-production.up.railway.app/api');
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 

@@ -4,8 +4,25 @@
  * Uso: import api desde cualquier página, o incluir este script antes del JS de la página.
  */
 
-const API_BASE = 'mundialfan-api-production.up.railway.app/api';
-const BACKEND_URL = 'mundialfan-api-production.up.railway.app';
+
+// === CONFIGURACIÓN DINÁMICA SEGÚN ENTORNO ===
+const isDevelopment = window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1';
+
+// URL base del backend
+const API_BASE_URL = isDevelopment
+    ? 'http://localhost:8000/api'      // Desarrollo local
+    : 'https://mundialfan-api-production.up.railway.app/api';  // Producción Railway
+
+const BACKEND_URL = isDevelopment
+    ? 'http://localhost:8000/'
+    : 'https://mundialfan-api-production.up.railway.app/';
+
+// Exportar para usar en otros archivos
+window.API_CONFIG = {
+    API_BASE: API_BASE_URL,
+    BACKEND_URL: BACKEND_URL
+};
 
 // ─── Interceptor para formatear fechas automáticamente ─────────────────────────
 function formatDates(obj) {
