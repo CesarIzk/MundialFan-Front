@@ -8,76 +8,190 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .stats-page { padding: 2rem 0 4rem; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 14px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border: 1px solid #eef2f6;
+    }
+
+    .summary-card__icon { font-size: 1.6rem; margin-bottom: 0.5rem; color: #c0392b; }
+    .summary-card__number { font-size: 2rem; font-weight: 700; font-family: 'Oswald', sans-serif; color: #1a1a1a; line-height: 1; }
+    .summary-card__label { font-size: 0.72rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+    .stats-section { margin-bottom: 2.5rem; }
+
+    .stats-section__title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-section__title i { color: #c0392b; }
+
+    .table-card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border: 1px solid #eef2f6;
+      overflow: hidden;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    .mf-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .mf-table thead tr { background: #f8f9fa; border-bottom: 2px solid #eef2f6; }
+    .mf-table th { padding: 0.75rem 1rem; font-weight: 600; color: #555; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+    .mf-table td { padding: 0.65rem 1rem; border-bottom: 1px solid #f5f5f5; color: #333; }
+    .mf-table tbody tr:last-child td { border-bottom: none; }
+    .mf-table tbody tr:hover { background: #fafbfc; }
+
+    .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; }
+    .rank-1 { background: #FFD700; color: #333; }
+    .rank-2 { background: #C0C0C0; color: #333; }
+    .rank-3 { background: #CD7F32; color: white; }
+    .rank-n { background: #eef2f6; color: #666; }
+
+    .goals-bar-wrap {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border: 1px solid #eef2f6;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .goals-bar-item { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .goals-bar-item:last-child { margin-bottom: 0; }
+    .goals-bar-year { font-size: 0.75rem; font-weight: 600; color: #555; width: 38px; flex-shrink: 0; }
+    .goals-bar-track { flex: 1; height: 10px; background: #f0f0f0; border-radius: 5px; overflow: hidden; }
+    .goals-bar-fill { height: 100%; background: linear-gradient(90deg, #c0392b, #e74c3c); border-radius: 5px; transition: width 0.6s ease; }
+    .goals-bar-num { font-size: 0.75rem; font-weight: 700; color: #333; width: 30px; text-align: right; flex-shrink: 0; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 </head>
 <body>
 
 <div id="mf-header"></div>
 <div id="mf-nav"></div>
 
-<!-- ═══════════ CONTENIDO ÚNICO DE ESTA PÁGINA ═══════════ -->
+<div class="contenedor stats-page">
 
-<main class="stats2026 contenedor">
-  <section class="stats2026__head">
-    <h1>Estadísticas • Mundial 2026</h1>
-  </section>
+  <div class="mb-4">
+    <h1 style="font-family:'Oswald',sans-serif;font-size:2rem;font-weight:700;">
+      <i class="fas fa-chart-bar me-2" style="color:#c0392b;"></i>Estadísticas Mundiales
+    </h1>
+    <p style="color:#999;font-size:0.85rem;">Datos históricos de la Copa del Mundo FIFA</p>
+  </div>
 
-  <!-- TABLAS DE GRUPOS -->
-  <section class="stats2026__section">
-    <h2>Fase de Grupos (12 grupos)</h2>
-    <div class="groups-grid" id="grupos-grid">
-      <!-- Se genera con JS o hardcoded si no hay API para esto -->
+  <!-- Resumen -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card__icon"><i class="fas fa-trophy"></i></div>
+      <div class="summary-card__number" id="sum-editions">—</div>
+      <div class="summary-card__label">Ediciones</div>
     </div>
-  </section>
+    <div class="summary-card">
+      <div class="summary-card__icon"><i class="fas fa-futbol"></i></div>
+      <div class="summary-card__number" id="sum-goals">—</div>
+      <div class="summary-card__label">Goles históricos</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card__icon"><i class="fas fa-star"></i></div>
+      <div class="summary-card__number" id="sum-champion" style="font-size:1.1rem;padding-top:4px;">—</div>
+      <div class="summary-card__label">Último campeón</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card__icon"><i class="fas fa-calendar"></i></div>
+      <div class="summary-card__number" id="sum-year">—</div>
+      <div class="summary-card__label">Última edición</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card__icon"><i class="fas fa-map-marker-alt"></i></div>
+      <div class="summary-card__number" id="sum-host" style="font-size:1.1rem;padding-top:4px;">—</div>
+      <div class="summary-card__label">Último anfitrión</div>
+    </div>
+  </div>
 
-  <!-- FASE FINAL -->
-  <section class="stats2026__section">
-    <h2>Fase Final (eliminación directa)</h2>
+  <!-- Campeones + Equipos -->
+  <div class="two-col mb-4">
+    <div class="stats-section">
+      <h2 class="stats-section__title"><i class="fas fa-crown"></i> Campeones históricos</h2>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="mf-table">
+            <thead><tr><th>#</th><th>País</th><th>Títulos</th></tr></thead>
+            <tbody id="tbody-champions">
+              <tr><td colspan="3" class="text-center py-3" style="opacity:.5;"><i class="fas fa-spinner fa-spin me-2"></i>Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <h2 class="stats-section__title"><i class="fas fa-shield-alt"></i> Equipos más exitosos</h2>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="mf-table">
+            <thead><tr><th>#</th><th>Equipo</th><th>Títulos</th></tr></thead>
+            <tbody id="tbody-teams">
+              <tr><td colspan="3" class="text-center py-3" style="opacity:.5;"><i class="fas fa-spinner fa-spin me-2"></i>Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goles por edición -->
+  <div class="stats-section">
+    <h2 class="stats-section__title"><i class="fas fa-futbol"></i> Goles por edición</h2>
+    <div class="goals-bar-wrap" id="goals-by-year">
+      <div class="text-center py-3" style="opacity:.5;"><i class="fas fa-spinner fa-spin me-2"></i>Cargando...</div>
+    </div>
+  </div>
+
+  <!-- Ranking países -->
+  <div class="stats-section">
+    <h2 class="stats-section__title"><i class="fas fa-flag"></i> Ranking de países participantes</h2>
     <div class="table-card">
       <div class="table-wrap">
         <table class="mf-table">
           <thead>
-            <tr>
-              <th>Ronda</th><th>Partido</th><th>Equipo 1</th>
-              <th>Marcador</th><th>Equipo 2</th><th>Fecha</th>
-            </tr>
+            <tr><th>#</th><th>País</th><th>Continente</th><th>Títulos</th><th>Participaciones</th></tr>
           </thead>
-          <tbody id="tbody-eliminatoria">
-            <tr><td>Dieciseisavos</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>Dieciseisavos</td><td>2</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>Octavos</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>Cuartos</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>Semifinal</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>Final</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>3er lugar</td><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          <tbody id="tbody-countries">
+            <tr><td colspan="5" class="text-center py-3" style="opacity:.5;"><i class="fas fa-spinner fa-spin me-2"></i>Cargando...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ESTADÍSTICA GENERAL -->
-  <section class="stats2026__section">
-    <h2>Estadística general (goles / amarillas / rojas)</h2>
-    <div class="table-card">
-      <div class="table-wrap">
-        <table class="mf-table">
-          <thead>
-            <tr><th>Equipo</th><th>Goles</th><th>Amarillas</th><th>Rojas</th></tr>
-          </thead>
-          <tbody id="tbody-stats">
-            <tr>
-              <td colspan="4" class="text-center py-3" style="opacity:.5;">
-                <i class="fas fa-spinner fa-spin me-2"></i>Cargando...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- ═══════════════════════════════════════════════════════ -->
+</div>
 
 <div id="mf-footer"></div>
 

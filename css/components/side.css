@@ -1,0 +1,237 @@
+
+    /* ── Contenedor — margen cómodo en laptop ────────────── */
+    .contenedor {
+      max-width: 1300px !important;
+      width: 96% !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    /* ── Layout 3 columnas — sidebars más anchas ─────────── */
+    .publicaciones-wrapper {
+      display: grid;
+      grid-template-columns: 300px 1fr 300px;
+      gap: 1.25rem;
+      width: 100%;
+      align-items: start;
+    }
+
+    /* ── Feed central ───────────────────────────────────── */
+    .feed-container {
+      min-width: 0;
+    }
+
+    .mf-post {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+
+    /* ── Sidebar base (compartida por perfil y chats) ───── */
+    .profile-sidebar,
+    .friends-sidebar {
+      position: sticky;
+      top: 16px;
+      height: fit-content;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border: 1px solid #eef2f6;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar IZQUIERDA — Perfil ─────────────────────── */
+    .profile-sidebar__cover {
+      height: 80px;
+      background: linear-gradient(135deg, #c0392b, #2c3e7a);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .profile-sidebar__body {
+      padding: 0 1rem 1rem;
+      text-align: center;
+    }
+
+    .profile-sidebar__avatar-wrap {
+      margin-top: -28px;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-sidebar__avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .profile-sidebar__name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin: 0 0 2px;
+      color: #1a1a1a;
+    }
+
+    .profile-sidebar__handle {
+      font-size: 0.7rem;
+      color: #999;
+      margin: 0 0 0.75rem;
+    }
+
+    .profile-sidebar__link {
+      display: block;
+      margin-top: 0.85rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #c0392b;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .profile-sidebar__link:hover { text-decoration: underline; }
+
+    /* ── Sidebar DERECHA — Amigos/Chats ─────────────────── */
+    .friends-sidebar__header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eef2f6;
+      background: #fafbfc;
+    }
+
+    .friends-sidebar__header h3 {
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #555;
+    }
+
+    .friends-sidebar__header h3 i { color: #e74c3c; }
+
+    .friends-sidebar__search {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .friends-search {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f5f6f8;
+      border-radius: 20px;
+      padding: 0.35rem 0.75rem;
+    }
+
+    .friends-search i { color: #aaa; font-size: 0.7rem; }
+
+    .friends-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      font-size: 0.75rem;
+    }
+
+    .friends-search input::placeholder { color: #bbb; }
+
+    .friends-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: calc(100vh - 220px);
+      overflow-y: auto;
+    }
+
+    .friends-list::-webkit-scrollbar { width: 3px; }
+    .friends-list::-webkit-scrollbar-track { background: #f1f1f1; }
+    .friends-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+    .friend-item { border-bottom: 1px solid #f5f5f5; }
+    .friend-item:last-child { border-bottom: none; }
+
+    .friend-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      text-decoration: none;
+      color: #333;
+      transition: background 0.2s;
+    }
+
+    .friend-link:hover { background: #fafbfc; }
+
+    .friend-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .friend-info { flex: 1; min-width: 0; }
+
+    .friend-name {
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin: 0 0 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .friend-preview {
+      font-size: 0.65rem;
+      color: #999;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .friend-preview i { font-size: 0.6rem; margin-right: 2px; }
+
+    .friend-badge {
+      background: #e74c3c;
+      color: white;
+      border-radius: 30px;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      min-width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Responsivo ─────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .publicaciones-wrapper {
+        grid-template-columns: 260px 1fr 260px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .publicaciones-wrapper {
+        grid-template-columns: 220px 1fr 220px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .contenedor {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .publicaciones-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-sidebar  { order: 1; position: static; }
+      .feed-container   { order: 2; }
+      .friends-sidebar  { order: 3; position: static; max-height: 260px; }
+    }
+  

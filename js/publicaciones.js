@@ -1,6 +1,129 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
   const feed = document.getElementById('posts-feed');
+  const friendsContainer = document.getElementById('friends-list-container');
+  let friendsList = [];
+  let currentUser = getUser();
+
+  // ──────────────────────────────────────────────────────────────
+  // LISTA DE AMIGOS
+  // ──────────────────────────────────────────────────────────────
+
+  async function loadFriendsList() {
+    if (!isLoggedIn()) {
+      friendsContainer.innerHTML = `
+        <div class="text-center py-4" style="opacity:0.6;">
+          <i class="fas fa-lock"></i><br>
+          <small>Inicia sesión para ver tus amigos</small>
+        </div>`;
+      return;
+    }
+
+    try {
+      const data = await Chats.getSidebar();
+      friendsList = data.data ?? data;
+      renderFriendsList(friendsList);
+    } catch (error) {
+      friendsContainer.innerHTML = `
+        <div class="text-center py-4 text-danger">
+          <i class="fas fa-exclamation-circle"></i><br>
+          <small>Error al cargar amigos</small>
+        </div>`;
+    }
+  }
+
+  function renderFriendsList(friends) {
+    if (!friends || friends.length === 0) {
+      friendsContainer.innerHTML = `
+        <div class="text-center py-4" style="opacity:0.6;">
+          <i class="fas fa-user-friends"></i><br>
+          <small>Aún no tienes amigos agregados</small>
+        </div>`;
+      return;
+    }
+
+    friendsContainer.innerHTML = `
+      <ul class="friends-list" id="friends-list">
+        ${friends.map(chat => {
+          const avatar = chat.friend_avatar 
+            ? `http://localhost:8000/uploads/${chat.friend_avatar}` 
+            : '../images/default-profile.jpg';
+          const lastMsg = chat.last_message_content 
+            ? (chat.last_message_content.length > 30 
+                ? chat.last_message_content.substring(0, 30) + '...' 
+                : chat.last_message_content)
+            : (chat.last_message_media ? '📷 Multimedia' : '');
+          const badge = chat.unread_count > 0 
+            ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>` 
+            : '';
+          
+          let ticks = '';
+          if (chat.last_message_sender_id == currentUser?.id && chat.last_message_content) {
+            if (chat.last_message_status === 'read') ticks = '<i class="fas fa-check-double" style="color:#53bdeb;"></i> ';
+            else if (chat.last_message_status === 'delivered') ticks = '<i class="fas fa-check-double text-muted"></i> ';
+            else if (chat.last_message_status === 'sent') ticks = '<i class="fas fa-check text-muted"></i> ';
+          }
+
+          return `
+            <li class="friend-item">
+              <a href="chat.html?with=${chat.friend_id}" class="friend-link">
+                <div style="position: relative;">
+                  <img class="friend-avatar" src="${avatar}" alt="${chat.friend_name}">
+                  <div class="friend-online" style="display: none;"></div>
+                </div>
+                <div class="friend-info">
+                  <p class="friend-name">${chat.friend_name}</p>
+                  <p class="friend-preview">${ticks}${lastMsg || 'Sin mensajes'}</p>
+                </div>
+                ${badge}
+              </a>
+            </li>
+          `;
+        }).join('')}
+      </ul>
+    `;
+
+    // Filtro de búsqueda
+    const searchInput = document.getElementById('friends-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = friendsList.filter(f => 
+          f.friend_name.toLowerCase().includes(term)
+        );
+        const list = document.getElementById('friends-list');
+        if (list) {
+          if (filtered.length === 0) {
+            list.innerHTML = `<li class="text-center py-3" style="opacity:0.6;">No se encontraron amigos</li>`;
+          } else {
+            list.innerHTML = filtered.map(chat => {
+              const avatar = chat.friend_avatar 
+                ? `http://localhost:8000/uploads/${chat.friend_avatar}` 
+                : '../images/default-profile.jpg';
+              const badge = chat.unread_count > 0 
+                ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>` 
+                : '';
+              return `
+                <li class="friend-item">
+                  <a href="chat.html?with=${chat.friend_id}" class="friend-link">
+                    <img class="friend-avatar" src="${avatar}" alt="${chat.friend_name}">
+                    <div class="friend-info">
+                      <p class="friend-name">${chat.friend_name}</p>
+                    </div>
+                    ${badge}
+                  </a>
+                </li>
+              `;
+            }).join('');
+          }
+        }
+      });
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  // PUBLICACIONES (código existente)
+  // ──────────────────────────────────────────────────────────────
 
   function renderPost(post) {
     const liked    = post.liked ?? false;
@@ -60,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       : '../images/default-profile.jpg';
 
     return `
-      <article class="mf-post mf-post--narrow card border-0 shadow-sm rounded-4 mb-4 mx-auto" style="max-width:600px;">
+      <article class="mf-post card border-0 shadow-sm rounded-4 mb-4 w-100">
         <div class="card-body">
           <div class="d-flex align-items-center gap-2 mb-3">
             <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
@@ -178,12 +301,76 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ──────────────────────────────────────────────────────────────
+  // INICIALIZACIÓN
+  // ──────────────────────────────────────────────────────────────
+
   document.getElementById('btn-search').addEventListener('click', () => {
     const q     = document.getElementById('search-input').value.trim();
     const orden = document.getElementById('order-select').value;
     loadPosts({ ...(q ? { q } : {}), orden });
   });
 
-  loadPosts();
+  // Cargar amigos y publicaciones
+  await loadFriendsList();
+  await loadPosts();
+
+  // Actualizar amigos cada 10 segundos
+  setInterval(async () => {
+    if (isLoggedIn()) {
+      await loadFriendsList();
+    }
+  }, 10000);
+
+});
+
+// ══════════════════════════════════════════════════════════════
+//  publicaciones-perfil.js
+//  Carga los datos del usuario en la sidebar izquierda de
+//  publicaciones.html (foto, portada, nombre, @handle)
+// ══════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+  if (!isLoggedIn()) return;
+
+  const user        = getUser();
+  const coverEl     = document.getElementById('profile-sidebar-cover');
+  const avatarEl    = document.getElementById('profile-avatar');
+  const nameEl      = document.getElementById('profile-name');
+  const handleEl    = document.getElementById('profile-handle');
+
+  // ── Datos básicos desde localStorage (instantáneo) ────────
+  if (avatarEl && user?.profile_picture) {
+    avatarEl.src = `http://localhost:8000/uploads/${user.profile_picture}`;
+  }
+  if (nameEl)   nameEl.textContent   = user?.name ?? 'Usuario';
+  if (handleEl) handleEl.textContent = '@' + (user?.username ?? user?.email?.split('@')[0] ?? 'usuario');
+
+  // ── Datos completos desde la API (portada) ─────────────────
+  try {
+    const data = await Users.getProfile(user.id);
+    const u    = data.user ?? data;
+
+    // Portada real — igual que en perfil.js
+    if (u.cover_picture && coverEl) {
+      coverEl.style.backgroundImage    = `url('http://localhost:8000/uploads/${u.cover_picture}')`;
+      coverEl.style.backgroundSize     = 'cover';
+      coverEl.style.backgroundPosition = 'center';
+    }
+
+    // Si el avatar en la API es más reciente que en localStorage, actualizarlo
+    if (u.profile_picture && avatarEl) {
+      avatarEl.src = `http://localhost:8000/uploads/${u.profile_picture}`;
+    }
+
+    // Nombre y handle actualizados desde la API
+    if (nameEl)   nameEl.textContent   = u.name ?? user?.name ?? 'Usuario';
+    if (handleEl) handleEl.textContent = '@' + (u.username ?? user?.username ?? 'usuario');
+
+  } catch (e) {
+    // Si falla la API, los datos del localStorage ya están cargados — no pasa nada
+    console.warn('No se pudo cargar el perfil completo:', e);
+  }
 
 });

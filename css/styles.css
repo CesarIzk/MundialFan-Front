@@ -18,6 +18,7 @@
 
 /* ===== COMPONENTS ===== */
 @import url('components/buttons.css');
+@import url('components/side.css');
 @import url('components/cards.css');
 @import url('components/modals.css');
 @import url('components/modal-custom.css');

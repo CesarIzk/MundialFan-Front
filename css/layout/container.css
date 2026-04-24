@@ -3,10 +3,44 @@
    ======================= */
 
 .contenedor {
-  width: 90%;
-  max-width: 1200px;
+  width: 92%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
+}
+
+/* ===== BREAKPOINTS DEL CONTENEDOR ===== */
+
+/* Laptop pequeña: 1024px - 1279px → 95% del ancho */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .contenedor {
+    width: 95%;
+    max-width: 100%;
+  }
+}
+
+/* Laptop estándar: 1280px - 1439px → sin max-width, ocupa casi toda la pantalla */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .contenedor {
+    width: 98%;
+    max-width: 100%;
+  }
+}
+
+/* Pantalla grande: 1440px - 1919px → 1400px max */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .contenedor {
+    width: 92%;
+    max-width: 1400px;
+  }
+}
+
+/* Monitor ancho / 4K: 1920px+ → 1600px max (evita que se vea muy estirado) */
+@media (min-width: 1920px) {
+  .contenedor {
+    width: 85%;
+    max-width: 1600px;
+  }
 }
 
 /* ===== GRID LAYOUTS ===== */

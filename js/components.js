@@ -114,27 +114,29 @@ function getNavHTML() {
             <a href="index.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
           </li>
 
-          <!-- Deportes -->
-          <li class="mf-nav-group" id="mf-nav-deportes">
-            <button class="mf-nav-group__btn" aria-expanded="false" aria-haspopup="true">
-              <i class="fas fa-futbol"></i> <span>Deportes</span>
-              <i class="fas fa-chevron-down mf-nav-group__arrow"></i>
-            </button>
-            <ul class="mf-nav-group__dropdown">
-              <li><a href="campeonatos.html"><i class="fas fa-trophy"></i> Campeonatos</a></li>
-              <li><a href="equipo.html"><i class="fas fa-users"></i> Equipos</a></li>
-              <li><a href="stats.html"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
-            </ul>
+          <!-- Campeonatos (enlace directo) -->
+          <li>
+            <a href="campeonatos.html"><i class="fas fa-trophy"></i> <span>Campeonatos</span></a>
           </li>
 
-          <!-- Social -->
+          <!-- Equipos (enlace directo) -->
+          <li>
+            <a href="equipo.html"><i class="fas fa-users"></i> <span>Equipos</span></a>
+          </li>
+
+          <!-- Estadísticas (enlace directo) -->
+          <li>
+            <a href="stats.html"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a>
+          </li>
+
+          <!-- Social (dropdown) -->
           <li class="mf-nav-group" id="mf-nav-social">
             <button class="mf-nav-group__btn" aria-expanded="false" aria-haspopup="true">
               <i class="fas fa-users"></i> <span>Social</span>
               <i class="fas fa-chevron-down mf-nav-group__arrow"></i>
             </button>
             <ul class="mf-nav-group__dropdown">
-              <li><a href="publicaciones.html"><i class="fas fa-calendar-alt"></i> Publicaciones</a></li>
+              <li><a href="publicaciones.html"><i class="fas fa-newspaper"></i> Publicaciones</a></li>
               <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
               <li><a href="amigos.html"><i class="fas fa-user-friends"></i> Amigos</a></li>
             </ul>
@@ -273,15 +275,6 @@ function setNotifBadge(count) {
   }
 }
 
-/**
- * Carga el conteo de no leídas.
- * ── Para conectar al backend reemplaza el bloque MOCK por: ──────────────────
- *   const res  = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
- *                  { headers: { Authorization: `Bearer ${getToken()}` } });
- *   const data = await res.json();
- *   setNotifBadge(data.count ?? 0);
- * ────────────────────────────────────────────────────────────────────────────
- */
 async function loadNotifCount() {
   try {
     const res  = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
@@ -293,13 +286,7 @@ async function loadNotifCount() {
   }
 }
 
-
 // ─── Notificaciones: polling adaptativo ──────────────────────────────────────
-// SSE con PHP-FPM bloquea un worker por usuario → congela la página.
-// Este polling usa setTimeout (no setInterval) para ajustar la frecuencia:
-//   · 5s  mientras haya actividad reciente (conteo cambió)
-//   · 15s después de 3 checks sin cambio
-//   · 30s después de 8 checks sin cambio
 
 let _notifTimer      = null;
 let _notifLastCount  = -1;
@@ -336,20 +323,11 @@ async function _notifTick() {
 
 function startNotifPolling() {
   if (!isLoggedIn() || _notifTimer) return;
-  _notifTick(); // primera llamada inmediata
+  _notifTick();
 }
 
 // ─── Notificaciones: dropdown ─────────────────────────────────────────────────
 
-/**
- * Carga las últimas notificaciones en el panel.
- * ── Para conectar al backend reemplaza el bloque MOCK por: ──────────────────
- *   const res   = await fetch(`${BASE_URL}/api/users/me/notifications?limit=5`,
- *                   { headers: { Authorization: `Bearer ${getToken()}` } });
- *   const data  = await res.json();
- *   renderNotifPanel(data.notifications ?? data);
- * ────────────────────────────────────────────────────────────────────────────
- */
 async function loadNotifPanel() {
   const list = document.getElementById('mf-notif-panel-list');
   if (!list) return;
@@ -390,27 +368,23 @@ function renderNotifPanel(notifs) {
 }
 
 function initNotifDropdown() {
-  // El DOM aún no tiene el botón en este punto, usar delegación desde document
   document.addEventListener('click', (e) => {
     const btn   = document.getElementById('mf-notif-btn');
     const panel = document.getElementById('mf-notif-panel');
     if (!btn || !panel) return;
 
-    // Abrir/cerrar al hacer clic en la campana
     if (btn.contains(e.target)) {
       const isOpen = panel.classList.toggle('open');
       if (isOpen) loadNotifPanel();
       return;
     }
 
-    // Cerrar si se hace clic fuera
     const dropdown = document.getElementById('mf-notif-dropdown');
     if (dropdown && !dropdown.contains(e.target)) {
       panel.classList.remove('open');
     }
   });
 }
-
 
 // ─── Notificaciones: mapa tipo → icono/título ─────────────────────────────────
 
