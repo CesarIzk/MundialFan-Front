@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     const userStr = localStorage.getItem('mf_user');
                     const currentUser = userStr ? JSON.parse(userStr) : {};
-                    const avatarSrc = currentUser.profile_picture ? `http://localhost:8000/uploads/${currentUser.profile_picture}` : '../imagenes/default-profile.jpg';
+                    const avatarSrc = currentUser.profile_picture ? `https://mundialfan-api-production.up.railway.app/uploads/${currentUser.profile_picture}` : '../imagenes/default-profile.jpg';
 
                     const nuevoHtml = `
                         <div class="d-flex gap-2 mb-2 mf-fade-in">

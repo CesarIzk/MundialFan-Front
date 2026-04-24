@@ -11,11 +11,11 @@ const isDevelopment = window.location.hostname === 'localhost' ||
 
 // URL base del backend
 const API_BASE_URL = isDevelopment
-    ? 'http://localhost:8000/api'      // Desarrollo local
+    ? 'https://mundialfan-api-production.up.railway.app/api'      // Desarrollo local
     : 'https://mundialfan-api-production.up.railway.app/api';  // Producción Railway
 
 const BACKEND_URL = isDevelopment
-    ? 'http://localhost:8000/'
+    ? 'https://mundialfan-api-production.up.railway.app/'
     : 'https://mundialfan-api-production.up.railway.app/';
 
 // Exportar para usar en otros archivos

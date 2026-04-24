@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <ul class="friends-list" id="friends-list">
         ${friends.map(chat => {
           const avatar = chat.friend_avatar 
-            ? `http://localhost:8000/uploads/${chat.friend_avatar}` 
+            ? `https://mundialfan-api-production.up.railway.app/uploads/${chat.friend_avatar}` 
             : '../images/default-profile.jpg';
           const lastMsg = chat.last_message_content 
             ? (chat.last_message_content.length > 30 
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           } else {
             list.innerHTML = filtered.map(chat => {
               const avatar = chat.friend_avatar 
-                ? `http://localhost:8000/uploads/${chat.friend_avatar}` 
+                ? `https://mundialfan-api-production.up.railway.app/uploads/${chat.friend_avatar}` 
                 : '../images/default-profile.jpg';
               const badge = chat.unread_count > 0 
                 ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>` 
@@ -134,15 +134,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mediaHTML = post.media_path ? (
       post.content_type === 'video'
         ? `<video controls class="rounded-4 border mb-3" style="width:100%;max-height:500px;object-fit:contain;background:#000;display:block;">
-             <source src="http://localhost:8000/uploads/${post.media_path}">
+             <source src="https://mundialfan-api-production.up.railway.app/uploads/${post.media_path}">
            </video>`
-        : `<img src="http://localhost:8000/uploads/${post.media_path}" alt="Imagen"
+        : `<img src="https://mundialfan-api-production.up.railway.app/uploads/${post.media_path}" alt="Imagen"
                class="rounded-4 border mb-3" style="width:100%;max-width:100%;height:auto;max-height:min(600px,80vh);display:block;object-fit:contain;">`
     ) : '';
 
     const commentsHTML = comments.map(c => {
       const cAvatar = c.user?.profile_picture
-        ? `http://localhost:8000/uploads/${c.user.profile_picture}`
+        ? `https://mundialfan-api-production.up.railway.app/uploads/${c.user.profile_picture}`
         : '../images/default-profile.jpg';
       return `
         <div class="d-flex gap-2 mb-2">
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
 
     const myAvatar = user?.profile_picture
-      ? `http://localhost:8000/uploads/${user.profile_picture}`
+      ? `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`
       : '../images/default-profile.jpg';
 
     const commentFormHTML = user ? `
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ` : '';
 
     const authorAvatar = post.user?.profile_picture
-      ? `http://localhost:8000/uploads/${post.user.profile_picture}`
+      ? `https://mundialfan-api-production.up.railway.app/uploads/${post.user.profile_picture}`
       : '../images/default-profile.jpg';
 
     return `
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const box  = document.querySelector(`.comments-box-${postId}`);
           const user = getUser();
           const myAvatar = user?.profile_picture
-            ? `http://localhost:8000/uploads/${user.profile_picture}`
+            ? `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`
             : '../images/default-profile.jpg';
           box.insertAdjacentHTML('beforeend', `
             <div class="d-flex gap-2 mb-2">
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ── Datos básicos desde localStorage (instantáneo) ────────
   if (avatarEl && user?.profile_picture) {
-    avatarEl.src = `http://localhost:8000/uploads/${user.profile_picture}`;
+    avatarEl.src = `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`;
   }
   if (nameEl)   nameEl.textContent   = user?.name ?? 'Usuario';
   if (handleEl) handleEl.textContent = '@' + (user?.username ?? user?.email?.split('@')[0] ?? 'usuario');
@@ -354,14 +354,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Portada real — igual que en perfil.js
     if (u.cover_picture && coverEl) {
-      coverEl.style.backgroundImage    = `url('http://localhost:8000/uploads/${u.cover_picture}')`;
+      coverEl.style.backgroundImage    = `url('https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}')`;
       coverEl.style.backgroundSize     = 'cover';
       coverEl.style.backgroundPosition = 'center';
     }
 
     // Si el avatar en la API es más reciente que en localStorage, actualizarlo
     if (u.profile_picture && avatarEl) {
-      avatarEl.src = `http://localhost:8000/uploads/${u.profile_picture}`;
+      avatarEl.src = `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`;
     }
 
     // Nombre y handle actualizados desde la API

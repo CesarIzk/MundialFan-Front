@@ -110,7 +110,10 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-  const API_BASE = 'http://localhost:8000';
+  const API_BASE = window.API_CONFIG?.API_BASE || 
+                 (window.location.hostname === 'localhost' 
+                  ? 'https://mundialfan-api-production.up.railway.app/api' 
+                  : 'https://mundialfan-api-production.up.railway.app/api');
 
   function renderCountries(list) {
     const tbody = document.getElementById('countries-tbody');

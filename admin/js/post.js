@@ -32,7 +32,7 @@ async function loadCurrentUser() {
 function getAvatarUrl(user) {
   if (!user) return '../../images/default-profile.jpg';
   if (user.profile_picture) {
-    return `http://localhost:8000/uploads/${user.profile_picture}`;
+    return `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`;
   }
   return '../../images/default-profile.jpg';
 }
@@ -172,9 +172,9 @@ function renderPost(post) {
     if (!mediaUrl.startsWith('http')) {
       // Si ya tiene la ruta completa, usarla, si no, construirla
       if (mediaUrl.startsWith('uploads/')) {
-        mediaUrl = `http://localhost:8000/${mediaUrl}`;
+        mediaUrl = `https://mundialfan-api-production.up.railway.app/${mediaUrl}`;
       } else {
-        mediaUrl = `http://localhost:8000/uploads/${mediaUrl}`;
+        mediaUrl = `https://mundialfan-api-production.up.railway.app/uploads/${mediaUrl}`;
       }
     }
     console.log('Media URL:', mediaUrl);
