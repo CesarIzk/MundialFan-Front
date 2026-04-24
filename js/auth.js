@@ -1,5 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+import { Auth } from './api.js';
+// Si isLoggedIn viene de components.js:
+import { isLoggedIn } from './components.js';
 
+document.addEventListener('DOMContentLoaded', () => {
   if (isLoggedIn()) window.location.href = 'index.html';
 
   // ── LOGIN ──────────────────────────────────────────────
