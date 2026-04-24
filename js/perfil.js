@@ -25,12 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('profile-birth').textContent = fechaNac;
 
     if (u.profile_picture) {
-      document.getElementById('profile-avatar').src = `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`;
+      document.getElementById('profile-avatar').src = `https://mundialfan-api.railway.internal/uploads/${u.profile_picture}`;
     }
 
     if (u.cover_picture) {
       const cover = document.getElementById('profile-cover');
-      cover.style.backgroundImage    = `url('https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}')`;
+      cover.style.backgroundImage    = `url('https://mundialfan-api.railway.internal/uploads/${u.cover_picture}')`;
       cover.style.backgroundSize     = 'cover';
       cover.style.backgroundPosition = 'center';
     }
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const result = await Users.updateCover(formData);
         const cover  = document.getElementById('profile-cover');
-        cover.style.backgroundImage    = `url('https://mundialfan-api-production.up.railway.app/uploads/${result.cover_picture}')`;
+        cover.style.backgroundImage    = `url('https://mundialfan-api.railway.internal/uploads/${result.cover_picture}')`;
         cover.style.backgroundSize     = 'cover';
         cover.style.backgroundPosition = 'center';
       } catch (err) {
@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="mb-2">${post.content}</p>
             ${post.media_path
               ? (post.content_type === 'video'
-                  ? `<video controls src="https://mundialfan-api-production.up.railway.app/uploads/${post.media_path}" class="w-100 rounded-4 border" style="max-height:320px;"></video>`
-                  : `<img src="https://mundialfan-api-production.up.railway.app/uploads/${post.media_path}" class="img-fluid rounded-4 border" style="max-height:320px;object-fit:cover;width:100%;">`)
+                  ? `<video controls src="https://mundialfan-api.railway.internal/uploads/${post.media_path}" class="w-100 rounded-4 border" style="max-height:320px;"></video>`
+                  : `<img src="https://mundialfan-api.railway.internal/uploads/${post.media_path}" class="img-fluid rounded-4 border" style="max-height:320px;object-fit:cover;width:100%;">`)
               : ''}
             <div class="d-flex gap-3 mt-3" style="font-size:14px;opacity:.85;">
               <span><i class="fas fa-heart me-1"></i>${post.likes ?? 0}</span>
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       tbody.innerHTML = users.map(u => {
         const avatarSrc = u.profile_picture
-          ? `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`
+          ? `https://mundialfan-api.railway.internal/uploads/${u.profile_picture}`
           : '../images/default-profile.jpg';
         return `
         <tr>

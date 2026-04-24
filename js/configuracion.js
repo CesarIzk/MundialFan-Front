@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('cfg-birth').value = fechaNac;
 
     if (u.profile_picture) {
-      document.getElementById('cfg-avatar-preview').src = `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`;
+      document.getElementById('cfg-avatar-preview').src = `https://mundialfan-api.railway.internal/uploads/${u.profile_picture}`;
     }
   } catch (e) {
     const user = getUser();

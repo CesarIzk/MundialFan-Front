@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     grid.innerHTML = list.map(c => {
       const flagSrc = c.flag
-        ? (c.flag.startsWith('http') ? c.flag : `https://mundialfan-api-production.up.railway.app/uploads/${c.flag}`)
+        ? (c.flag.startsWith('http') ? c.flag : `https://mundialfan-api.railway.internal/uploads/${c.flag}`)
         : `../images/default-profile.jpg`;
       return `
         <article class="team-card">
