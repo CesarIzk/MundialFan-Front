@@ -17,7 +17,7 @@ function getUser() {
   return raw ? JSON.parse(raw) : null;
 }
 
-function isLoggedIn() {
+export function isLoggedIn() {
   return !!getToken();
 }
 
