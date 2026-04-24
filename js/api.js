@@ -4,8 +4,8 @@
  * Uso: import api desde cualquier página, o incluir este script antes del JS de la página.
  */
 
-const API_BASE = 'http://localhost:8000/api';
-const BACKEND_URL = 'http://localhost:8000/';
+const API_BASE = 'mundialfan-api-production.up.railway.app/api';
+const BACKEND_URL = 'mundialfan-api-production.up.railway.app';
 
 // ─── Interceptor para formatear fechas automáticamente ─────────────────────────
 function formatDates(obj) {
