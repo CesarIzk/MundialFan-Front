@@ -302,6 +302,6 @@ const Notifications = {
   async markAllRead() {
     return apiFetch('/users/me/notifications/read', { method: 'POST' });
   },
-};-e 
+};
 // ─── Exports ──────────────────────────────────────────────────────────────────
 export { Auth, Posts, Likes, Comments, Users, Chats, Countries, Championships, Categories, Notifications };
