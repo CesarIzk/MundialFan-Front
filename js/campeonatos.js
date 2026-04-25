@@ -1,3 +1,5 @@
+import { Championships } from './api.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   let allChampionships = [];

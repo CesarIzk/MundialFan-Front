@@ -1,3 +1,5 @@
+import { Countries } from './api.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   const grid = document.getElementById('paises-grid');

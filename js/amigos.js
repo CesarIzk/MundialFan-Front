@@ -1,3 +1,5 @@
+import { Users } from './api.js';
+
 let myFriends = [];
 let pendingRequests = [];
 let suggestedUsers = [];

@@ -4,6 +4,8 @@
  * Requiere: api.js y components.js cargados antes.
  */
 
+import { Notifications } from './api.js';
+
 // ─── Config visual por tipo ───────────────────────────────────────────────────
 
 const PAGE_NOTIF_META = {

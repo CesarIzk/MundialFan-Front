@@ -5,8 +5,8 @@
  */
 
 const API = window.API_CONFIG?.API_BASE || 
-                 (window.location.hostname === 'localhost' 
-                  ? 'https://mundialfan-api-production.up.railway.app/api' 
+                 (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                  ? 'http://localhost:8000/api' 
                   : 'https://mundialfan-api-production.up.railway.app/api');
 
 // ─── Auth ────────────────────────────────────────────────────────────────────

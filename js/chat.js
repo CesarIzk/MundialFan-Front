@@ -1,3 +1,5 @@
+import { Chats } from './api.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   if (!isLoggedIn()) {

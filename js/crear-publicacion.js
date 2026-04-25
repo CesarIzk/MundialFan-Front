@@ -1,3 +1,5 @@
+import { Categories, Posts } from './api.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   if (!isLoggedIn()) {
