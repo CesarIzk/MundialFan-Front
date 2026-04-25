@@ -85,9 +85,11 @@
   </main>
 </div>
 
-<script type="module" src="js/admin.js"></script>
-<script>
-document.getElementById('btn-create').addEventListener('click', async () => {
+<script type="module">
+import './js/admin.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('btn-create').addEventListener('click', async () => {
   const name         = document.getElementById('f-name').value.trim();
   const username     = document.getElementById('f-username').value.trim();
   const email        = document.getElementById('f-email').value.trim();
@@ -123,6 +125,7 @@ document.getElementById('btn-create').addEventListener('click', async () => {
   } finally {
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Crear Administrador';
   }
+  });
 });
 </script>
 </body>
