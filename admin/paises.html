@@ -65,8 +65,6 @@
           <label class="adm-form-label">Continente</label>
           <select class="adm-select" id="edit-continent">
             <option value="">Selecciona</option>
-            <option>CONCACAF</option><option>CONMEBOL</option><option>UEFA</option>
-            <option>AFC</option><option>CAF</option><option>OFC</option>
           </select>
         </div>
         <div class="adm-form-group">
@@ -114,6 +112,33 @@ document.addEventListener('DOMContentLoaded', () => {
                  (window.location.hostname === 'localhost' 
                   ? 'https://mundialfan-api-production.up.railway.app/api' 
                   : 'https://mundialfan-api-production.up.railway.app/api');
+
+  // Lista de continentes
+  const CONTINENTS = [
+    'América del Norte',
+    'América Central',
+    'América del Sur',
+    'Europa',
+    'África',
+    'Asia',
+    'Oceanía'
+  ];
+
+  // Función para cargar continentes en el select
+  function loadContinents() {
+    const select = document.getElementById('edit-continent');
+    // Limpiar opciones excepto la primera (Selecciona)
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+    // Agregar continentes
+    CONTINENTS.forEach(continent => {
+      const option = document.createElement('option');
+      option.value = continent;
+      option.textContent = continent;
+      select.appendChild(option);
+    });
+  }
 
   function renderCountries(list) {
     const tbody = document.getElementById('countries-tbody');
