@@ -4,7 +4,13 @@
  * También gestiona el estado de sesión (JWT en localStorage).
  */
 
-const BASE_URL = 'http://localhost:8000'; // URL del backend
+// ─── Configuración dinámica según entorno ─────────────────────────────────────
+const isDevelopment = window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1';
+
+const BASE_URL = isDevelopment
+    ? 'http://localhost:8000'  // Desarrollo local
+    : 'https://mundialfan-api-production.up.railway.app';  // Producción Railway
 
 // ─── Auth helpers ────────────────────────────────────────────────────────────
 

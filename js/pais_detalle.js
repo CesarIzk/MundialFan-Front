@@ -20,7 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    const API = 'http://localhost:8000';
+    const isDevelopment = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1';
+    const API = isDevelopment
+        ? 'http://localhost:8000'  // Desarrollo local
+        : 'https://mundialfan-api-production.up.railway.app';  // Producción Railway
     document.title = `MundialFan - ${country.name}`;
 
     document.getElementById('pais-nombre').textContent       = country.name;
