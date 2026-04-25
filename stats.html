@@ -84,7 +84,11 @@
     .goals-bar-fill { height: 100%; background: linear-gradient(90deg, #c0392b, #e74c3c); border-radius: 5px; transition: width 0.6s ease; }
     .goals-bar-num { font-size: 0.75rem; font-weight: 700; color: #333; width: 30px; text-align: right; flex-shrink: 0; }
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; min-width: 0; }
+    .two-col > * { min-width: 0; overflow: hidden; }
+
+    .table-card { overflow: hidden; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     @media (max-width: 768px) {
       .two-col { grid-template-columns: 1fr; }
