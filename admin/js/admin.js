@@ -157,4 +157,8 @@ window.adminGetUser = adminGetUser;
 window.adminGetToken = adminGetToken;
 window.adminGuard = adminGuard;
 window.adminLogout = adminLogout;
+window.showAlert = showAlert;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.confirmAction = confirmAction;
 
