@@ -23,7 +23,7 @@ function getUser() {
   return raw ? JSON.parse(raw) : null;
 }
 
-export function isLoggedIn() {
+function isLoggedIn() {
   return !!getToken();
 }
 
@@ -32,6 +32,12 @@ function logout() {
   localStorage.removeItem('mf_user');
   window.location.href = 'auth.html';
 }
+
+// ─── Exponer funciones globales para que otros módulos puedan usarlas ────────
+window.isLoggedIn = isLoggedIn;
+window.getUser = getUser;
+window.getToken = getToken;
+window.logout = logout;
 
 // ─── Nav dinámico según sesión ────────────────────────────────────────────────
 
