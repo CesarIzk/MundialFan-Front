@@ -150,3 +150,11 @@ function confirmAction(msg, callback) {
 
 document.addEventListener('DOMContentLoaded', injectAdminLayout);
 
+// ─── Exponer funciones globales para que scripts inline puedan usarlas ───────
+window.adminFetch = adminFetch;
+window.adminFetchForm = adminFetchForm;
+window.adminGetUser = adminGetUser;
+window.adminGetToken = adminGetToken;
+window.adminGuard = adminGuard;
+window.adminLogout = adminLogout;
+
