@@ -12,6 +12,25 @@ const BASE_URL = isDevelopment
     ? 'http://localhost:8000'  // Desarrollo local
     : 'https://mundialfan-api-production.up.railway.app';  // Producción Railway
 
+// ─── Media URL helper ────────────────────────────────────────────────────────
+
+function mediaUrl(path, fallback = '../images/default-profile.jpg') {
+  if (!path) return fallback;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${BASE_URL}/uploads/${path}`;
+}
+
+// ─── Limpiar localStorage con profile_picture truncado (migración Cloudinary) ─
+(function fixStoredUser() {
+  try {
+    const stored = JSON.parse(localStorage.getItem('mf_user') || 'null');
+    if (stored?.profile_picture && !stored.profile_picture.startsWith('http')) {
+      stored.profile_picture = null;
+      localStorage.setItem('mf_user', JSON.stringify(stored));
+    }
+  } catch (_) {}
+})();
+
 // ─── Auth helpers ────────────────────────────────────────────────────────────
 
 function getToken() {
@@ -45,9 +64,7 @@ function buildAuthButtons() {
   const user = getUser();
 
   if (user) {
-    const avatarSrc = user.profile_picture
-      ? `${BASE_URL}/uploads/${user.profile_picture}`
-      : `../images/default-profile.jpg`;
+    const avatarSrc = mediaUrl(user.profile_picture);
     const displayName = user.username || user.name || 'Usuario';
 
     return `
