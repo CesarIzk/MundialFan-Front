@@ -38,14 +38,7 @@ function formatDates(obj) {
           obj[key] = date.toLocaleString('es-ES', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
       }
-      else if (obj[key].match(/\.(jpg|jpeg|png|gif|webp|mp4|webm)$/i)) {
-        let clean = obj[key].replace(/^https?:\/\/[^\/]+\//, '');
-        clean = clean.replace(/^\/+/, '');
-        while (clean.startsWith('uploads/')) {
-          clean = clean.substring(8);
-        }
-        obj[key] = clean;
-      }
+      // URLs de imágenes/video se dejan tal cual — pueden ser Cloudinary (https://) o rutas relativas
     }
   }
   return obj;
