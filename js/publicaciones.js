@@ -1,7 +1,20 @@
 // ─── Importar API y helpers de auth ───────────────────────────────────────────
 import { Posts, Likes, Comments, Users, Chats } from './api.js';
 
-// Helpers de sesión (definidos aquí para no depender de components.js)
+const BASE = 'https://mundialfan-api-production.up.railway.app';
+
+/**
+ * Resuelve cualquier URL de imagen/video:
+ * - Si ya es una URL completa (Cloudinary, etc.) la devuelve tal cual.
+ * - Si es una ruta relativa la prefija con BASE/uploads/.
+ * - Si es null/undefined devuelve el fallback.
+ */
+function mediaUrl(path, fallback = '../images/default-profile.jpg') {
+  if (!path) return fallback;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${BASE}/uploads/${path}`;
+}
+
 function getUser() {
   try {
     return JSON.parse(localStorage.getItem('mf_user')) || null;
@@ -62,21 +75,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     friendsContainer.innerHTML = `
       <ul class="friends-list" id="friends-list">
         ${friends.map(chat => {
-          const avatar = chat.friend_avatar 
-            ? `https://mundialfan-api-production.up.railway.app/uploads/${chat.friend_avatar}` 
-            : '../images/default-profile.jpg';
-          const lastMsg = chat.last_message_content 
-            ? (chat.last_message_content.length > 30 
-                ? chat.last_message_content.substring(0, 30) + '...' 
+          const avatar  = mediaUrl(chat.friend_avatar);
+          const lastMsg = chat.last_message_content
+            ? (chat.last_message_content.length > 30
+                ? chat.last_message_content.substring(0, 30) + '...'
                 : chat.last_message_content)
             : (chat.last_message_media ? '📷 Multimedia' : '');
-          const badge = chat.unread_count > 0 
-            ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>` 
+          const badge = chat.unread_count > 0
+            ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>`
             : '';
-          
+
           let ticks = '';
           if (chat.last_message_sender_id == currentUser?.id && chat.last_message_content) {
-            if (chat.last_message_status === 'read') ticks = '<i class="fas fa-check-double" style="color:#53bdeb;"></i> ';
+            if (chat.last_message_status === 'read')      ticks = '<i class="fas fa-check-double" style="color:#53bdeb;"></i> ';
             else if (chat.last_message_status === 'delivered') ticks = '<i class="fas fa-check-double text-muted"></i> ';
             else if (chat.last_message_status === 'sent') ticks = '<i class="fas fa-check text-muted"></i> ';
           }
@@ -104,35 +115,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchInput = document.getElementById('friends-search-input');
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = friendsList.filter(f => 
-          f.friend_name.toLowerCase().includes(term)
-        );
-        const list = document.getElementById('friends-list');
-        if (list) {
-          if (filtered.length === 0) {
-            list.innerHTML = `<li class="text-center py-3" style="opacity:0.6;">No se encontraron amigos</li>`;
-          } else {
-            list.innerHTML = filtered.map(chat => {
-              const avatar = chat.friend_avatar 
-                ? `https://mundialfan-api-production.up.railway.app/uploads/${chat.friend_avatar}` 
-                : '../images/default-profile.jpg';
-              const badge = chat.unread_count > 0 
-                ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>` 
-                : '';
-              return `
-                <li class="friend-item">
-                  <a href="chat.html?with=${chat.friend_id}" class="friend-link">
-                    <img class="friend-avatar" src="${avatar}" alt="${chat.friend_name}">
-                    <div class="friend-info">
-                      <p class="friend-name">${chat.friend_name}</p>
-                    </div>
-                    ${badge}
-                  </a>
-                </li>
-              `;
-            }).join('');
-          }
+        const term     = e.target.value.toLowerCase();
+        const filtered = friendsList.filter(f => f.friend_name.toLowerCase().includes(term));
+        const list     = document.getElementById('friends-list');
+        if (!list) return;
+        if (filtered.length === 0) {
+          list.innerHTML = `<li class="text-center py-3" style="opacity:0.6;">No se encontraron amigos</li>`;
+        } else {
+          list.innerHTML = filtered.map(chat => {
+            const avatar = mediaUrl(chat.friend_avatar);
+            const badge  = chat.unread_count > 0
+              ? `<span class="friend-badge">${chat.unread_count > 99 ? '99+' : chat.unread_count}</span>`
+              : '';
+            return `
+              <li class="friend-item">
+                <a href="chat.html?with=${chat.friend_id}" class="friend-link">
+                  <img class="friend-avatar" src="${avatar}" alt="${chat.friend_name}">
+                  <div class="friend-info">
+                    <p class="friend-name">${chat.friend_name}</p>
+                  </div>
+                  ${badge}
+                </a>
+              </li>
+            `;
+          }).join('');
         }
       });
     }
@@ -151,16 +157,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mediaHTML = post.media_path ? (
       post.content_type === 'video'
         ? `<video controls class="rounded-4 border mb-3" style="width:100%;max-height:500px;object-fit:contain;background:#000;display:block;">
-             <source src="https://mundialfan-api-production.up.railway.app/uploads/${post.media_path}">
+             <source src="${mediaUrl(post.media_path)}">
            </video>`
-        : `<img src="https://mundialfan-api-production.up.railway.app/uploads/${post.media_path}" alt="Imagen"
+        : `<img src="${mediaUrl(post.media_path)}" alt="Imagen"
                class="rounded-4 border mb-3" style="width:100%;max-width:100%;height:auto;max-height:min(600px,80vh);display:block;object-fit:contain;">`
     ) : '';
 
     const commentsHTML = comments.map(c => {
-      const cAvatar = c.user?.profile_picture
-        ? `https://mundialfan-api-production.up.railway.app/uploads/${c.user.profile_picture}`
-        : '../images/default-profile.jpg';
+      const cAvatar = mediaUrl(c.user?.profile_picture);
       return `
         <div class="d-flex gap-2 mb-2">
           <img src="${cAvatar}" alt="Avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
@@ -175,9 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
     }).join('');
 
-    const myAvatar = user?.profile_picture
-      ? `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`
-      : '../images/default-profile.jpg';
+    const myAvatar = mediaUrl(user?.profile_picture);
 
     const commentFormHTML = user ? `
       <div class="d-flex gap-2 mt-2">
@@ -195,9 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     ` : '';
 
-    const authorAvatar = post.user?.profile_picture
-      ? `https://mundialfan-api-production.up.railway.app/uploads/${post.user.profile_picture}`
-      : '../images/default-profile.jpg';
+    const authorAvatar = mediaUrl(post.user?.profile_picture);
 
     return `
       <article class="mf-post card border-0 shadow-sm rounded-4 mb-4 w-100">
@@ -298,9 +298,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           await Comments.create(postId, content);
           const box  = document.querySelector(`.comments-box-${postId}`);
           const user = getUser();
-          const myAvatar = user?.profile_picture
-            ? `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`
-            : '../images/default-profile.jpg';
+          const myAvatar = mediaUrl(user?.profile_picture);
           box.insertAdjacentHTML('beforeend', `
             <div class="d-flex gap-2 mb-2">
               <img src="${myAvatar}" alt="Avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
@@ -338,7 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ══════════════════════════════════════════════════════════════
-//  Sidebar de perfil (antes publicaciones-perfil.js)
+//  Sidebar de perfil
 // ══════════════════════════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -352,7 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const handleEl = document.getElementById('profile-handle');
 
   if (avatarEl && user?.profile_picture) {
-    avatarEl.src = `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`;
+    avatarEl.src = mediaUrl(user.profile_picture);
   }
   if (nameEl)   nameEl.textContent   = user?.name ?? 'Usuario';
   if (handleEl) handleEl.textContent = '@' + (user?.username ?? user?.email?.split('@')[0] ?? 'usuario');
@@ -362,12 +360,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const u    = data.user ?? data;
 
     if (u.cover_picture && coverEl) {
-      coverEl.style.backgroundImage    = `url('https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}')`;
+      coverEl.style.backgroundImage    = `url('${mediaUrl(u.cover_picture)}')`;
       coverEl.style.backgroundSize     = 'cover';
       coverEl.style.backgroundPosition = 'center';
     }
     if (u.profile_picture && avatarEl) {
-      avatarEl.src = `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`;
+      avatarEl.src = mediaUrl(u.profile_picture);
     }
     if (nameEl)   nameEl.textContent   = u.name ?? user?.name ?? 'Usuario';
     if (handleEl) handleEl.textContent = '@' + (u.username ?? user?.username ?? 'usuario');
