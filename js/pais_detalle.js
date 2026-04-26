@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('pais-jugador').textContent      = country.best_player ?? '—';
 
     if (country.flag) {
-      const flagUrl = country.flag.startsWith('http') ? country.flag : `${API}/uploads/${country.flag}`;
+      const flagUrl = country.flag;
       document.getElementById('pais-bandera').src = flagUrl;
       const cover = document.getElementById('pais-cover');
       cover.style.backgroundImage    = `url('${flagUrl}')`;
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('galeria-section').style.display = 'block';
       document.getElementById('galeria-container').innerHTML =
         country.images.map(img => `
-          <img src="${API}/uploads/${img.path}" alt="${img.caption ?? ''}"
+          <img src="${img.path}" alt="${img.caption ?? ''}"
                class="rounded shadow-sm" style="max-width:100%;border-radius:10px;">
         `).join('');
     }

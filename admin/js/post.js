@@ -31,14 +31,8 @@ async function loadCurrentUser() {
 // Función para obtener URL de avatar
 function getAvatarUrl(user) {
   if (!user) return '../../images/default-profile.jpg';
-  if (user.profile_picture) {
-    // Si es URL completa (Cloudinary), devolverla tal cual
-    if (user.profile_picture.startsWith('http://') || user.profile_picture.startsWith('https://')) {
-      return user.profile_picture;
-    }
-    // Si es ruta relativa, construir URL completa
-    return `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`;
-  }
+ return user.profile_picture;
+
   return '../../images/default-profile.jpg';
 }
 
@@ -169,37 +163,8 @@ function renderPost(post) {
   const likeIcon = isLiked ? 'fas fa-heart' : 'far fa-heart';
   const likeClass = isLiked ? 'btn-danger' : 'btn-outline-secondary';
   
-  // Media HTML - Corregir ruta de uploads
-  let mediaHtml = '';
-  if (post.media_path && post.media_path !== 'null' && post.media_path !== '') {
-    // La ruta correcta es /uploads/ no /uploads/post/images/
-    let mediaUrl = post.media_path;
-    if (!mediaUrl.startsWith('http')) {
-      // Si ya tiene la ruta completa, usarla, si no, construirla
-      if (mediaUrl.startsWith('uploads/')) {
-        mediaUrl = `https://mundialfan-api-production.up.railway.app/${mediaUrl}`;
-      } else {
-        mediaUrl = `https://mundialfan-api-production.up.railway.app/uploads/${mediaUrl}`;
-      }
-    }
-    console.log('Media URL:', mediaUrl);
-    
-    if (post.content_type === 'video') {
-      mediaHtml = `
-        <video controls class="post-media w-100" style="max-height:400px;">
-          <source src="${mediaUrl}">
-        </video>
-      `;
-    } else {
-      mediaHtml = `
-        <img src="${mediaUrl}" 
-             alt="Imagen de publicación" 
-             class="post-media w-100" 
-             style="max-height:400px; object-fit:cover;"
-             onerror="this.onerror=null; this.src='../../images/default-image.jpg'; console.error('Error cargando imagen:', this.src)">
-      `;
-    }
-  }
+ const mediaUrl = post.media_path;
+
   
   // Formulario de comentario (solo si admin está logueado)
   const commentForm = currentUser ? `
