@@ -32,6 +32,11 @@ async function loadCurrentUser() {
 function getAvatarUrl(user) {
   if (!user) return '../../images/default-profile.jpg';
   if (user.profile_picture) {
+    // Si es URL completa (Cloudinary), devolverla tal cual
+    if (user.profile_picture.startsWith('http://') || user.profile_picture.startsWith('https://')) {
+      return user.profile_picture;
+    }
+    // Si es ruta relativa, construir URL completa
     return `https://mundialfan-api-production.up.railway.app/uploads/${user.profile_picture}`;
   }
   return '../../images/default-profile.jpg';

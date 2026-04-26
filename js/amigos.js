@@ -1,5 +1,13 @@
 import { Users } from './api.js';
 
+const BASE = 'https://mundialfan-api-production.up.railway.app';
+
+function mediaUrl(path, fallback = '../images/default-profile.jpg') {
+  if (!path) return fallback;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${BASE}/uploads/${path}`;
+}
+
 let myFriends = [];
 let pendingRequests = [];
 let suggestedUsers = [];
@@ -168,8 +176,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       countryFlag: "",
       isOnline: Math.random() > 0.5,
       mutualFriends: 0,
-      avatar: u.profile_picture ? `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}` : "../images/default-profile.jpg",
-      cover: u.cover_picture    ? `https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}`   : `https://picsum.photos/seed/${u.id}/400/120`
+      avatar: mediaUrl(u.profile_picture),
+      cover: u.cover_picture    ? mediaUrl(u.cover_picture)   : `https://picsum.photos/seed/${u.id}/400/120`
     }));
   } catch (error) {
     console.error("Error fetching friends:", error);
@@ -186,8 +194,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       countryFlag: "",
       isOnline: Math.random() > 0.5,
       mutualFriends: 0,
-      avatar: u.profile_picture ? `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}` : "../images/default-profile.jpg",
-      cover: u.cover_picture    ? `https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}`   : `https://picsum.photos/seed/${u.id}/400/120`
+      avatar: mediaUrl(u.profile_picture),
+      cover: u.cover_picture    ? mediaUrl(u.cover_picture)   : `https://picsum.photos/seed/${u.id}/400/120`
     }));
   } catch (error) {
     console.error("Error fetching requests:", error);
@@ -206,8 +214,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         countryFlag: "",
         isOnline: Math.random() > 0.5,
         mutualFriends: 0,
-        avatar: u.profile_picture ? `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}` : "../images/default-profile.jpg",
-        cover: u.cover_picture    ? `https://mundialfan-api-production.up.railway.app/uploads/${u.cover_picture}`   : `https://picsum.photos/seed/${u.id}/400/120`
+        avatar: mediaUrl(u.profile_picture),
+        cover: u.cover_picture    ? mediaUrl(u.cover_picture)   : `https://picsum.photos/seed/${u.id}/400/120`
       }));
   } catch (error) {
     console.error("Error fetching users:", error);
