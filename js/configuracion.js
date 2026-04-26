@@ -1,5 +1,13 @@
 import { Users } from './api.js';
 
+const BASE = 'https://mundialfan-api-production.up.railway.app';
+
+function avatarUrl(path, fallback = '/images/default-profile.jpg') {
+  if (!path) return fallback;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${BASE}/uploads/${path}`;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
 
   if (!isLoggedIn()) {
@@ -40,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('cfg-birth').value = fechaNac;
 
     if (u.profile_picture) {
-      document.getElementById('cfg-avatar-preview').src = `https://mundialfan-api-production.up.railway.app/uploads/${u.profile_picture}`;
+      document.getElementById('cfg-avatar-preview').src = avatarUrl(u.profile_picture);
     }
   } catch (e) {
     const user = getUser();
