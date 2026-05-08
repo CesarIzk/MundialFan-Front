@@ -72,15 +72,7 @@ function formatDates(obj) {
 
 async function apiFetch(endpoint, options = {}) {
   const token = localStorage.getItem('mf_token');
-if (!response.ok) {
-  if (response.status === 401) {
-    localStorage.removeItem('mf_token');
-    localStorage.removeItem('mf_user');
-    window.location.href = 'auth.html';
-    return;
-  }
-  throw { status: response.status, message: data.message || 'Error en la solicitud', data };
-}
+
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -95,12 +87,17 @@ if (!response.ok) {
   const data = await response.json();
 
   if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem('mf_token');
+      localStorage.removeItem('mf_user');
+      window.location.href = 'auth.html';
+      return;
+    }
     throw { status: response.status, message: data.message || 'Error en la solicitud', data };
   }
 
   return formatDates(data);
 }
-
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 const Auth = {
