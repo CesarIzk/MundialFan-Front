@@ -1,5 +1,13 @@
 import { Chats } from './api.js';
+const BASE = 'https://mundialfan-api-production.up.railway.app';
 
+function mediaUrl(path, fallback = '../images/default-profile.jpg') {
+  if (!path) return fallback;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  // Evitar doble /uploads/
+  if (path.startsWith('uploads/')) return `${BASE}/${path}`;
+  return `${BASE}/uploads/${path}`;
+}
 document.addEventListener('DOMContentLoaded', async () => {
 
   if (!isLoggedIn()) {
@@ -46,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     chatList.dataset.cacheKey = cacheKey;
 
     chatList.innerHTML = chats.map(chat => {
-      const avatar  = chat.friend_avatar ? `https://mundialfan-api-production.up.railway.app/uploads/${chat.friend_avatar}` : '../images/default-profile.jpg';
+const avatar = mediaUrl(chat.friend_avatar);
       const lastMsg = chat.last_message_content || (chat.last_message_media ? '📷 Multimedia' : '');
       const badge   = chat.unread_count > 0 ? `<span class="chat-badge">${chat.unread_count}</span>` : '';
 
@@ -90,9 +98,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.history.replaceState({}, document.title, 'chat.html');
     renderChatList(myChats);
 
-    const avatar = currentChatUser.friend_avatar
-      ? `https://mundialfan-api-production.up.railway.app/uploads/${currentChatUser.friend_avatar}`
-      : '../images/default-profile.jpg';
+   const avatar = mediaUrl(currentChatUser.friend_avatar);
+
 
     topbarLeft.innerHTML = `
       <img class="chat-avatar" src="${avatar}" alt="${currentChatUser.friend_name}">
@@ -172,9 +179,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (msg.media_url) {
       window.chatMediaMap.set('msg_' + msg.id, [msg]);
       if (msg.media_type === 'image') {
-        mediaHtml = `<div class="msg-media mb-1" style="cursor:pointer;" onclick="openMediaViewer('msg_${msg.id}')"><img src="https://mundialfan-api-production.up.railway.app/uploads/${msg.media_url}" style="max-width:100%; border-radius:8px;"></div>`;
+        mediaHtml = `<div class="msg-media mb-1" style="cursor:pointer;" onclick="openMediaViewer('msg_${msg.id}')"><="<img src="${mediaUrl(msg.media_url)}" style="max-width:100%; border-radius:8px;"></div>`;
       } else if (msg.media_type === 'video') {
-        mediaHtml = `<div class="msg-media mb-1" style="cursor:pointer;" onclick="openMediaViewer('msg_${msg.id}')"><video controls src="https://mundialfan-api-production.up.railway.app/uploads/${msg.media_url}" style="max-width:100%; border-radius:8px;"></video></div>`;
+        mediaHtml = `<div class="msg-media mb-1" style="cursor:pointer;" onclick="openMediaViewer('msg_${msg.id}')"><video controls src="${mediaUrl(msg.media_url)}" style="max-width:100%; border-radius:8px;"></video></div>`;
       }
     }
 
