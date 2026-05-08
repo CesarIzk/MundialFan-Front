@@ -166,16 +166,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const commentsHTML = comments.map(c => {
       const cAvatar = mediaUrl(c.user?.profile_picture);
       return `
-        <div class="d-flex gap-2 mb-2">
-          <img src="${cAvatar}" alt="Avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
-          <div class="p-2 rounded-4 bg-light flex-grow-1 border">
-            <div class="d-flex justify-content-between">
-              <strong style="font-size:12px;">${c.user?.name ?? 'Usuario'}</strong>
-              <small class="text-muted" style="font-size:10px;">${c.created_at ?? ''}</small>
-            </div>
-            <div style="font-size:13px;">${c.content}</div>
-          </div>
-        </div>
+       // Antes (líneas del d-flex de autor):
+<div class="d-flex align-items-center gap-2 mb-3">
+  <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+  <div>
+    <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
+    <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
+  </div>
+</div>
+
+// Después:
+<a href="perfil.html?id=${post.user?.id}" class="d-flex align-items-center gap-2 mb-3 text-decoration-none text-reset">
+  <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover; cursor:pointer;">
+  <div>
+    <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
+    <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
+  </div>
+</a>
       `;
     }).join('');
 
@@ -203,11 +210,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       <article class="mf-post card border-0 shadow-sm rounded-4 mb-4 w-100">
         <div class="card-body">
           <div class="d-flex align-items-center gap-2 mb-3">
-            <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-            <div>
-              <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
-              <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
-            </div>
+         <a href="perfil.html?id=${post.user?.id}" class="d-flex align-items-center gap-2 text-decoration-none text-reset mb-3">
+  <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+  <div>
+    <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
+    <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
+  </div>
+</a>
           </div>
           <p class="mb-3">${post.content}</p>
           ${mediaHTML}
