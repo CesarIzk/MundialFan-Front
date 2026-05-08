@@ -164,8 +164,9 @@ function renderPost(post) {
   const likeIcon = isLiked ? 'fas fa-heart' : 'far fa-heart';
   const likeClass = isLiked ? 'btn-danger' : 'btn-outline-secondary';
   
-// ✅ Después
+// ─── Al nivel del módulo (fuera de cualquier función) ──────────────────
 const BASE = 'https://mundialfan-api-production.up.railway.app';
+
 function resolveUrl(path) {
   if (!path) return null;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
@@ -173,19 +174,45 @@ function resolveUrl(path) {
   return `${BASE}/uploads/${path}`;
 }
 
-const resolvedMedia = resolveUrl(post.media_path);
-const mediaHtml = resolvedMedia
-  ? (post.content_type === 'video'
-      ? `<video controls src="${resolvedMedia}" class="w-100 rounded-3 mb-3" style="max-height:400px;"></video>`
-      : `<img src="${resolvedMedia}" class="img-fluid rounded-3 mb-3" style="max-height:400px;object-fit:cover;width:100%;">`)
-  : '';
-  
-  // Formulario de comentario (solo si admin está logueado)
+function getAvatarUrl(user) {
+  if (!user) return '../../images/default-profile.jpg';
+  const path = user.profile_picture;
+  if (!path) return '../../images/default-profile.jpg';
+  return resolveUrl(path) || '../../images/default-profile.jpg';
+}
+
+// ─── Dentro de renderPost ──────────────────────────────────────────────
+function renderPost(post) {
+  const isLiked   = post.liked_by_user || false;
+  const likeIcon  = isLiked ? 'fas fa-heart' : 'far fa-heart';
+  const likeClass = isLiked ? 'btn-danger' : 'btn-outline-secondary';
+
+  // ✅ mediaHtml declarado ANTES del template literal
+  const resolvedMedia = resolveUrl(post.media_path);
+  const mediaHtml = resolvedMedia
+    ? (post.content_type === 'video'
+        ? `<video controls src="${resolvedMedia}" class="w-100 rounded-3 mb-3" style="max-height:400px;"></video>`
+        : `<img src="${resolvedMedia}" class="img-fluid rounded-3 mb-3" style="max-height:400px;object-fit:cover;width:100%;">`)
+    : '';
+
+  // Avatar/nombre del autor
+  let authorUser = post.user;
+  if (typeof authorUser === 'string') {
+    try { authorUser = JSON.parse(authorUser); } catch(e) { authorUser = {}; }
+  }
+  authorUser = authorUser || {};
+  const authorAvatar   = getAvatarUrl(authorUser);
+  const authorName     = authorUser.name     || 'Usuario';
+  const authorUsername = authorUser.username || 'usuario';
+
   const commentForm = currentUser ? `
     <div class="d-flex gap-2 mt-3">
-      <img src="${getAvatarUrl(currentUser)}" alt="Tu avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" onerror="this.src='../../images/default-profile.jpg'">
+      <img src="${getAvatarUrl(currentUser)}" alt="Tu avatar"
+           style="width:36px;height:36px;border-radius:50%;object-fit:cover;"
+           onerror="this.src='../../images/default-profile.jpg'">
       <div class="flex-grow-1">
-        <textarea id="comment-textarea" class="form-control-custom" rows="2" placeholder="Escribe un comentario..."></textarea>
+        <textarea id="comment-textarea" class="form-control-custom" rows="2"
+                  placeholder="Escribe un comentario..."></textarea>
         <div class="d-flex justify-content-end mt-2">
           <button id="btn-submit-comment" class="btn btn-primary btn-sm px-3 rounded-pill">
             <i class="fas fa-paper-plane"></i> Comentar
@@ -193,17 +220,50 @@ const mediaHtml = resolvedMedia
         </div>
       </div>
     </div>
-  ` : `
-    <div class="alert alert-info text-center mt-3">
-      <i class="fas fa-info-circle"></i> Inicia sesión para comentar
+  ` : `<div class="alert alert-info text-center mt-3">Inicia sesión para comentar</div>`;
+
+  return `
+    <div class="mf-post">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <img src="${authorAvatar}" alt="Avatar"
+               style="width:48px;height:48px;border-radius:50%;object-fit:cover;"
+               onerror="this.src='../../images/default-profile.jpg'">
+          <div>
+            <h5 class="m-0 fw-bold" style="color:var(--adm-text);">${escapeHtml(authorName)}</h5>
+            <small class="text-muted-custom">@${escapeHtml(authorUsername)} · ${formatDate(post.created_at)}</small>
+          </div>
+        </div>
+
+        <p class="mb-3" style="color:var(--adm-text);font-size:1rem;line-height:1.5;">
+          ${escapeHtml(post.content)}
+        </p>
+
+        ${mediaHtml}
+
+        <div class="d-flex align-items-center gap-3 mt-3 pt-2 border-top" style="border-color:var(--adm-border);">
+          <button id="btn-like" class="btn btn-sm ${likeClass} rounded-pill px-3">
+            <i class="${likeIcon} me-1"></i>
+            <span id="likes-count">${post.likes_count || post.likes || 0}</span>
+          </button>
+          <button id="btn-toggle-comments" class="btn btn-sm btn-outline-secondary-custom rounded-pill px-3">
+            <i class="far fa-comment me-1"></i>
+            <span id="comments-count">0</span> comentarios
+          </button>
+        </div>
+
+        <div id="comments-section" style="display:none;margin-top:1rem;">
+          <hr class="my-3" style="border-color:var(--adm-border);">
+          <div id="comments-list">
+            <div class="text-center text-muted-custom py-3">Cargando comentarios...</div>
+          </div>
+          ${commentForm}
+        </div>
+      </div>
     </div>
   `;
-  
-  // Avatar del autor
-  let authorUser = post.user;
-  if (typeof authorUser === 'string') {
-    try { authorUser = JSON.parse(authorUser); } catch(e) { authorUser = {}; }
-  }
+}
+
   authorUser = authorUser || {};
   const authorAvatar = getAvatarUrl(authorUser);
   const authorName = authorUser.name || 'Usuario';
