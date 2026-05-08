@@ -28,12 +28,13 @@ async function loadCurrentUser() {
   }
 }
 
-// Función para obtener URL de avatar
 function getAvatarUrl(user) {
   if (!user) return '../../images/default-profile.jpg';
- return user.profile_picture;
-
-  return '../../images/default-profile.jpg';
+  const path = user.profile_picture;
+  if (!path) return '../../images/default-profile.jpg';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith('uploads/')) return `${BASE}/${path}`;
+  return `${BASE}/uploads/${path}`;
 }
 
 // Formatear fecha
@@ -163,8 +164,21 @@ function renderPost(post) {
   const likeIcon = isLiked ? 'fas fa-heart' : 'far fa-heart';
   const likeClass = isLiked ? 'btn-danger' : 'btn-outline-secondary';
   
- const mediaUrl = post.media_path;
+// ✅ Después
+const BASE = 'https://mundialfan-api-production.up.railway.app';
+function resolveUrl(path) {
+  if (!path) return null;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith('uploads/')) return `${BASE}/${path}`;
+  return `${BASE}/uploads/${path}`;
+}
 
+const resolvedMedia = resolveUrl(post.media_path);
+const mediaHtml = resolvedMedia
+  ? (post.content_type === 'video'
+      ? `<video controls src="${resolvedMedia}" class="w-100 rounded-3 mb-3" style="max-height:400px;"></video>`
+      : `<img src="${resolvedMedia}" class="img-fluid rounded-3 mb-3" style="max-height:400px;object-fit:cover;width:100%;">`)
+  : '';
   
   // Formulario de comentario (solo si admin está logueado)
   const commentForm = currentUser ? `
