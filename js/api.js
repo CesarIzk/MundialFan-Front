@@ -18,6 +18,30 @@ const BACKEND_URL = isDevelopment
     ? 'http://localhost:8000/'
     : 'https://mundialfan-api-production.up.railway.app/';
 
+
+    // Verificar si el token ya expiró antes de cualquier petición
+(function checkTokenExpiry() {
+  const token = localStorage.getItem('mf_token');
+  if (!token) return;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]
+      .replace(/-/g, '+').replace(/_/g, '/')));
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      localStorage.removeItem('mf_token');
+      localStorage.removeItem('mf_user');
+      // Solo redirigir si la página requiere login
+      const publicPages = ['index.html', 'auth.html', 'equipo.html', 
+                           'campeonatos.html', 'stats.html', 'pais_detalle.html'];
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      if (!publicPages.includes(currentPage)) {
+        window.location.href = 'auth.html';
+      }
+    }
+  } catch (_) {
+    localStorage.removeItem('mf_token');
+    localStorage.removeItem('mf_user');
+  }
+})();
 // Configuración global
 window.API_CONFIG = {
     API_BASE: API_BASE,
@@ -48,7 +72,15 @@ function formatDates(obj) {
 
 async function apiFetch(endpoint, options = {}) {
   const token = localStorage.getItem('mf_token');
-
+if (!response.ok) {
+  if (response.status === 401) {
+    localStorage.removeItem('mf_token');
+    localStorage.removeItem('mf_user');
+    window.location.href = 'auth.html';
+    return;
+  }
+  throw { status: response.status, message: data.message || 'Error en la solicitud', data };
+}
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),

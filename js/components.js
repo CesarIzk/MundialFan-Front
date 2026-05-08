@@ -23,12 +23,26 @@ function mediaUrl(path, fallback = '../images/default-profile.jpg') {
 // ─── Limpiar localStorage con profile_picture truncado (migración Cloudinary) ─
 (function fixStoredUser() {
   try {
+    // Limpiar profile_picture con ruta local (migración Cloudinary)
     const stored = JSON.parse(localStorage.getItem('mf_user') || 'null');
     if (stored?.profile_picture && !stored.profile_picture.startsWith('http')) {
       stored.profile_picture = null;
       localStorage.setItem('mf_user', JSON.stringify(stored));
     }
-  } catch (_) {}
+
+    const token = localStorage.getItem('mf_token');
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]
+        .replace(/-/g, '+').replace(/_/g, '/')));
+      if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+        localStorage.removeItem('mf_token');
+        localStorage.removeItem('mf_user');
+      }
+    }
+  } catch (_) {
+    localStorage.removeItem('mf_token');
+    localStorage.removeItem('mf_user');
+  }
 })();
 
 // ─── Auth helpers ────────────────────────────────────────────────────────────
@@ -282,8 +296,17 @@ function setNotifBadge(count) {
 
 async function loadNotifCount() {
   try {
-    const res  = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
-                   { headers: { Authorization: `Bearer ${getToken()}` } });
+    const res = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
+                  { headers: { Authorization: `Bearer ${getToken()}` } });
+
+    // ✅ Si el token expiró, limpiar sesión
+    if (res.status === 401) {
+      localStorage.removeItem('mf_token');
+      localStorage.removeItem('mf_user');
+      window.location.href = 'auth.html';
+      return;
+    }
+
     const data = await res.json();
     setNotifBadge(data.count ?? 0);
   } catch (e) {
@@ -306,9 +329,20 @@ function _notifInterval() {
 async function _notifTick() {
   if (!isLoggedIn()) return;
   try {
-    const res   = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
-                    { headers: { Authorization: `Bearer ${getToken()}` } });
+    const res = await fetch(`${BASE_URL}/api/users/me/notifications/unread-count`,
+                  { headers: { Authorization: `Bearer ${getToken()}` } });
+
+    // ✅ Token expirado — limpiar y redirigir
+    if (res.status === 401) {
+      clearTimeout(_notifTimer);
+      localStorage.removeItem('mf_token');
+      localStorage.removeItem('mf_user');
+      window.location.href = 'auth.html';
+      return;
+    }
+
     if (!res.ok) return;
+    
     const data  = await res.json();
     const count = data.count ?? 0;
 
