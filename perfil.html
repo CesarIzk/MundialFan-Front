@@ -80,14 +80,14 @@
           <h2 class="m-0 fw-bold" id="profile-name">—</h2>
           <p class="m-0" style="opacity:.7;" id="profile-username">@—</p>
         </div>
-        <div class="d-grid gap-2" style="min-width:220px;">
-          <a href="chat.html" class="btn btn-outline-primary">
-            <i class="fas fa-comments me-1"></i> Ir al chat
-          </a>
-          <a href="configuracion.html" class="btn btn-outline-secondary btn-sm">
-            <i class="fas fa-cog me-1"></i> Configuración
-          </a>
-        </div>
+       <div id="profile-actions" class="d-grid gap-2" style="min-width:220px;">
+  <a href="chat.html" class="btn btn-outline-primary" data-own-only>
+    <i class="fas fa-comments me-1"></i> Ir al chat
+  </a>
+  <a href="configuracion.html" class="btn btn-outline-secondary btn-sm" data-own-only>
+    <i class="fas fa-cog me-1"></i> Configuración
+  </a>
+</div>
       </div>
       <hr class="my-4">
       <div class="row g-3">
@@ -120,7 +120,7 @@
     <div class="card-body p-4">
       <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
         <h2 class="h5 m-0"><i class="fas fa-newspaper me-2"></i>Mis publicaciones</h2>
-        <a class="btn btn-outline-primary btn-sm" href="crear-publicacion.html">
+<a class="btn btn-outline-primary btn-sm" href="crear-publicacion.html" data-own-only>
           <i class="fas fa-plus me-1"></i> Crear publicación
         </a>
       </div>

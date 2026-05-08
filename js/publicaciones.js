@@ -148,11 +148,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // PUBLICACIONES
   // ──────────────────────────────────────────────────────────────
 
-  function renderPost(post) {
+ function renderPost(post) {
     const liked    = post.liked ?? false;
     const likes    = post.likes_count ?? 0;
     const comments = post.comments ?? [];
     const user     = getUser();
+
+    // IMPORTANTE: declarar authorAvatar ANTES de usarlo
+    const authorAvatar = mediaUrl(post.user?.profile_picture);
+    const authorId     = post.user?.id ?? post.user_id;
 
     const mediaHTML = post.media_path ? (
       post.content_type === 'video'
@@ -166,23 +170,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const commentsHTML = comments.map(c => {
       const cAvatar = mediaUrl(c.user?.profile_picture);
       return `
-       // Antes (líneas del d-flex de autor):
-<div class="d-flex align-items-center gap-2 mb-3">
-  <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-  <div>
-    <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
-    <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
-  </div>
-</div>
-
-// Después:
-<a href="perfil.html?id=${post.user?.id}" class="d-flex align-items-center gap-2 mb-3 text-decoration-none text-reset">
-  <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover; cursor:pointer;">
-  <div>
-    <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
-    <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
-  </div>
-</a>
+        <div class="d-flex gap-2 mb-2">
+          <img src="${cAvatar}" alt="Avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
+          <div class="p-2 rounded-4 bg-light flex-grow-1 border">
+            <div class="d-flex justify-content-between">
+              <strong style="font-size:12px;">${c.user?.name ?? 'Usuario'}</strong>
+              <small class="text-muted" style="font-size:10px;">${c.created_at ?? ''}</small>
+            </div>
+            <div style="font-size:13px;">${c.content}</div>
+          </div>
+        </div>
       `;
     }).join('');
 
@@ -204,22 +201,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     ` : '';
 
-    const authorAvatar = mediaUrl(post.user?.profile_picture);
-
     return `
       <article class="mf-post card border-0 shadow-sm rounded-4 mb-4 w-100">
         <div class="card-body">
-          <div class="d-flex align-items-center gap-2 mb-3">
-         <a href="perfil.html?id=${post.user?.id}" class="d-flex align-items-center gap-2 text-decoration-none text-reset mb-3">
-  <img src="${authorAvatar}" alt="Avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-  <div>
-    <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
-    <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
-  </div>
-</a>
-          </div>
+
+          <!-- Autor: avatar + nombre clicables → perfil -->
+          <a href="perfil.html?id=${authorId}" class="d-flex align-items-center gap-2 mb-3 text-decoration-none text-reset">
+            <img src="${authorAvatar}" alt="Avatar"
+                 style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+            <div>
+              <h6 class="m-0 fw-bold">${post.user?.name ?? 'Usuario'}</h6>
+              <small class="text-muted" style="font-size:11px;">${post.created_at ?? ''}</small>
+            </div>
+          </a>
+
           <p class="mb-3">${post.content}</p>
           ${mediaHTML}
+
           <div class="d-flex align-items-center gap-3 mb-2">
             <button class="btn btn-sm ${liked ? 'btn-danger' : 'btn-outline-secondary'} rounded-pill px-3 btn-like"
                     data-post-id="${post.id}" ${!user ? 'onclick="window.location.href=\'auth.html\'"' : ''}>
@@ -232,11 +230,13 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="comment-count-${post.id}">${comments.length}</span> comentarios
             </button>
           </div>
+
           <div class="comments-section-${post.id}" style="display:none;">
             <hr class="my-3 opacity-25">
             <div class="comments-box-${post.id} mb-2">${commentsHTML}</div>
             ${commentFormHTML}
           </div>
+
         </div>
       </article>
     `;
