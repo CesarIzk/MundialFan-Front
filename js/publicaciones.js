@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
   }
 
-  async function loadPosts(params = {}) {
+async function loadPosts(params = {}) {
     feed.innerHTML = `<div class="text-center py-5" style="opacity:.5;">
       <i class="fas fa-spinner fa-spin fa-2x mb-3"></i><p>Cargando...</p></div>`;
     try {
@@ -256,7 +256,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       feed.innerHTML = posts.map(renderPost).join('');
       attachListeners();
     } catch (err) {
-      feed.innerHTML = `<div class="text-center py-4 text-danger">Error al cargar publicaciones.</div>`;
+      // 👇 Agrega esto temporalmente
+      console.error('Error completo:', err);
+      console.error('Mensaje:', err.message);
+      console.error('Stack:', err.stack);
+      feed.innerHTML = `<div class="text-center py-4 text-danger">Error al cargar publicaciones.<br><small>${err.message}</small></div>`;
     }
   }
 
