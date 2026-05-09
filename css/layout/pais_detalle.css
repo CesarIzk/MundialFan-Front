@@ -1,0 +1,157 @@
+
+.pais-card {
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.pais-cover {
+  height: 320px !important;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.pais-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,.15),
+      rgba(0,0,0,.45)
+    );
+}
+
+.pais-card-body {
+  padding: 2.2rem;
+}
+
+.pais-header {
+  margin-top: -90px;
+  position: relative;
+  z-index: 2;
+}
+
+.pais-bandera {
+  width: 180px !important;
+  height: 120px !important;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 6px solid white;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  background: white;
+}
+
+.pais-titulo {
+  font-size: 2.3rem;
+  font-weight: 700;
+}
+
+.pais-codigo {
+  opacity: .75;
+  font-size: 1rem;
+}
+
+.pais-mini-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.pais-mini-info span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.08);
+
+  border: 1px solid rgba(255,255,255,.1);
+
+  font-size: .95rem;
+}
+
+.pais-info-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  background: var(--bg);
+
+  border-radius: 20px;
+
+  padding: 1.6rem;
+
+  min-height: 130px;
+
+  border: 1px solid rgba(255,255,255,.06);
+
+  transition: .25s ease;
+}
+
+.pais-info-card:hover {
+  transform: translateY(-3px);
+}
+
+.pais-info-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--gradient-primary);
+
+  color: white;
+
+  font-size: 1.2rem;
+
+  flex-shrink: 0;
+}
+
+.pais-info-card small {
+  opacity: .7;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.pais-info-card h5 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+  .pais-cover {
+    height: 210px !important;
+  }
+
+  .pais-header {
+    margin-top: -70px;
+  }
+
+  .pais-bandera {
+    width: 150px !important;
+    height: 100px !important;
+  }
+
+  .pais-card-body {
+    padding: 1.5rem;
+  }
+
+  .pais-titulo {
+    font-size: 1.9rem;
+  }
+
+}
